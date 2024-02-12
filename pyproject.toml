@@ -27,9 +27,9 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Documentation = "https://github.com/unknown/opiniated#readme"
-Issues = "https://github.com/unknown/opiniated/issues"
-Source = "https://github.com/unknown/opiniated"
+Documentation = "https://github.com/hasansezertasan/opiniated#readme"
+Issues = "https://github.com/hasansezertasan/opiniated/issues"
+Source = "https://github.com/hasansezertasan/opiniated"
 
 [tool.hatch.version]
 path = "src/opiniated/__about__.py"
