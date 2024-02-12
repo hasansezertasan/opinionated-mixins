@@ -1,24 +1,24 @@
-# opiniated
+# Opinionated
 
-[![PyPI - Version](https://img.shields.io/pypi/v/opiniated.svg)](https://pypi.org/project/opiniated)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/opiniated.svg)](https://pypi.org/project/opiniated)
+[![PyPI - Version](https://img.shields.io/pypi/v/opinionated.svg)](https://pypi.org/project/opinionated)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/opinionated.svg)](https://pypi.org/project/opinionated)
 
-Opiniated mixins for software developers. Mixins for Pydantic, SQLAlchemy, MongoEngine, ODMantic, etc.
+Opinionated set of mixins. Implemented in for Pydantic, SQLAlchemy, MongoEngine, ODMantic, etc.
 
 -----
 
 **Table of Contents**
 
-- [opiniated](#opiniated)
+- [Opinionated](#opinionated)
   - [Installation](#installation)
   - [License](#license)
 
 ## Installation
 
 ```console
-pip install opiniated
+pip install opinionated
 ```
 
 ## License
 
-`opiniated` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+`opinionated` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.

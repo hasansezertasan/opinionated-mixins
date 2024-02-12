@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "opiniated"
+name = "opinionated"
 dynamic = ["version"]
 description = ''
 readme = "README.md"
@@ -27,12 +27,12 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Documentation = "https://github.com/hasansezertasan/opiniated#readme"
-Issues = "https://github.com/hasansezertasan/opiniated/issues"
-Source = "https://github.com/hasansezertasan/opiniated"
+Documentation = "https://github.com/hasansezertasan/opinionated#readme"
+Issues = "https://github.com/hasansezertasan/opinionated/issues"
+Source = "https://github.com/hasansezertasan/opinionated"
 
 [tool.hatch.version]
-path = "src/opiniated/__about__.py"
+path = "src/opinionated/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -59,19 +59,19 @@ dependencies = [
   "mypy>=1.0.0",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/opiniated tests}"
+check = "mypy --install-types --non-interactive {args:src/opinionated tests}"
 
 [tool.coverage.run]
-source_pkgs = ["opiniated", "tests"]
+source_pkgs = ["opinionated", "tests"]
 branch = true
 parallel = true
 omit = [
-  "src/opiniated/__about__.py",
+  "src/opinionated/__about__.py",
 ]
 
 [tool.coverage.paths]
-opiniated = ["src/opiniated", "*/opiniated/src/opiniated"]
-tests = ["tests", "*/opiniated/tests"]
+opinionated = ["src/opinionated", "*/opinionated/src/opinionated"]
+tests = ["tests", "*/opinionated/tests"]
 
 [tool.coverage.report]
 exclude_lines = [
