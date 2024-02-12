@@ -3,7 +3,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/opinionated.svg)](https://pypi.org/project/opinionated)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/opinionated.svg)](https://pypi.org/project/opinionated)
 
-Opinionated set of mixins. Implemented in for Pydantic, SQLAlchemy, MongoEngine, ODMantic, etc.
+Opinionated set of mixins. Implemented in Pydantic, SQLAlchemy, MongoEngine, ODMantic, etc.
 
 -----
 
