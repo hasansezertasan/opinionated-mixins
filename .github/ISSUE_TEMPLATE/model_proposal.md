@@ -11,7 +11,7 @@ assignees: ''
 A clear and concise explanation of why you need this model.
 
 **Details**
-Fill the table below with the fields you want to add to the model.
+Write the fields that your proposed model must have in the table below or write a Pydantic model accordingly.
 
 | Field Name | Python Type | Description | Unique | Required | Index |
 | ---------- | ----------- | ----------- | ------ | -------- | ----- |
