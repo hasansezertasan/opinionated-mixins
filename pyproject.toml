@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "opinionated"
+name = "opinionated-mixins"
 dynamic = ["version"]
 description = ''
 readme = "README.md"
@@ -11,7 +11,7 @@ requires-python = ">=3.8"
 license = "MIT"
 keywords = []
 authors = [
-  { name = "hasansezertasan", email = "hasansezertasan@gmail.com" },
+  { name = "Hasan Sezer Taşan", email = "hasansezertasan@gmail.com" },
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -27,12 +27,12 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Documentation = "https://github.com/hasansezertasan/opinionated#readme"
-Issues = "https://github.com/hasansezertasan/opinionated/issues"
-Source = "https://github.com/hasansezertasan/opinionated"
+Documentation = "https://github.com/hasansezertasan/opinionated-mixins#readme"
+Issues = "https://github.com/hasansezertasan/opinionated-mixins/issues"
+Source = "https://github.com/hasansezertasan/opinionated-mixins"
 
 [tool.hatch.version]
-path = "src/opinionated/__about__.py"
+path = "src/opinionated_mixins/__about__.py"
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -59,19 +59,19 @@ dependencies = [
   "mypy>=1.0.0",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/opinionated tests}"
+check = "mypy --install-types --non-interactive {args:src/opinionated_mixins tests}"
 
 [tool.coverage.run]
-source_pkgs = ["opinionated", "tests"]
+source_pkgs = ["opinionated_mixins", "tests"]
 branch = true
 parallel = true
 omit = [
-  "src/opinionated/__about__.py",
+  "src/opinionated_mixins/__about__.py",
 ]
 
 [tool.coverage.paths]
-opinionated = ["src/opinionated", "*/opinionated/src/opinionated"]
-tests = ["tests", "*/opinionated/tests"]
+opinionated_mixins = ["src/opinionated_mixins", "*/opinionated-mixins/src/opinionated_mixins"]
+tests = ["tests", "*/opinionated-mixins/tests"]
 
 [tool.coverage.report]
 exclude_lines = [

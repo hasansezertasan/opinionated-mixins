@@ -20,7 +20,7 @@ You can find help for creating such an example [here](https://stackoverflow.com/
 
 **Environment (please complete the following information):**
 
-- opinionated version: [e.g. 0.1.2]
+- opinionated-mixins ersion: [e.g. 0.1.2]
 
 **Additional context**
 Add any other context about the problem here.
