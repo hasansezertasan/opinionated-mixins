@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "opinionated-mixins"
 dynamic = ["version"]
-description = ''
+description = 'Opinionated set of mixins. Implemented in Pydantic, SQLAlchemy, MongoEngine, ODMantic, etc.'
 readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
