@@ -1,4 +1,4 @@
-from opinionated_mixins.contrib.pydantic.person import Person as PydanticPerson
+from opinionated_mixins.contrib.pydantic import Person as PydanticPerson
 
 
 class Person(PydanticPerson):
