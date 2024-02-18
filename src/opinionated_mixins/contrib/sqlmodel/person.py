@@ -1,4 +1,4 @@
-from opinionated_mixins.contrib.sqlalchemy.person import Person as SQLAlchemyPerson
+from opinionated_mixins.contrib.sqlalchemy import Person as SQLAlchemyPerson
 
 
 class Person(SQLAlchemyPerson):
