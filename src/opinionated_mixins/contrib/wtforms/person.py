@@ -1,11 +1,11 @@
 import datetime
 
 from typing_extensions import Optional
-from wtforms import DateField, EmailField, Form, StringField
+from wtforms import DateField, EmailField, StringField
 from wtforms.validators import DataRequired, Length
 
 
-class Person(Form):
+class Person:
     """
     WTForms `Person` form that represents a person.
     """
