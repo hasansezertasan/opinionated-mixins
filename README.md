@@ -10,13 +10,45 @@
 [![Downloads/Month](https://pepy.tech/badge/opinionated-mixins/month)](https://pepy.tech/project/opinionated-mixins)
 [![Downloads/Week](https://pepy.tech/badge/opinionated-mixins/week)](https://pepy.tech/project/opinionated-mixins)
 
-Opinionated set of mixins. Implemented in Pydantic, SQLAlchemy, MongoEngine, ODMantic, etc.
+Reusable mixin classes for common model patterns across multiple Python ORMs and data frameworks.
 
------
+## Supported Frameworks
+
+| Framework       | Purpose                       |
+| --------------- | ----------------------------- |
+| **Pydantic**    | Data validation models        |
+| **SQLAlchemy**  | SQL ORM models                |
+| **SQLModel**    | Pydantic + SQLAlchemy hybrid  |
+| **MongoEngine** | MongoDB ODM                   |
+| **ODMantic**    | MongoDB async ODM             |
+| **WTForms**     | Form validation               |
+| **dataclasses** | Standard library data classes |
+
+## What It Does
+
+opinionated-mixins provides consistent interfaces for common model patterns, so you get the same fields and behavior regardless of which framework you use:
+
+- **Reusable model fields** (timestamps, UUIDs, soft-delete, etc.)
+- **Common model patterns** with consistent interfaces across frameworks
+
+### Example
+
+```python
+from opinionated_mixins.contrib.sqlalchemy import TimestampMixin, SoftDeleteMixin
+
+class User(Base, TimestampMixin, SoftDeleteMixin):
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    # Automatically gets: created_at, updated_at, deleted_at, is_deleted
+```
+
+---
 
 **Table of Contents**
 
 - [opinionated-mixins](#opinionated-mixins)
+  - [Supported Frameworks](#supported-frameworks)
+  - [What It Does](#what-it-does)
   - [Installation](#installation)
   - [License](#license)
 
