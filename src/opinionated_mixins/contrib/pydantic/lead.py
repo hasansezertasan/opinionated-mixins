@@ -20,7 +20,9 @@ class Lead:
     industry: str | None = Field(default=None, max_length=255)
     rating: LeadRating | None = Field(default=None)
     opportunity_amount: Decimal | None = Field(
-        default=None, max_digits=12, decimal_places=2,
+        default=None,
+        max_digits=12,
+        decimal_places=2,
     )
     currency: str | None = Field(default=None, min_length=3, max_length=3)
     probability: int = Field(default=0, ge=0, le=100)

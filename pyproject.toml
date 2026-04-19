@@ -50,7 +50,6 @@ dev = [
 types = [
   "mypy>=1.20.1",
   "ruff==0.15.11",
-  "sqlalchemy-stubs>=0.4",
   "types-WTForms>=3.1",
 ]
 
@@ -66,6 +65,27 @@ fix = true
 fixable = ["ALL"]
 ignore-init-module-imports = true
 select = ["ALL"]
+ignore = [
+  "D100",   # Missing docstring in public module
+  "D104",   # Missing docstring in public package
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+  "D101",    # Missing docstring in public class
+  "D102",    # Missing docstring in public method
+  "D103",    # Missing docstring in public function
+  "S101",    # Use of assert (expected in tests)
+  "S105",    # Possible hardcoded password (test fixtures)
+  "S106",    # Possible hardcoded password in argument (test fixtures)
+  "PLR2004", # Magic value used in comparison (expected in tests)
+  "PT018",   # Compound assertion (intentional for clear error messages)
+  "PLC0415", # Import not at top-level (intentional in test methods)
+  "DTZ001",  # datetime without tzinfo (test fixtures)
+]
+"src/opinionated_mixins/contrib/sqlmodel/*.py" = [
+  "PLC0414", # Import alias does not rename (intentional re-exports)
+]
 
 
 [tool.ruff.lint.pydocstyle]
@@ -88,6 +108,11 @@ disallow_any_generics = true
 check_untyped_defs = true
 no_implicit_reexport = true
 disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "opinionated_mixins.contrib.sqlalchemy.*"
+# Declarative mixins use Column() without Mapped[] annotations
+disable_error_code = ["var-annotated"]
 
 
 [tool.coverage.run]

@@ -43,7 +43,7 @@ class TestPydanticTemplate:
             TemplateModel(name="x" * 256, content="Body")
 
     def test_format_from_string(self) -> None:
-        obj = TemplateModel(name="Test", content="Body", format="html")  # type: ignore[arg-type]
+        obj = TemplateModel(name="Test", content="Body", format="HTML")  # type: ignore[arg-type]
         assert obj.format == TemplateFormat.HTML
 
     def test_invalid_format_rejected(self) -> None:
@@ -51,7 +51,7 @@ class TestPydanticTemplate:
             TemplateModel(name="Test", content="Body", format="invalid")  # type: ignore[arg-type]
 
     def test_type_from_string(self) -> None:
-        obj = TemplateModel(name="Test", content="Body", type="sms")  # type: ignore[arg-type]
+        obj = TemplateModel(name="Test", content="Body", type="SMS")  # type: ignore[arg-type]
         assert obj.type == TemplateType.SMS
 
     def test_invalid_type_rejected(self) -> None:

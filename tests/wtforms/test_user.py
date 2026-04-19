@@ -8,7 +8,6 @@ class UserForm(User, Form):  # type: ignore[misc]
 
 USER_FIELDS = {
     "username",
-    "password",
     "email",
     "date_email_verified",
 }
@@ -24,7 +23,6 @@ class TestWTFormsUser:
         form = UserForm(
             data={
                 "username": "janedoe",
-                "password": "secret123",
             },
         )
         assert form.validate()
@@ -33,7 +31,6 @@ class TestWTFormsUser:
         form = UserForm(
             data={
                 "username": "janedoe",
-                "password": "secret123",
                 "email": "jane@example.com",
                 "date_email_verified": "2024-01-15 12:00:00",
             },
@@ -42,18 +39,12 @@ class TestWTFormsUser:
 
     def test_missing_username_invalid(self) -> None:
         form = UserForm(
-            data={
-                "password": "secret123",
-            },
+            data={},
         )
         assert not form.validate()
         assert "username" in form.errors
 
-    def test_missing_password_invalid(self) -> None:
-        form = UserForm(
-            data={
-                "username": "janedoe",
-            },
-        )
-        assert not form.validate()
-        assert "password" in form.errors
+    def test_no_password_field(self) -> None:
+        form = UserForm()
+        assert "password" not in form._fields
+        assert "hashed_password" not in form._fields

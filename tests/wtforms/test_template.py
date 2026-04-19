@@ -40,8 +40,8 @@ class TestWTFormsTemplate:
             data={
                 "name": "Welcome",
                 "content": "Hello {{name}}",
-                "format": "plain",
-                "type": "email",
+                "format": "PLAIN",
+                "type": "EMAIL",
             },
         )
         assert form.validate()

@@ -31,7 +31,7 @@ jobs:
     - name: Run format check
       run: uv run ruff format --check .
     - name: Run type checking
-      run: uv run mypy --install-types --non-interactive src/opinionated_mixins
+      run: uv run mypy src/opinionated_mixins
     - name: Run tests
       run: uv run coverage run -m pytest tests
     - name: Coverage report

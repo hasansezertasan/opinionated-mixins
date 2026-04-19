@@ -29,7 +29,7 @@ class TestWTFormsAnnouncement:
             data={
                 "title": "Test",
                 "content": "Hello world",
-                "category": "general",
+                "category": "GENERAL",
             },
         )
         assert form.validate()
