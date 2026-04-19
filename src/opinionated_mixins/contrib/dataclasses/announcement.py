@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
-#
-# SPDX-License-Identifier: MIT
 import dataclasses
 from typing import Annotated
 
@@ -14,6 +11,8 @@ class Announcement:
 
     title: Annotated[str, Doc("Title of the announcement")]
     content: Annotated[str, Doc("Content of the announcement")]
-    category: Annotated[AnnouncementCategory, Doc("Category of the announcement")] = dataclasses.field(
-        default=AnnouncementCategory.GENERAL,
+    category: Annotated[AnnouncementCategory, Doc("Category of the announcement")] = (
+        dataclasses.field(
+            default=AnnouncementCategory.GENERAL,
+        )
     )

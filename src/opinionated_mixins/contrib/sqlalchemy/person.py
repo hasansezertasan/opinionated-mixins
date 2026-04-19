@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
-#
-# SPDX-License-Identifier: MIT
-
 from sqlalchemy import Column, Date, String, Text
 from sqlalchemy.orm import declarative_mixin
 

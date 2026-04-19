@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
-#
-# SPDX-License-Identifier: MIT
 import dataclasses
 from typing import Annotated
 
@@ -14,8 +11,10 @@ class Template:
 
     name: Annotated[str, Doc("Name of the template")]
     content: Annotated[str, Doc("Content of the template")]
-    format: Annotated[TemplateFormat, Doc("Format of the template")] = dataclasses.field(
-        default=TemplateFormat.PLAIN,
+    format: Annotated[TemplateFormat, Doc("Format of the template")] = (
+        dataclasses.field(
+            default=TemplateFormat.PLAIN,
+        )
     )
     type: Annotated[TemplateType, Doc("Type of the template")] = dataclasses.field(
         default=TemplateType.OTHER,

@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
-#
-# SPDX-License-Identifier: MIT
 from opinionated_mixins.enums import AnnouncementCategory
 
 from sqlalchemy import Column, Enum, String, Text
@@ -15,4 +12,6 @@ class Announcement:
 
     title = Column(String(255), nullable=False, index=True)
     content = Column(Text, nullable=False)
-    category = Column(Enum(AnnouncementCategory), nullable=False, default=AnnouncementCategory.GENERAL)
+    category = Column(
+        Enum(AnnouncementCategory), nullable=False, default=AnnouncementCategory.GENERAL
+    )

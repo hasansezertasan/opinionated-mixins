@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
-#
-# SPDX-License-Identifier: MIT
 from opinionated_mixins.enums import FeedbackCategory, FeedbackStatus
 
 from sqlalchemy import Column, Enum, String, Text
@@ -16,8 +13,12 @@ class Feedback:
     subject = Column(String(255), nullable=False, index=True)
     content = Column(Text, nullable=False)
     category = Column(
-        Enum(FeedbackCategory), nullable=False, default=FeedbackCategory.OTHER,
+        Enum(FeedbackCategory),
+        nullable=False,
+        default=FeedbackCategory.OTHER,
     )
     status = Column(
-        Enum(FeedbackStatus), nullable=False, default=FeedbackStatus.PENDING,
+        Enum(FeedbackStatus),
+        nullable=False,
+        default=FeedbackStatus.PENDING,
     )

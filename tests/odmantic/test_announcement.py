@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
-#
-# SPDX-License-Identifier: MIT
 from opinionated_mixins.contrib.odmantic import Announcement
 from opinionated_mixins.enums import AnnouncementCategory
 
@@ -13,4 +10,7 @@ class TestODManticAnnouncement:
         assert "category" in annotations
 
     def test_category_default(self) -> None:
-        assert Announcement.category.pydantic_field_info.default == AnnouncementCategory.GENERAL
+        assert (
+            Announcement.category.pydantic_field_info.default
+            == AnnouncementCategory.GENERAL
+        )
