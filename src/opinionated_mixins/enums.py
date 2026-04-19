@@ -17,6 +17,23 @@ class AnnouncementCategory(str, enum.Enum):
     EVENT = "event"
 
 
+class TemplateFormat(str, enum.Enum):
+    """Format of a template's content."""
+
+    PLAIN = "plain"
+    HTML = "html"
+    MARKDOWN = "markdown"
+
+
+class TemplateType(str, enum.Enum):
+    """Type/purpose of a template."""
+
+    EMAIL = "email"
+    SMS = "sms"
+    PUSH = "push"
+    OTHER = "other"
+
+
 class FeedbackCategory(str, enum.Enum):
     """Category of a feedback submission."""
 
