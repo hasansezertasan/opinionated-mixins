@@ -4,41 +4,40 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Build & Development
 
-This project uses **Hatch** as its build system and environment manager.
+This project uses **uv** for dependency management and **hatchling** as the build backend.
 
 ```bash
-# Install hatch
-pip install --upgrade hatch
+# Install dependencies
+uv sync --group dev --group types
 
 # Run tests
-hatch run test
+uv run pytest tests
 
 # Run a single test file
-hatch run test tests/test_something.py
+uv run pytest tests/test_something.py
 
 # Run a single test by name
-hatch run test -k "test_name"
+uv run pytest -k "test_name"
 
 # Run tests with coverage
-hatch run cov
+uv run coverage run -m pytest tests
+uv run coverage combine  # if parallel
+uv run coverage report
 
-# Lint & format (check only)
-hatch fmt --check
+# Lint (check only)
+uv run ruff check .
 
-# Lint & format (auto-fix)
-hatch fmt
+# Lint (auto-fix)
+uv run ruff check --fix .
+
+# Format (check only)
+uv run ruff format --check .
+
+# Format (auto-fix)
+uv run ruff format .
 
 # Type checking
-hatch run types:typing
-
-# Ruff lint only
-hatch run types:style
-
-# Ruff format only
-hatch run types:format
-
-# Pre-commit hooks
-hatch run pre
+uv run mypy --install-types --non-interactive src/opinionated_mixins
 ```
 
 ## Philosophy
@@ -54,7 +53,7 @@ This project ships **consensus-based defaults**. Field names, enum values, and b
 ```
 src/opinionated_mixins/
 ├── __init__.py          # Package root
-├── __about__.py         # Version (single source of truth for hatch)
+├── __about__.py         # Version (single source of truth for hatchling)
 ├── enums.py             # Shared enums used across all contrib modules
 └── contrib/             # Framework-specific implementations
     ├── pydantic/        # Pydantic BaseModel mixins
@@ -97,7 +96,7 @@ When adding a mixin:
 
 ## Code Style
 
-- **Python target**: 3.8+ (no walrus operator, no `type` statement, use `typing` imports)
+- **Python target**: 3.10+ (can use `X | Y` union syntax, `match` statements, `TypeAlias`)
 - **Formatter/Linter**: Ruff (Black-compatible formatting, double quotes, spaces)
 - **Type checking**: mypy in strict mode
 - **Docstring convention**: Google style
