@@ -1,6 +1,11 @@
 from .announcement import Announcement as Announcement
+from .created_at import CreatedAt as CreatedAt
 from .feedback import Feedback as Feedback
+from .integer_id import IntegerID as IntegerID
+from .is_active import IsActive as IsActive
 from .lead import Lead as Lead
 from .person import Person as Person
 from .template import Template as Template
+from .updated_at import UpdatedAt as UpdatedAt
 from .user import User as User
+from .uuid_id import UUIDID as UUIDID

@@ -30,7 +30,19 @@ from opinionated_mixins.contrib import (
 )
 from sqlalchemy import Column
 
-MIXIN_NAMES = ["Announcement", "Feedback", "Lead", "Person", "Template", "User"]
+MIXIN_NAMES = [
+    "Announcement",
+    "CreatedAt",
+    "Feedback",
+    "IsActive",
+    "Lead",
+    "Person",
+    "Template",
+    "UpdatedAt",
+    "User",
+]
+
+SQL_ONLY_MIXIN_NAMES = ["IntegerID", "UUIDID"]
 
 REFERENCE_FRAMEWORK = "sqlalchemy"
 
@@ -84,3 +96,21 @@ def test_all_frameworks_export_mixin(mixin_name: str) -> None:
     """Every framework module must export every mixin."""
     for fw_name, (module, _) in FRAMEWORKS.items():
         assert hasattr(module, mixin_name), f"{fw_name} does not export {mixin_name}"
+
+
+@pytest.mark.parametrize("mixin_name", SQL_ONLY_MIXIN_NAMES)
+def test_sql_only_mixins_exported(mixin_name: str) -> None:
+    """SQL-only mixins must be exported by sqlalchemy and sqlmodel."""
+    for fw_name in ("sqlalchemy", "sqlmodel"):
+        module = FRAMEWORKS[fw_name][0]
+        assert hasattr(module, mixin_name), f"{fw_name} does not export {mixin_name}"
+
+
+@pytest.mark.parametrize("mixin_name", SQL_ONLY_MIXIN_NAMES)
+def test_sql_only_mixins_not_in_nosql(mixin_name: str) -> None:
+    """SQL-only mixins must NOT be exported by mongoengine or odmantic."""
+    for fw_name in ("mongoengine", "odmantic"):
+        module = FRAMEWORKS[fw_name][0]
+        assert not hasattr(module, mixin_name), (
+            f"{fw_name} should not export {mixin_name}"
+        )
