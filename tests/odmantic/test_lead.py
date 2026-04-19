@@ -1,6 +1,5 @@
 from opinionated_mixins.contrib.odmantic import Lead
 
-
 LEAD_ANNOTATIONS = {
     "title",
     "salutation",

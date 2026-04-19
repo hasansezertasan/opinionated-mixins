@@ -1,8 +1,8 @@
 from typing import Any, ClassVar
 
-from mongoengine import BooleanField, DateField, DecimalField, IntField, StringField
-
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
+
+from mongoengine import BooleanField, DateField, DecimalField, IntField, StringField
 
 
 class Lead:

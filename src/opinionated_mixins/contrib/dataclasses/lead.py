@@ -3,9 +3,8 @@ import datetime
 from decimal import Decimal
 from typing import Annotated
 
-from typing_extensions import Doc
-
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
+from typing_extensions import Doc
 
 
 @dataclasses.dataclass
