@@ -1,42 +1,40 @@
 name: test
-
 on:
   push:
     branches: [main, master]
   pull_request:
     branches: [main, master]
-
 concurrency:
   group: test-${{ github.head_ref }}
   cancel-in-progress: true
-
 env:
   PYTHONUNBUFFERED: "1"
   FORCE_COLOR: "1"
-
 jobs:
   run:
-    name: Python ${{ matrix.python-version }} on ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
-    runs-on: ${{ matrix.os }}
+    name: Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
-
+        python-version: ['3.10', '3.14']
     steps:
-    - uses: actions/checkout@v6
-
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+    - name: Install uv
+      uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Install Hatch
-      run: pip install --upgrade hatch
-
+      run: uv python install ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: uv sync --group dev --group types
     - name: Run static analysis
-      run: hatch fmt --check
-
+      run: uv run ruff check .
+    - name: Run format check
+      run: uv run ruff format --check .
+    - name: Run type checking
+      run: uv run mypy --install-types --non-interactive src/opinionated_mixins
     - name: Run tests
-      run: hatch run cov
+      run: uv run coverage run -m pytest tests
+    - name: Coverage report
+      run: |
+        uv run coverage combine || true
+        uv run coverage report

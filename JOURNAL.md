@@ -19,7 +19,7 @@
 ### Current State
 
 - All contrib modules are **empty** (scaffolded but no implementation)
-- Infrastructure is in place: CI (GitHub Actions, Python 3.8-3.12), linting (Ruff), type checking (mypy), testing (pytest)
+- Infrastructure is in place: CI (GitHub Actions, Python 3.10-3.14), linting (Ruff), type checking (mypy), testing (pytest)
 - Issue templates exist for "Model Proposal" and "Field Proposal"
 
 ### Similar Projects

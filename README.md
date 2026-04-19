@@ -81,6 +81,34 @@ pip install opinionated-mixins
 
 Zero runtime dependencies. Framework packages (SQLAlchemy, Pydantic, etc.) are your responsibility — you already have them in your project.
 
+## Development
+
+```bash
+# Install uv (if not already installed)
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Install all dependencies
+uv sync --group dev --group types
+
+# Run tests
+uv run pytest tests
+
+# Run tests with coverage
+uv run coverage run -m pytest tests
+uv run coverage report
+
+# Lint (check / auto-fix)
+uv run ruff check .
+uv run ruff check --fix .
+
+# Format (check / auto-fix)
+uv run ruff format --check .
+uv run ruff format .
+
+# Type checking
+uv run mypy --install-types --non-interactive src/opinionated_mixins
+```
+
 ## Contributing
 
 New mixin ideas? Open a [Model Proposal](https://github.com/hasansezertasan/opinionated-mixins/issues/new?template=model_proposal.md). New fields on existing mixins? Open a [Field Proposal](https://github.com/hasansezertasan/opinionated-mixins/issues/new?template=field_proposal.md).
