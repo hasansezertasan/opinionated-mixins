@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 **Contrib**
-Which contrib(s) and version(s) does this bug occurs?
+Which contrib(s) and version(s) does this bug occur?
 SQLAlchemy, SQLModel, MongoEngine, ODMantic.
 
 **Describe the bug**
