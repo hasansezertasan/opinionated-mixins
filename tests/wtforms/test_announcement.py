@@ -1,10 +1,9 @@
 # SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
 #
 # SPDX-License-Identifier: MIT
-from wtforms import Form
-
 from opinionated_mixins.contrib.wtforms import Announcement
 from opinionated_mixins.enums import AnnouncementCategory
+from wtforms import Form
 
 
 class AnnouncementForm(Announcement, Form):  # type: ignore[misc]
@@ -34,6 +33,6 @@ class TestWTFormsAnnouncement:
                 "title": "Test",
                 "content": "Hello world",
                 "category": "general",
-            }
+            },
         )
         assert form.validate()

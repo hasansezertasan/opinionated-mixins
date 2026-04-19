@@ -2,10 +2,10 @@
 #
 # SPDX-License-Identifier: MIT
 import dataclasses
-
-from typing_extensions import Annotated, Doc
+from typing import Annotated
 
 from opinionated_mixins.enums import AnnouncementCategory
+from typing_extensions import Doc
 
 
 @dataclasses.dataclass
@@ -15,5 +15,5 @@ class Announcement:
     title: Annotated[str, Doc("Title of the announcement")]
     content: Annotated[str, Doc("Content of the announcement")]
     category: Annotated[AnnouncementCategory, Doc("Category of the announcement")] = dataclasses.field(
-        default=AnnouncementCategory.GENERAL
+        default=AnnouncementCategory.GENERAL,
     )

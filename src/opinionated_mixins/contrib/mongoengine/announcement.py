@@ -1,16 +1,17 @@
 # SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
 #
 # SPDX-License-Identifier: MIT
-from typing import Any, ClassVar, Dict
+from typing import Any, ClassVar
+
+from opinionated_mixins.enums import AnnouncementCategory
 
 from mongoengine import StringField
-from opinionated_mixins.enums import AnnouncementCategory
 
 
 class Announcement:
     """Announcement mixin for MongoEngine documents."""
 
-    meta: ClassVar[Dict[str, Any]] = {"allow_inheritance": True}
+    meta: ClassVar[dict[str, Any]] = {"allow_inheritance": True}
 
     title = StringField(required=True, max_length=255)
     content = StringField(required=True)
