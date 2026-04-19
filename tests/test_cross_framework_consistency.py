@@ -123,6 +123,4 @@ def test_all_frameworks_have_same_fields(mixin_name: str) -> None:
 def test_all_frameworks_export_mixin(mixin_name: str) -> None:
     """Every framework module must export every mixin."""
     for fw_name, module in FRAMEWORKS.items():
-        assert hasattr(module, mixin_name), (
-            f"{fw_name} does not export {mixin_name}"
-        )
+        assert hasattr(module, mixin_name), f"{fw_name} does not export {mixin_name}"
