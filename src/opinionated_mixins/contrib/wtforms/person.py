@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
-#
-# SPDX-License-Identifier: MIT
 from wtforms import DateField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Length, Optional
 

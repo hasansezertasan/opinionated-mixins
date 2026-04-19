@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
-#
-# SPDX-License-Identifier: MIT
 import enum
 
 
@@ -32,6 +29,36 @@ class TemplateType(str, enum.Enum):
     SMS = "sms"
     PUSH = "push"
     OTHER = "other"
+
+
+class LeadStatus(str, enum.Enum):
+    """Status of a lead in the sales pipeline."""
+
+    ASSIGNED = "assigned"
+    IN_PROCESS = "in_process"
+    CONVERTED = "converted"
+    RECYCLED = "recycled"
+    CLOSED = "closed"
+
+
+class LeadSource(str, enum.Enum):
+    """Source channel where a lead originated."""
+
+    CALL = "call"
+    EMAIL = "email"
+    EXISTING_CUSTOMER = "existing_customer"
+    PARTNER = "partner"
+    PUBLIC_RELATIONS = "public_relations"
+    CAMPAIGN = "campaign"
+    OTHER = "other"
+
+
+class LeadRating(str, enum.Enum):
+    """Temperature rating of a lead."""
+
+    HOT = "hot"
+    WARM = "warm"
+    COLD = "cold"
 
 
 class FeedbackCategory(str, enum.Enum):

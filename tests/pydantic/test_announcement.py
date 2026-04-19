@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
-#
-# SPDX-License-Identifier: MIT
 import pytest
 from opinionated_mixins.contrib.pydantic import Announcement
 from opinionated_mixins.enums import AnnouncementCategory

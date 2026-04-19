@@ -1,6 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
-#
-# SPDX-License-Identifier: MIT
 from opinionated_mixins.contrib.sqlalchemy import Feedback
 from opinionated_mixins.enums import FeedbackCategory, FeedbackStatus
 from sqlalchemy import Column, Integer, create_engine
