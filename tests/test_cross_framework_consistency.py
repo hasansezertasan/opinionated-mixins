@@ -13,19 +13,30 @@ import dataclasses
 import pytest
 from mongoengine.base.fields import BaseField
 from odmantic.field import ODMFieldInfo
+from opinionated_mixins.contrib import (
+    dataclasses as dc_contrib,
+)
+from opinionated_mixins.contrib import (
+    mongoengine as me_contrib,
+)
+from opinionated_mixins.contrib import (
+    odmantic as od_contrib,
+)
+from opinionated_mixins.contrib import (
+    pydantic as pd_contrib,
+)
+from opinionated_mixins.contrib import (
+    sqlalchemy as sa_contrib,
+)
+from opinionated_mixins.contrib import (
+    sqlmodel as sm_contrib,
+)
+from opinionated_mixins.contrib import (
+    wtforms as wt_contrib,
+)
 from pydantic.fields import FieldInfo as PydanticFieldInfo
 from sqlalchemy import Column
 from wtforms.fields.core import UnboundField as WTUnboundField
-
-from opinionated_mixins.contrib import (
-    dataclasses as dc_contrib,
-    mongoengine as me_contrib,
-    odmantic as od_contrib,
-    pydantic as pd_contrib,
-    sqlalchemy as sa_contrib,
-    sqlmodel as sm_contrib,
-    wtforms as wt_contrib,
-)
 
 MIXIN_NAMES = ["Announcement", "Feedback", "Lead", "Person", "Template", "User"]
 
