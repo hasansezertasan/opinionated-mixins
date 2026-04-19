@@ -1,9 +1,9 @@
 from opinionated_mixins.enums import FeedbackCategory, FeedbackStatus
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 
-class Feedback(BaseModel):
+class Feedback:
     """Feedback mixin for Pydantic models."""
 
     subject: str = Field(..., min_length=1, max_length=255)

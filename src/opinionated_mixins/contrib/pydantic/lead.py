@@ -3,10 +3,10 @@ from decimal import Decimal
 
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 
-class Lead(BaseModel):
+class Lead:
     """Lead mixin for Pydantic models."""
 
     title: str | None = Field(default=None, max_length=255)

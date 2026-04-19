@@ -1,9 +1,9 @@
 import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 
-class User(BaseModel):
+class User:
     """User mixin for Pydantic models."""
 
     username: str = Field(..., min_length=1, max_length=255)

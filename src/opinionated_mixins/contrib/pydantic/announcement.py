@@ -1,9 +1,9 @@
 from opinionated_mixins.enums import AnnouncementCategory
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 
-class Announcement(BaseModel):
+class Announcement:
     """Announcement mixin for Pydantic models."""
 
     title: str = Field(..., min_length=1, max_length=255)

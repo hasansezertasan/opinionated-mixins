@@ -1,9 +1,9 @@
 from opinionated_mixins.enums import TemplateFormat, TemplateType
 
-from pydantic import BaseModel, Field
+from pydantic import Field
 
 
-class Template(BaseModel):
+class Template:
     """Template mixin for Pydantic models."""
 
     name: str = Field(..., min_length=1, max_length=255)
