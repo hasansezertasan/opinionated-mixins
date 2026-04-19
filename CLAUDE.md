@@ -56,7 +56,7 @@ src/opinionated_mixins/
 ├── __about__.py         # Version (single source of truth for hatchling)
 ├── enums.py             # Shared enums used across all contrib modules
 └── contrib/             # Framework-specific implementations
-    ├── pydantic/        # Pydantic BaseModel mixins
+    ├── pydantic/        # Pydantic mixins
     ├── sqlalchemy/      # SQLAlchemy declarative mixins
     ├── sqlmodel/        # SQLModel mixins (re-exports from sqlalchemy)
     ├── mongoengine/     # MongoEngine Document mixins
@@ -64,6 +64,26 @@ src/opinionated_mixins/
     ├── wtforms/         # WTForms mixins
     └── dataclasses/     # stdlib dataclass mixins
 ```
+
+### What Is a Mixin
+
+A mixin is a plain class that provides fields/methods to other classes through multiple inheritance, **without being a standalone base class**. Rules:
+
+1. **Never inherit from a framework base** — no `class Foo(BaseModel)`, no `class Foo(Document)`. The mixin is a plain `class Foo:`. The consumer picks the base.
+2. **Not independently instantiable** — mixins are composed, not used alone: `class MyModel(AnnouncementMixin, BaseModel): pass`.
+3. **Composable** — multiple mixins combine freely with any compatible base.
+
+```python
+# ✅ Correct — true mixin
+class Announcement:
+    title: str = Field(..., min_length=1, max_length=255)
+
+# ❌ Wrong — couples to framework base
+class Announcement(BaseModel):
+    title: str = Field(..., min_length=1, max_length=255)
+```
+
+This applies to **all** contrib modules. Every mixin class must be a plain class with no parent.
 
 ### Key Design Principles
 
@@ -76,7 +96,7 @@ src/opinionated_mixins/
 Each framework expresses the same fields differently:
 
 - **SQLAlchemy**: `Column(String(255), nullable=False, index=True)`, uses `@declarative_mixin` and `__abstract__ = True`
-- **Pydantic**: `Field(..., min_length=1, max_length=255)` on `BaseModel`
+- **Pydantic**: `Field(..., min_length=1, max_length=255)` — plain class, user composes with `BaseModel`
 - **MongoEngine**: `StringField(required=True, max_length=255)` with `choices` for enums, uses `.value` for enum defaults
 - **ODMantic**: `Field(...)` similar to Pydantic syntax
 - **WTForms**: `StringField(label="...", validators=[...])` with `SelectField` for enums, uses `.value` for defaults/choices

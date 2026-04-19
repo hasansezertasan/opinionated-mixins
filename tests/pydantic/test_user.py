@@ -2,12 +2,16 @@ import datetime
 
 import pytest
 from opinionated_mixins.contrib.pydantic import User
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
+
+
+class UserModel(User, BaseModel):
+    pass
 
 
 class TestPydanticUser:
     def test_create_with_required_only(self) -> None:
-        obj = User(username="janedoe", hashed_password="hashed123")
+        obj = UserModel(username="janedoe", hashed_password="hashed123")
         assert obj.username == "janedoe"
         assert obj.hashed_password == "hashed123"
         assert obj.email is None
@@ -15,7 +19,7 @@ class TestPydanticUser:
 
     def test_create_with_all_fields(self) -> None:
         now = datetime.datetime(2024, 1, 15, 12, 0, 0)
-        obj = User(
+        obj = UserModel(
             username="janedoe",
             hashed_password="hashed123",
             email="jane@example.com",
@@ -26,24 +30,24 @@ class TestPydanticUser:
 
     def test_username_required(self) -> None:
         with pytest.raises(ValidationError):
-            User(hashed_password="hashed123")  # type: ignore[call-arg]
+            UserModel(hashed_password="hashed123")  # type: ignore[call-arg]
 
     def test_hashed_password_required(self) -> None:
         with pytest.raises(ValidationError):
-            User(username="janedoe")  # type: ignore[call-arg]
+            UserModel(username="janedoe")  # type: ignore[call-arg]
 
     def test_empty_username_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            User(username="", hashed_password="hashed123")
+            UserModel(username="", hashed_password="hashed123")
 
     def test_username_max_length(self) -> None:
         with pytest.raises(ValidationError):
-            User(username="x" * 256, hashed_password="hashed123")
+            UserModel(username="x" * 256, hashed_password="hashed123")
 
     def test_empty_hashed_password_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            User(username="janedoe", hashed_password="")
+            UserModel(username="janedoe", hashed_password="")
 
     def test_email_max_length(self) -> None:
         with pytest.raises(ValidationError):
-            User(username="janedoe", hashed_password="hashed123", email="x" * 255)
+            UserModel(username="janedoe", hashed_password="hashed123", email="x" * 255)
