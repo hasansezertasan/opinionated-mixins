@@ -50,7 +50,6 @@ dev = [
 types = [
   "mypy>=1.20.1",
   "ruff==0.15.11",
-  "sqlalchemy-stubs>=0.4",
   "types-WTForms>=3.1",
 ]
 
@@ -109,6 +108,11 @@ disallow_any_generics = true
 check_untyped_defs = true
 no_implicit_reexport = true
 disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "opinionated_mixins.contrib.sqlalchemy.*"
+# Declarative mixins use Column() without Mapped[] annotations
+disable_error_code = ["var-annotated"]
 
 
 [tool.coverage.run]
