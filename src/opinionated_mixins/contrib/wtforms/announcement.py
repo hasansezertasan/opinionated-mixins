@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 from opinionated_mixins.enums import AnnouncementCategory
+
 from wtforms import SelectField, StringField, TextAreaField
 from wtforms.validators import DataRequired, Length
 

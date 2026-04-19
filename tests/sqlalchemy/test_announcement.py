@@ -1,11 +1,10 @@
 # SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
 #
 # SPDX-License-Identifier: MIT
-from sqlalchemy import Column, Integer, create_engine
-from sqlalchemy.orm import Session, declarative_base
-
 from opinionated_mixins.contrib.sqlalchemy import Announcement
 from opinionated_mixins.enums import AnnouncementCategory
+from sqlalchemy import Column, Integer, create_engine
+from sqlalchemy.orm import Session, declarative_base
 
 Base = declarative_base()
 

@@ -2,10 +2,9 @@
 #
 # SPDX-License-Identifier: MIT
 import pytest
-from pydantic import ValidationError
-
 from opinionated_mixins.contrib.pydantic import Announcement
 from opinionated_mixins.enums import AnnouncementCategory
+from pydantic import ValidationError
 
 
 class TestPydanticAnnouncement:

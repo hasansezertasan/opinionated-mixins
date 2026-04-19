@@ -2,3 +2,4 @@
 #
 # SPDX-License-Identifier: MIT
 from .announcement import Announcement as Announcement
+from .person import Person as Person

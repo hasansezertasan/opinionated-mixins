@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: MIT
 from opinionated_mixins.enums import AnnouncementCategory
+
 from sqlalchemy import Column, Enum, String, Text
 from sqlalchemy.orm import declarative_mixin
 

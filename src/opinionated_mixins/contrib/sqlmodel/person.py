@@ -1,5 +1,6 @@
 # SPDX-FileCopyrightText: 2024-present hasansezertasan <hasansezertasan@gmail.com>
 #
 # SPDX-License-Identifier: MIT
-from .announcement import Announcement as Announcement
-from .person import Person as Person
+from opinionated_mixins.contrib.sqlalchemy.person import (
+    Person as Person,
+)
