@@ -12,9 +12,9 @@ class _AutoStrEnum(str, enum.Enum):
     @staticmethod
     def _generate_next_value_(
         name: str,
-        start: int,
-        count: int,
-        last_values: list[str],
+        _start: int,
+        _count: int,
+        _last_values: list[str],
     ) -> str:
         return name
 
