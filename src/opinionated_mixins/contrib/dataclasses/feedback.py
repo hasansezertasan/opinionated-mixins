@@ -14,9 +14,13 @@ class Feedback:
 
     subject: Annotated[str, Doc("Subject of the feedback")]
     content: Annotated[str, Doc("Content of the feedback")]
-    category: Annotated[FeedbackCategory, Doc("Category of the feedback")] = dataclasses.field(
-        default=FeedbackCategory.OTHER,
+    category: Annotated[FeedbackCategory, Doc("Category of the feedback")] = (
+        dataclasses.field(
+            default=FeedbackCategory.OTHER,
+        )
     )
-    status: Annotated[FeedbackStatus, Doc("Status of the feedback")] = dataclasses.field(
-        default=FeedbackStatus.PENDING,
+    status: Annotated[FeedbackStatus, Doc("Status of the feedback")] = (
+        dataclasses.field(
+            default=FeedbackStatus.PENDING,
+        )
     )

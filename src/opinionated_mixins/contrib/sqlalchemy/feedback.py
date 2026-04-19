@@ -15,5 +15,9 @@ class Feedback:
 
     subject = Column(String(255), nullable=False, index=True)
     content = Column(Text, nullable=False)
-    category = Column(Enum(FeedbackCategory), nullable=False, default=FeedbackCategory.OTHER)
-    status = Column(Enum(FeedbackStatus), nullable=False, default=FeedbackStatus.PENDING)
+    category = Column(
+        Enum(FeedbackCategory), nullable=False, default=FeedbackCategory.OTHER
+    )
+    status = Column(
+        Enum(FeedbackStatus), nullable=False, default=FeedbackStatus.PENDING
+    )
