@@ -1,79 +1,97 @@
 import enum
 
 
-class AnnouncementCategory(str, enum.Enum):
+class _AutoStrEnum(str, enum.Enum):
+    """Base enum that auto-generates string values from member names.
+
+    On Python <3.11 (no ``StrEnum``), ``auto()`` with ``str, Enum`` produces
+    integers instead of strings. This override ensures ``auto()`` yields the
+    member name as-is (e.g. ``GENERAL`` → ``"GENERAL"``).
+    """
+
+    @staticmethod
+    def _generate_next_value_(
+        name: str,
+        start: int,
+        count: int,
+        last_values: list[str],
+    ) -> str:
+        return name
+
+
+class AnnouncementCategory(_AutoStrEnum):
     """Category of an announcement."""
 
-    GENERAL = "general"
-    INFO = "info"
-    WARNING = "warning"
-    SUCCESS = "success"
-    ERROR = "error"
-    MAINTENANCE = "maintenance"
-    UPDATE = "update"
-    EVENT = "event"
+    GENERAL = enum.auto()
+    INFO = enum.auto()
+    WARNING = enum.auto()
+    SUCCESS = enum.auto()
+    ERROR = enum.auto()
+    MAINTENANCE = enum.auto()
+    UPDATE = enum.auto()
+    EVENT = enum.auto()
 
 
-class TemplateFormat(str, enum.Enum):
+class TemplateFormat(_AutoStrEnum):
     """Format of a template's content."""
 
-    PLAIN = "plain"
-    HTML = "html"
-    MARKDOWN = "markdown"
+    PLAIN = enum.auto()
+    HTML = enum.auto()
+    MARKDOWN = enum.auto()
 
 
-class TemplateType(str, enum.Enum):
+class TemplateType(_AutoStrEnum):
     """Type/purpose of a template."""
 
-    EMAIL = "email"
-    SMS = "sms"
-    PUSH = "push"
-    OTHER = "other"
+    EMAIL = enum.auto()
+    SMS = enum.auto()
+    PUSH = enum.auto()
+    OTHER = enum.auto()
 
 
-class LeadStatus(str, enum.Enum):
+class LeadStatus(_AutoStrEnum):
     """Status of a lead in the sales pipeline."""
 
-    ASSIGNED = "assigned"
-    IN_PROCESS = "in_process"
-    CONVERTED = "converted"
-    RECYCLED = "recycled"
-    CLOSED = "closed"
+    ASSIGNED = enum.auto()
+    IN_PROCESS = enum.auto()
+    CONVERTED = enum.auto()
+    RECYCLED = enum.auto()
+    CLOSED = enum.auto()
 
 
-class LeadSource(str, enum.Enum):
+class LeadSource(_AutoStrEnum):
     """Source channel where a lead originated."""
 
-    CALL = "call"
-    EMAIL = "email"
-    EXISTING_CUSTOMER = "existing_customer"
-    PARTNER = "partner"
-    PUBLIC_RELATIONS = "public_relations"
-    CAMPAIGN = "campaign"
-    OTHER = "other"
+    CALL = enum.auto()
+    EMAIL = enum.auto()
+    EXISTING_CUSTOMER = enum.auto()
+    PARTNER = enum.auto()
+    PUBLIC_RELATIONS = enum.auto()
+    CAMPAIGN = enum.auto()
+    OTHER = enum.auto()
 
 
-class LeadRating(str, enum.Enum):
+class LeadRating(_AutoStrEnum):
     """Temperature rating of a lead."""
 
-    HOT = "hot"
-    WARM = "warm"
-    COLD = "cold"
+    HOT = enum.auto()
+    WARM = enum.auto()
+    COLD = enum.auto()
 
 
-class FeedbackCategory(str, enum.Enum):
+class FeedbackCategory(_AutoStrEnum):
     """Category of a feedback submission."""
 
-    BUG = "bug"
-    FEATURE = "feature"
-    IMPROVEMENT = "improvement"
-    OTHER = "other"
+    BUG = enum.auto()
+    FEATURE = enum.auto()
+    IMPROVEMENT = enum.auto()
+    OTHER = enum.auto()
 
 
-class FeedbackStatus(str, enum.Enum):
+class FeedbackStatus(_AutoStrEnum):
     """Status of a feedback submission."""
 
-    PENDING = "pending"
-    REVIEWED = "reviewed"
-    RESOLVED = "resolved"
-    DISMISSED = "dismissed"
+    PENDING = enum.auto()
+    REVIEWED = enum.auto()
+    RESOLVED = enum.auto()
+    DISMISSED = enum.auto()

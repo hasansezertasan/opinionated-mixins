@@ -43,9 +43,9 @@ class TestWTFormsLead:
             data={
                 "title": "Dr.",
                 "job_title": "CTO",
-                "status": "assigned",
-                "source": "email",
-                "rating": "hot",
+                "status": "ASSIGNED",
+                "source": "EMAIL",
+                "rating": "HOT",
             },
         )
         assert form.validate()

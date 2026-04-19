@@ -40,8 +40,8 @@ class TestWTFormsFeedback:
             data={
                 "subject": "Bug report",
                 "content": "Something broke",
-                "category": "bug",
-                "status": "pending",
+                "category": "BUG",
+                "status": "PENDING",
             },
         )
         assert form.validate()

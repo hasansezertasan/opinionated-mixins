@@ -40,7 +40,7 @@ class TestPydanticAnnouncement:
             AnnouncementModel(title="x" * 256, content="Body")
 
     def test_category_from_string(self) -> None:
-        obj = AnnouncementModel(title="Test", content="Body", category="warning")  # type: ignore[arg-type]
+        obj = AnnouncementModel(title="Test", content="Body", category="WARNING")  # type: ignore[arg-type]
         assert obj.category == AnnouncementCategory.WARNING
 
     def test_invalid_category_rejected(self) -> None:

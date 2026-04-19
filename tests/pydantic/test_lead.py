@@ -49,7 +49,7 @@ class TestPydanticLead:
             LeadModel(title="x" * 256)
 
     def test_status_from_string(self) -> None:
-        obj = LeadModel(status="assigned")
+        obj = LeadModel(status="ASSIGNED")
         assert obj.status == LeadStatus.ASSIGNED
 
     def test_invalid_status_rejected(self) -> None:

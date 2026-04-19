@@ -43,7 +43,7 @@ class TestPydanticFeedback:
             FeedbackModel(subject="x" * 256, content="Body")
 
     def test_category_from_string(self) -> None:
-        obj = FeedbackModel(subject="Test", content="Body", category="bug")  # type: ignore[arg-type]
+        obj = FeedbackModel(subject="Test", content="Body", category="BUG")  # type: ignore[arg-type]
         assert obj.category == FeedbackCategory.BUG
 
     def test_invalid_category_rejected(self) -> None:
@@ -51,7 +51,7 @@ class TestPydanticFeedback:
             FeedbackModel(subject="Test", content="Body", category="invalid")  # type: ignore[arg-type]
 
     def test_status_from_string(self) -> None:
-        obj = FeedbackModel(subject="Test", content="Body", status="reviewed")  # type: ignore[arg-type]
+        obj = FeedbackModel(subject="Test", content="Body", status="REVIEWED")  # type: ignore[arg-type]
         assert obj.status == FeedbackStatus.REVIEWED
 
     def test_invalid_status_rejected(self) -> None:
