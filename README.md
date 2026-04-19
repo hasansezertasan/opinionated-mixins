@@ -46,9 +46,10 @@ class MyAnnouncement(Base, Announcement):
 Switch to Pydantic? Same fields, same names:
 
 ```python
+from pydantic import BaseModel
 from opinionated_mixins.contrib.pydantic import Announcement
 
-class MyAnnouncement(Announcement):
+class MyAnnouncement(Announcement, BaseModel):
     id: int
     # Same: title, content, category — with Pydantic validation
 ```
@@ -59,7 +60,7 @@ class MyAnnouncement(Announcement):
 | --------------- | ----------------------------- | ----------------------------- |
 | **SQLAlchemy**  | SQL ORM                       | Declarative model mixins      |
 | **SQLModel**    | SQL ORM (Pydantic + SA)       | Re-exports SQLAlchemy mixins  |
-| **Pydantic**    | Data validation               | BaseModel mixins with `Field` |
+| **Pydantic**    | Data validation               | Plain mixins with `Field`, compose with `BaseModel` |
 | **MongoEngine** | MongoDB ODM                   | Document field mixins         |
 | **ODMantic**    | MongoDB async ODM             | Model field mixins            |
 | **WTForms**     | Form validation               | Form field mixins             |
@@ -67,11 +68,16 @@ class MyAnnouncement(Announcement):
 
 ## Available Mixins
 
-| Mixin | Fields | Shared Enum |
-| ----- | ------ | ----------- |
+| Mixin | Fields | Shared Enums |
+| ----- | ------ | ------------ |
 | **Announcement** | `title`, `content`, `category` | `AnnouncementCategory` (8 values) |
+| **Feedback** | `subject`, `content`, `category`, `status` | `FeedbackCategory` (4), `FeedbackStatus` (4) |
+| **Lead** | `title`, `salutation`, `job_title`, `company_name`, `website`, `linkedin_url`, `status`, `source`, `industry`, `rating`, `opportunity_amount`, `currency`, `probability`, `close_date`, `last_contacted`, `next_follow_up`, `description`, `is_active` | `LeadStatus` (5), `LeadSource` (7), `LeadRating` (3) |
+| **Person** | `first_name`, `last_name`, `middle_name`, `phone_number`, `email`, `street_address`, `postal_code`, `city`, `country`, `date_of_birth`, `bio` | — |
+| **Template** | `name`, `content`, `format`, `type` | `TemplateFormat` (3), `TemplateType` (4) |
+| **User** | `username`, `hashed_password`, `email`, `date_email_verified` | — |
 
-More coming — see [open proposals](https://github.com/hasansezertasan/opinionated-mixins/issues?q=is%3Aopen+label%3Amodel-proposal).
+See [open proposals](https://github.com/hasansezertasan/opinionated-mixins/issues?q=is%3Aopen+label%3Amodel-proposal) for upcoming mixins.
 
 ## Installation
 
