@@ -8,7 +8,6 @@ See: https://github.com/hasansezertasan/opinionated-mixins/issues/32
 
 from __future__ import annotations
 
-import dataclasses
 from typing import TYPE_CHECKING
 
 import pytest
@@ -18,16 +17,10 @@ if TYPE_CHECKING:
 from mongoengine.base.fields import BaseField
 from odmantic.field import ODMFieldInfo
 from opinionated_mixins.contrib import (
-    dataclasses as dc_contrib,
-)
-from opinionated_mixins.contrib import (
     mongoengine as me_contrib,
 )
 from opinionated_mixins.contrib import (
     odmantic as od_contrib,
-)
-from opinionated_mixins.contrib import (
-    pydantic as pd_contrib,
 )
 from opinionated_mixins.contrib import (
     sqlalchemy as sa_contrib,
@@ -35,23 +28,11 @@ from opinionated_mixins.contrib import (
 from opinionated_mixins.contrib import (
     sqlmodel as sm_contrib,
 )
-from opinionated_mixins.contrib import (
-    wtforms as wt_contrib,
-)
-from pydantic.fields import FieldInfo as PydanticFieldInfo
 from sqlalchemy import Column
-from wtforms.fields.core import UnboundField as WTUnboundField
 
 MIXIN_NAMES = ["Announcement", "Feedback", "Lead", "Person", "Template", "User"]
 
-REFERENCE_FRAMEWORK = "pydantic"
-
-# Fields intentionally excluded from specific frameworks.
-# Key: (framework, mixin), Value: set of field names to ignore.
-EXPECTED_EXCLUSIONS: dict[tuple[str, str], set[str]] = {
-    # WTForms collects raw input; password hashing is app-level concern.
-    ("wtforms", "User"): {"hashed_password"},
-}
+REFERENCE_FRAMEWORK = "sqlalchemy"
 
 
 def _isinstance_extractor(field_type: type) -> Callable[[type], set[str]]:
@@ -67,18 +48,11 @@ def _isinstance_extractor(field_type: type) -> Callable[[type], set[str]]:
     return extract
 
 
-def _dataclass_extractor(mixin_cls: type) -> set[str]:
-    return {f.name for f in dataclasses.fields(mixin_cls)}
-
-
 FRAMEWORKS: dict[str, tuple[object, Callable[[type], set[str]]]] = {
-    "pydantic": (pd_contrib, _isinstance_extractor(PydanticFieldInfo)),
     "sqlalchemy": (sa_contrib, _isinstance_extractor(Column)),
     "sqlmodel": (sm_contrib, _isinstance_extractor(Column)),
     "mongoengine": (me_contrib, _isinstance_extractor(BaseField)),
     "odmantic": (od_contrib, _isinstance_extractor(ODMFieldInfo)),
-    "wtforms": (wt_contrib, _isinstance_extractor(WTUnboundField)),
-    "dataclasses": (dc_contrib, _dataclass_extractor),
 }
 
 
@@ -95,8 +69,7 @@ def test_all_frameworks_have_same_fields(mixin_name: str) -> None:
     for fw_name, fields in fields_by_framework.items():
         if fw_name == REFERENCE_FRAMEWORK:
             continue
-        excluded = EXPECTED_EXCLUSIONS.get((fw_name, mixin_name), set())
-        missing = reference_fields - fields - excluded
+        missing = reference_fields - fields
         extra = fields - reference_fields
         assert not missing, (
             f"{mixin_name}: {fw_name} missing vs {REFERENCE_FRAMEWORK}: {missing}"
@@ -111,18 +84,3 @@ def test_all_frameworks_export_mixin(mixin_name: str) -> None:
     """Every framework module must export every mixin."""
     for fw_name, (module, _) in FRAMEWORKS.items():
         assert hasattr(module, mixin_name), f"{fw_name} does not export {mixin_name}"
-
-
-def test_expected_exclusions_are_valid() -> None:
-    """Excluded fields must exist in the reference framework's mixin."""
-    ref_module = FRAMEWORKS[REFERENCE_FRAMEWORK][0]
-    ref_extractor = FRAMEWORKS[REFERENCE_FRAMEWORK][1]
-    for (fw_name, mixin_name), excluded_fields in EXPECTED_EXCLUSIONS.items():
-        assert fw_name in FRAMEWORKS, f"Unknown framework in exclusions: {fw_name}"
-        assert mixin_name in MIXIN_NAMES, f"Unknown mixin in exclusions: {mixin_name}"
-        ref_cls = getattr(ref_module, mixin_name)
-        ref_fields = ref_extractor(ref_cls)
-        stale = excluded_fields - ref_fields
-        assert not stale, (
-            f"Stale exclusion: {stale} not in {REFERENCE_FRAMEWORK}.{mixin_name}"
-        )

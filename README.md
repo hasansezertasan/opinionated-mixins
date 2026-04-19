@@ -10,7 +10,7 @@
 [![Downloads/Month](https://pepy.tech/badge/opinionated-mixins/month)](https://pepy.tech/project/opinionated-mixins)
 [![Downloads/Week](https://pepy.tech/badge/opinionated-mixins/week)](https://pepy.tech/project/opinionated-mixins)
 
-Opinionated, consensus-driven model mixins — timestamps, feedback, announcements — consistent across Python ORMs and data frameworks.
+Opinionated, consensus-driven model mixins — timestamps, feedback, announcements — consistent across Python storage frameworks (ORMs & ODMs).
 
 ## Why?
 
@@ -43,15 +43,14 @@ class MyAnnouncement(Base, Announcement):
     # Gets: title (str, indexed), content (text), category (enum)
 ```
 
-Switch to Pydantic? Same fields, same names:
+Switch to MongoDB? Same fields, same names:
 
 ```python
-from pydantic import BaseModel
-from opinionated_mixins.contrib.pydantic import Announcement
+from opinionated_mixins.contrib.mongoengine import Announcement
 
-class MyAnnouncement(Announcement, BaseModel):
-    id: int
-    # Same: title, content, category — with Pydantic validation
+class MyAnnouncement(Document, Announcement):
+    pass
+    # Same: title, content, category — with MongoEngine field types
 ```
 
 ## Supported Frameworks
@@ -60,11 +59,8 @@ class MyAnnouncement(Announcement, BaseModel):
 | --------------- | ----------------------------- | ----------------------------- |
 | **SQLAlchemy**  | SQL ORM                       | Declarative model mixins      |
 | **SQLModel**    | SQL ORM (Pydantic + SA)       | Re-exports SQLAlchemy mixins  |
-| **Pydantic**    | Data validation               | Plain mixins with `Field`, compose with `BaseModel` |
 | **MongoEngine** | MongoDB ODM                   | Document field mixins         |
 | **ODMantic**    | MongoDB async ODM             | Model field mixins            |
-| **WTForms**     | Form validation               | Form field mixins             |
-| **dataclasses** | Standard library              | `@dataclass` field mixins     |
 
 ## Available Mixins
 
@@ -85,7 +81,7 @@ See [open proposals](https://github.com/hasansezertasan/opinionated-mixins/issue
 pip install opinionated-mixins
 ```
 
-Zero runtime dependencies. Framework packages (SQLAlchemy, Pydantic, etc.) are your responsibility — you already have them in your project.
+Zero runtime dependencies. Framework packages (SQLAlchemy, MongoEngine, etc.) are your responsibility — you already have them in your project.
 
 ## Development
 

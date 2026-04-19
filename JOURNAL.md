@@ -6,15 +6,12 @@
 
 **opinionated-mixins** is an early-stage Python library (v0.0.1) that provides reusable mixin classes for common model patterns across multiple Python ORMs and data frameworks.
 
-### Supported Frameworks (via contrib modules)
+### Supported Frameworks (storage-layer only, via contrib modules)
 
-- Pydantic (data validation)
 - SQLAlchemy (SQL ORM)
-- SQLModel (Pydantic + SQLAlchemy)
+- SQLModel (Pydantic + SQLAlchemy, re-exports SQLAlchemy)
 - MongoEngine (MongoDB ODM)
 - ODMantic (MongoDB async ODM)
-- WTForms (form validation)
-- dataclasses (stdlib)
 
 ### Current State
 

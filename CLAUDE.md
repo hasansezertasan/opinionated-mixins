@@ -46,7 +46,7 @@ This project ships **consensus-based defaults**. Field names, enum values, and b
 
 ## Architecture
 
-**opinionated-mixins** provides reusable mixin classes for common model patterns (timestamps, UUIDs, soft-delete, etc.) with consistent interfaces across multiple Python ORMs and data frameworks.
+**opinionated-mixins** provides reusable mixin classes for common model patterns (timestamps, UUIDs, soft-delete, etc.) with consistent interfaces across Python storage frameworks (ORMs & ODMs).
 
 ### Source Layout
 
@@ -56,13 +56,10 @@ src/opinionated_mixins/
 ├── __about__.py         # Version (single source of truth for hatchling)
 ├── enums.py             # Shared enums used across all contrib modules
 └── contrib/             # Framework-specific implementations
-    ├── pydantic/        # Pydantic mixins
     ├── sqlalchemy/      # SQLAlchemy declarative mixins
     ├── sqlmodel/        # SQLModel mixins (re-exports from sqlalchemy)
     ├── mongoengine/     # MongoEngine Document mixins
-    ├── odmantic/        # ODMantic Model mixins
-    ├── wtforms/         # WTForms mixins
-    └── dataclasses/     # stdlib dataclass mixins
+    └── odmantic/        # ODMantic Model mixins
 ```
 
 ### What Is a Mixin
@@ -96,11 +93,8 @@ This applies to **all** contrib modules. Every mixin class must be a plain class
 Each framework expresses the same fields differently:
 
 - **SQLAlchemy**: `Column(String(255), nullable=False, index=True)`, uses `@declarative_mixin` and `__abstract__ = True`
-- **Pydantic**: `Field(..., min_length=1, max_length=255)` — plain class, user composes with `BaseModel`
 - **MongoEngine**: `StringField(required=True, max_length=255)` with `choices` for enums, uses `.value` for enum defaults
 - **ODMantic**: `Field(...)` similar to Pydantic syntax
-- **WTForms**: `StringField(label="...", validators=[...])` with `SelectField` for enums, uses `.value` for defaults/choices
-- **dataclasses**: `Annotated[str, Doc("...")]` with `dataclasses.field(default=...)`
 
 ### Contributing New Mixins
 

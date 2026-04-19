@@ -9,7 +9,7 @@ assignees: ''
 
 **Contrib**
 Which contrib(s) and version(s) does this bug occurs?
-Pydantic, SQLAlchemy, MongoEngine, SQLModel.
+SQLAlchemy, SQLModel, MongoEngine, ODMantic.
 
 **Describe the bug**
 A clear and concise description of what the bug is.
