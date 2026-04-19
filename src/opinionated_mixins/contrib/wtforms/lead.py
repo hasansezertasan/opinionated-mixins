@@ -1,3 +1,5 @@
+from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
+
 from wtforms import (
     BooleanField,
     DateField,
@@ -8,8 +10,6 @@ from wtforms import (
     TextAreaField,
 )
 from wtforms.validators import Length, NumberRange, Optional
-
-from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
 
 
 class Lead:

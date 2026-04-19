@@ -1,9 +1,9 @@
 import datetime
 from decimal import Decimal
 
-from odmantic import Field
-
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
+
+from odmantic import Field
 
 
 class Lead:
