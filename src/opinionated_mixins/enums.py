@@ -15,3 +15,21 @@ class AnnouncementCategory(str, enum.Enum):
     MAINTENANCE = "maintenance"
     UPDATE = "update"
     EVENT = "event"
+
+
+class FeedbackCategory(str, enum.Enum):
+    """Category of a feedback submission."""
+
+    BUG = "bug"
+    FEATURE = "feature"
+    IMPROVEMENT = "improvement"
+    OTHER = "other"
+
+
+class FeedbackStatus(str, enum.Enum):
+    """Status of a feedback submission."""
+
+    PENDING = "pending"
+    REVIEWED = "reviewed"
+    RESOLVED = "resolved"
+    DISMISSED = "dismissed"
