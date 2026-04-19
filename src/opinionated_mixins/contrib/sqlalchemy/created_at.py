@@ -10,7 +10,7 @@ class CreatedAt:
 
     __abstract__ = True
     created_at = Column(
-        DateTime,
+        DateTime(timezone=True),
         nullable=False,
         default=lambda: datetime.datetime.now(datetime.timezone.utc),
     )
