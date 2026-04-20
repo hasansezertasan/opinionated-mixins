@@ -12,7 +12,7 @@ from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
 
 pytestmark = pytest.mark.xfail(
     reason="ODMantic metaclass does not process annotations from mixin parents. "
-    "See: https://github.com/hasansezertasan/opinionated-mixins/issues/TODO",
+    "See: https://github.com/hasansezertasan/opinionated-mixins/issues/39",
     strict=True,
 )
 
