@@ -13,4 +13,6 @@ def _mongomock_connection():
         mongo_client_class=mongomock.MongoClient,
     )
     yield conn
+    # Drop all collections to prevent data leaking between tests
+    conn.drop_database("testdb")
     mongoengine.disconnect_all()
