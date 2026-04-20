@@ -1,7 +1,6 @@
 """Integration tests for MongoEngine Feedback mixin."""
 
 from mongoengine import Document
-
 from opinionated_mixins.contrib.mongoengine import Feedback
 from opinionated_mixins.enums import FeedbackCategory, FeedbackStatus
 

@@ -4,9 +4,7 @@ import datetime
 
 import pytest
 from odmantic import Model
-
 from opinionated_mixins.contrib.odmantic import Person
-
 
 pytestmark = pytest.mark.xfail(
     reason="ODMantic metaclass does not process annotations from mixin parents. "

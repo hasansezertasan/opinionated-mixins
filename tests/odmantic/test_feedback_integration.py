@@ -2,10 +2,8 @@
 
 import pytest
 from odmantic import Model
-
 from opinionated_mixins.contrib.odmantic import Feedback
 from opinionated_mixins.enums import FeedbackCategory, FeedbackStatus
-
 
 pytestmark = pytest.mark.xfail(
     reason="ODMantic metaclass does not process annotations from mixin parents. "

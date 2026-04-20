@@ -3,7 +3,6 @@
 import datetime
 
 from mongoengine import Document, StringField
-
 from opinionated_mixins.contrib.mongoengine import UpdatedAt
 
 
@@ -30,11 +29,14 @@ class TestUpdatedAtIntegration:
         obj.save()
         loaded = MyModel.objects.first()
         now = datetime.datetime.now(datetime.timezone.utc)
-        assert (now - loaded.updated_at.replace(tzinfo=datetime.timezone.utc)).total_seconds() < 5
+        utc = datetime.timezone.utc
+        delta = now - loaded.updated_at.replace(tzinfo=utc)
+        assert delta.total_seconds() < 5
 
     def test_updated_at_survives_roundtrip(self) -> None:
         obj = MyModel(name="test")
         obj.save()
         loaded = MyModel.objects.first()
         # mongomock truncates microseconds; compare up to millisecond precision
-        assert abs((loaded.updated_at - obj.updated_at.replace(tzinfo=None)).total_seconds()) < 0.01
+        diff = loaded.updated_at - obj.updated_at.replace(tzinfo=None)
+        assert abs(diff.total_seconds()) < 0.01

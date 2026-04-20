@@ -3,7 +3,6 @@
 import datetime
 
 from mongoengine import Document
-
 from opinionated_mixins.contrib.mongoengine import Person
 
 

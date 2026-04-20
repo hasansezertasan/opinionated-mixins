@@ -1,7 +1,6 @@
 """Integration tests for MongoEngine IsActive mixin."""
 
 from mongoengine import Document, StringField
-
 from opinionated_mixins.contrib.mongoengine import IsActive
 
 

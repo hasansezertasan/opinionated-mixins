@@ -4,9 +4,7 @@ import datetime
 
 import pytest
 from odmantic import Field, Model
-
 from opinionated_mixins.contrib.odmantic import CreatedAt
-
 
 pytestmark = pytest.mark.xfail(
     reason="ODMantic metaclass does not process annotations from mixin parents. "
@@ -38,7 +36,8 @@ class TestCreatedAtIntegration:
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyModel)
         now = datetime.datetime.now(datetime.timezone.utc)
-        delta = (now - loaded.created_at.replace(tzinfo=datetime.timezone.utc)).total_seconds()
+        utc = datetime.timezone.utc
+        delta = (now - loaded.created_at.replace(tzinfo=utc)).total_seconds()
         assert delta < 5
 
     async def test_created_at_survives_roundtrip(self, mock_engine) -> None:
@@ -46,4 +45,5 @@ class TestCreatedAtIntegration:
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyModel)
         # mongomock may truncate microseconds; compare up to millisecond precision
-        assert abs((loaded.created_at - obj.created_at.replace(tzinfo=None)).total_seconds()) < 0.01
+        diff = loaded.created_at - obj.created_at.replace(tzinfo=None)
+        assert abs(diff.total_seconds()) < 0.01

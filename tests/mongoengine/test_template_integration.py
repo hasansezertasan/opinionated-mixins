@@ -1,7 +1,6 @@
 """Integration tests for MongoEngine Template mixin."""
 
 from mongoengine import Document
-
 from opinionated_mixins.contrib.mongoengine import Template
 from opinionated_mixins.enums import TemplateFormat, TemplateType
 

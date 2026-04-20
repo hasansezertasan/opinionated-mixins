@@ -4,7 +4,6 @@ import datetime
 from decimal import Decimal
 
 from mongoengine import Document
-
 from opinionated_mixins.contrib.mongoengine import Lead
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
 

@@ -1,7 +1,6 @@
 """Integration tests for MongoEngine Announcement mixin."""
 
 from mongoengine import Document
-
 from opinionated_mixins.contrib.mongoengine import Announcement
 from opinionated_mixins.enums import AnnouncementCategory
 

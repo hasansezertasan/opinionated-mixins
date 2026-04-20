@@ -2,10 +2,8 @@
 
 import pytest
 from odmantic import Model
-
 from opinionated_mixins.contrib.odmantic import Template
 from opinionated_mixins.enums import TemplateFormat, TemplateType
-
 
 pytestmark = pytest.mark.xfail(
     reason="ODMantic metaclass does not process annotations from mixin parents. "

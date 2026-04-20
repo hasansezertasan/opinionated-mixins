@@ -5,10 +5,8 @@ from decimal import Decimal
 
 import pytest
 from odmantic import Model
-
 from opinionated_mixins.contrib.odmantic import Lead
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
-
 
 pytestmark = pytest.mark.xfail(
     reason="ODMantic metaclass does not process annotations from mixin parents. "

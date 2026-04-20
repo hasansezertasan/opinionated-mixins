@@ -2,9 +2,7 @@
 
 import pytest
 from odmantic import Field, Model
-
 from opinionated_mixins.contrib.odmantic import IsActive
-
 
 pytestmark = pytest.mark.xfail(
     reason="ODMantic metaclass does not process annotations from mixin parents. "
