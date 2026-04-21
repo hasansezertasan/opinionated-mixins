@@ -87,6 +87,16 @@ ignore = [
   "S105",    # Possible hardcoded password (test fixtures)
   "S106",    # Possible hardcoded password in argument (test fixtures)
 ]
+"examples/**/*.py" = [
+  "D101",    # Missing docstring in public class (model definitions)
+  "D106",    # Missing docstring in public nested class (Meta)
+  "INP001",  # Implicit namespace package (examples aren't packages)
+  "PLC0415", # Import not at top-level (conditional imports like mongomock)
+  "RUF012",  # Mutable class attribute without ClassVar (model columns)
+  "S105",    # Possible hardcoded password (demo data)
+  "S106",    # Possible hardcoded password in argument (demo data)
+  "T201",    # print() usage (example scripts)
+]
 "src/opinionated_mixins/contrib/sqlmodel/*.py" = [
   "PLC0414", # Import alias does not rename (intentional re-exports)
 ]
