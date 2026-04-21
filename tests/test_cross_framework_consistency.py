@@ -31,11 +31,13 @@ from opinionated_mixins.contrib import (
 from sqlalchemy import Column
 
 MIXIN_NAMES = [
+    "Activity",
     "Announcement",
     "CreatedAt",
     "Feedback",
     "IsActive",
     "Lead",
+    "Notification",
     "Person",
     "Template",
     "UpdatedAt",
