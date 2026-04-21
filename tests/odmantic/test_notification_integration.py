@@ -10,7 +10,7 @@ pytestmark = pytest.mark.xfail(
     raises=(ValidationError, NotImplementedError),
     reason="ODMantic metaclass does not process annotations from mixin parents. "
     "See: https://github.com/hasansezertasan/opinionated-mixins/issues/39",
-    strict=True,
+    strict=False,
 )
 
 

@@ -18,6 +18,7 @@ class Notification:
 
     notification_type: str = Field(
         ...,
+        max_length=255,
         description=(
             "Dot-notation type identifier (e.g. 'comment.reply', 'order.shipped')"
         ),

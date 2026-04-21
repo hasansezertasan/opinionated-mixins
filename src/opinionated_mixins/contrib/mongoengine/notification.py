@@ -21,6 +21,7 @@ class Notification:
     notification_type = StringField(
         required=True,
         max_length=255,
+        index=True,
         help_text=(
             "Dot-notation type identifier (e.g. 'comment.reply', 'order.shipped')"
         ),
@@ -29,6 +30,7 @@ class Notification:
         required=True,
         default=NotificationLevel.INFO.value,
         choices=[level.value for level in NotificationLevel],
+        index=True,
         help_text="Severity/criticality level of notification",
     )
     title = StringField(
@@ -44,10 +46,12 @@ class Notification:
     )
     actor_type = StringField(
         max_length=255,
+        index=True,
         help_text="Polymorphic type of entity that triggered notification",
     )
     actor_id = StringField(
         max_length=255,
+        index=True,
         help_text="Polymorphic ID of entity that triggered notification",
     )
     action_url = StringField(
@@ -56,19 +60,24 @@ class Notification:
     )
     group_key = StringField(
         max_length=255,
+        index=True,
         help_text="Grouping key for batching similar notifications",
     )
     seen_at = DateTimeField(
+        index=True,
         help_text="When notification appeared in user's feed; None = unseen",
     )
     read_at = DateTimeField(
+        index=True,
         help_text="When user clicked/opened notification; None = unread",
     )
     archived_at = DateTimeField(
+        index=True,
         help_text="When user archived/dismissed notification; None = not archived",
     )
     created_at = DateTimeField(
         required=True,
+        index=True,
         default=lambda: datetime.datetime.now(datetime.timezone.utc),
         help_text="When notification was created",
     )
