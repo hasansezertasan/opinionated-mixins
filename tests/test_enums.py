@@ -3,6 +3,7 @@ from opinionated_mixins.enums import (
     LeadRating,
     LeadSource,
     LeadStatus,
+    NotificationLevel,
     TemplateFormat,
     TemplateType,
 )
@@ -101,3 +102,16 @@ class TestTemplateType:
 
     def test_lookup_by_value(self) -> None:
         assert TemplateType("PUSH") is TemplateType.PUSH
+
+
+class TestNotificationLevel:
+    def test_values(self) -> None:
+        expected = ["INFO", "SUCCESS", "WARNING", "ERROR", "CRITICAL"]
+        assert [level.value for level in NotificationLevel] == expected
+
+    def test_str_mixin(self) -> None:
+        assert NotificationLevel.INFO == "INFO"
+        assert isinstance(NotificationLevel.WARNING, str)
+
+    def test_lookup_by_value(self) -> None:
+        assert NotificationLevel("ERROR") is NotificationLevel.ERROR
