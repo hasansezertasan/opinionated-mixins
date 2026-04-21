@@ -20,6 +20,7 @@ class Notification:
 
     notification_type = StringField(
         required=True,
+        max_length=255,
         help_text=(
             "Dot-notation type identifier (e.g. 'comment.reply', 'order.shipped')"
         ),

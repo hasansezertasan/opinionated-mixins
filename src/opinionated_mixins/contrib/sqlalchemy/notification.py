@@ -45,7 +45,11 @@ class Notification:
     data = Column(
         JSON,
         nullable=True,
-        doc="Arbitrary JSON payload for extra context",
+        doc=(
+            "Arbitrary JSON payload for extra context. "
+            "Write-once: set at creation. To update, reassign the entire object "
+            "(in-place dict mutations are not tracked by SQLAlchemy)."
+        ),
     )
     actor_type = Column(
         String(255),
