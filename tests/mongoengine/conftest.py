@@ -8,11 +8,11 @@ import pytest
 @pytest.fixture(autouse=True)
 def _mongomock_connection():
     """Connect MongoEngine to mongomock for every test."""
-    conn = mongoengine.connect(
+    client = mongoengine.connect(
         "testdb",
         mongo_client_class=mongomock.MongoClient,
     )
-    yield conn
+    yield client
     # Drop all collections to prevent data leaking between tests
-    conn.drop_database("testdb")
+    client.drop_database("testdb")
     mongoengine.disconnect_all()

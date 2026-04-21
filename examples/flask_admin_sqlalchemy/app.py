@@ -36,7 +36,7 @@ from opinionated_mixins.enums import (
     TemplateType,
 )
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, Session, scoped_session, sessionmaker
 
 # ---------------------------------------------------------------------------
 # Database setup
@@ -272,20 +272,19 @@ def create_app() -> Flask:
 
     engine = create_engine("sqlite:///demo.db")
     Base.metadata.create_all(engine)
-    SessionLocal = sessionmaker(bind=engine)  # noqa: N806
+    session_factory = sessionmaker(bind=engine)
+    session = scoped_session(session_factory)
 
-    with SessionLocal() as session:
-        seed(session)
+    with session_factory() as seed_session:
+        seed(seed_session)
 
     admin = Admin(app, name="Opinionated Mixins", template_mode="bootstrap4")
-    admin.add_view(
-        AnnouncementAdmin(AnnouncementModel, SessionLocal(), name="Announcements"),
-    )
-    admin.add_view(FeedbackAdmin(FeedbackModel, SessionLocal(), name="Feedback"))
-    admin.add_view(TemplateAdmin(TemplateModel, SessionLocal(), name="Templates"))
-    admin.add_view(LeadAdmin(LeadModel, SessionLocal(), name="Leads"))
-    admin.add_view(PersonAdmin(PersonModel, SessionLocal(), name="Persons"))
-    admin.add_view(UserAdmin(UserModel, SessionLocal(), name="Users"))
+    admin.add_view(AnnouncementAdmin(AnnouncementModel, session, name="Announcements"))
+    admin.add_view(FeedbackAdmin(FeedbackModel, session, name="Feedback"))
+    admin.add_view(TemplateAdmin(TemplateModel, session, name="Templates"))
+    admin.add_view(LeadAdmin(LeadModel, session, name="Leads"))
+    admin.add_view(PersonAdmin(PersonModel, session, name="Persons"))
+    admin.add_view(UserAdmin(UserModel, session, name="Users"))
 
     return app
 

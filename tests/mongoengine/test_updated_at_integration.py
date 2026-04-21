@@ -29,8 +29,7 @@ class TestUpdatedAtIntegration:
         obj.save()
         loaded = MyModel.objects.first()
         now = datetime.datetime.now(datetime.timezone.utc)
-        utc = datetime.timezone.utc
-        delta = now - loaded.updated_at.replace(tzinfo=utc)
+        delta = now - loaded.updated_at.replace(tzinfo=datetime.timezone.utc)
         assert delta.total_seconds() < 5
 
     def test_updated_at_survives_roundtrip(self) -> None:
@@ -40,3 +39,20 @@ class TestUpdatedAtIntegration:
         # mongomock truncates microseconds; compare up to millisecond precision
         diff = loaded.updated_at - obj.updated_at.replace(tzinfo=None)
         assert abs(diff.total_seconds()) < 0.01
+
+    def test_updated_at_can_be_manually_refreshed(self) -> None:
+        obj = MyModel(name="test")
+        obj.save()
+        first_loaded = MyModel.objects.first()
+        first_ts = first_loaded.updated_at
+        # Mixin provides the field; consumer is responsible for updating it
+        import time
+
+        time.sleep(0.01)
+        obj.updated_at = datetime.datetime.now(datetime.timezone.utc)
+        obj.name = "changed"
+        obj.save()
+        loaded = MyModel.objects.first()
+        assert loaded.name == "changed"
+        # Both timestamps come from mongomock with same truncation
+        assert loaded.updated_at >= first_ts
