@@ -4,6 +4,7 @@ from .feedback import Feedback as Feedback
 from .integer_id import IntegerID as IntegerID
 from .is_active import IsActive as IsActive
 from .lead import Lead as Lead
+from .notification import Notification as Notification
 from .person import Person as Person
 from .template import Template as Template
 from .updated_at import UpdatedAt as UpdatedAt

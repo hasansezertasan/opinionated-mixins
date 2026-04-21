@@ -95,3 +95,13 @@ class FeedbackStatus(_AutoStrEnum):
     REVIEWED = enum.auto()
     RESOLVED = enum.auto()
     DISMISSED = enum.auto()
+
+
+class NotificationLevel(_AutoStrEnum):
+    """Severity/criticality level of a notification."""
+
+    INFO = enum.auto()
+    SUCCESS = enum.auto()
+    WARNING = enum.auto()
+    ERROR = enum.auto()
+    CRITICAL = enum.auto()
