@@ -35,8 +35,8 @@ class Activity:
         nullable=True,
         doc=(
             "Arbitrary JSON payload for extra context. "
-            "Write-once: set at creation. To update, reassign the entire object "
-            "(in-place dict mutations are not tracked by SQLAlchemy)."
+            "In-place dict mutations are not tracked by SQLAlchemy; "
+            "reassign the entire object to trigger change detection."
         ),
     )
     actor_type = Column(
