@@ -28,6 +28,7 @@ class Activity:
         help_text="Human-readable summary of the activity",
     )
     data = DictField(
+        default=None,
         help_text="Arbitrary JSON payload for extra context",
     )
     actor_type = StringField(
