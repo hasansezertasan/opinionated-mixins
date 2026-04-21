@@ -1,0 +1,18 @@
+"""Shared fixtures for MongoEngine integration tests."""
+
+import mongoengine
+import mongomock
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def _mongomock_connection():
+    """Connect MongoEngine to mongomock for every test."""
+    client = mongoengine.connect(
+        "testdb",
+        mongo_client_class=mongomock.MongoClient,
+    )
+    yield client
+    # Drop all collections to prevent data leaking between tests
+    client.drop_database("testdb")
+    mongoengine.disconnect_all()
