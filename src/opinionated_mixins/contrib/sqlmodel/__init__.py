@@ -1,3 +1,4 @@
+from .activity import Activity as Activity
 from .announcement import Announcement as Announcement
 from .created_at import CreatedAt as CreatedAt
 from .feedback import Feedback as Feedback
