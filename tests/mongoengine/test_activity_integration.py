@@ -43,6 +43,7 @@ class TestActivityIntegration:
         assert loaded.target_id is None
         assert loaded.action_object_type is None
         assert loaded.action_object_id is None
+        assert loaded.data is None
 
     def test_public_defaults_true(self) -> None:
         obj = MyActivity(
