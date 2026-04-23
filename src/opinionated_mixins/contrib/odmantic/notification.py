@@ -40,13 +40,13 @@ class Notification:
         default=None,
         description="Arbitrary JSON payload for extra context",
     )
-    actor_type: str | None = Field(
-        default=None,
+    actor_type: str = Field(
+        ...,
         max_length=255,
         description="Polymorphic type of entity that triggered notification",
     )
-    actor_id: str | None = Field(
-        default=None,
+    actor_id: str = Field(
+        ...,
         max_length=255,
         description="Polymorphic ID of entity that triggered notification",
     )

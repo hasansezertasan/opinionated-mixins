@@ -45,11 +45,13 @@ class Notification:
         help_text="Arbitrary JSON payload for extra context",
     )
     actor_type = StringField(
+        required=True,
         max_length=255,
         index=True,
         help_text="Polymorphic type of entity that triggered notification",
     )
     actor_id = StringField(
+        required=True,
         max_length=255,
         index=True,
         help_text="Polymorphic ID of entity that triggered notification",

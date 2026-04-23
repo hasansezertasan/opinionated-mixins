@@ -32,8 +32,10 @@ class TestMongoEngineNotification:
 
     def test_has_actor_fields(self) -> None:
         assert hasattr(Notification, "actor_type")
+        assert Notification.actor_type.required is True
         assert Notification.actor_type.max_length == 255
         assert hasattr(Notification, "actor_id")
+        assert Notification.actor_id.required is True
         assert Notification.actor_id.max_length == 255
 
     def test_has_action_url_field(self) -> None:

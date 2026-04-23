@@ -20,6 +20,8 @@ class TestNotificationIntegration:
         obj = MyNotification(
             notification_type="comment.reply",
             title="Someone replied",
+            actor_type="User",
+            actor_id="1",
         )
         obj.save()
         loaded = MyNotification.objects.first()
@@ -27,12 +29,16 @@ class TestNotificationIntegration:
         assert loaded.notification_type == "comment.reply"
         assert loaded.title == "Someone replied"
         assert loaded.level == NotificationLevel.INFO.value
+        assert loaded.actor_type == "User"
+        assert loaded.actor_id == "1"
 
     def test_create_with_explicit_level(self) -> None:
         obj = MyNotification(
             notification_type="order.shipped",
             title="Order shipped",
             level=NotificationLevel.SUCCESS.value,
+            actor_type="System",
+            actor_id="system",
         )
         obj.save()
         loaded = MyNotification.objects.first()
@@ -42,13 +48,13 @@ class TestNotificationIntegration:
         obj = MyNotification(
             notification_type="system.alert",
             title="Alert",
+            actor_type="System",
+            actor_id="system",
         )
         obj.save()
         loaded = MyNotification.objects.first()
         assert loaded is not None
         assert loaded.description is None
-        assert loaded.actor_type is None
-        assert loaded.actor_id is None
         assert loaded.action_url is None
         assert loaded.group_key is None
         assert loaded.seen_at is None
