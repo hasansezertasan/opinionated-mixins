@@ -53,13 +53,13 @@ class Notification:
     )
     actor_type = Column(
         String(255),
-        nullable=True,
+        nullable=False,
         index=True,
         doc="Polymorphic type of entity that triggered notification",
     )
     actor_id = Column(
         String(255),
-        nullable=True,
+        nullable=False,
         index=True,
         doc="Polymorphic ID of entity that triggered notification",
     )

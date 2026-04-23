@@ -27,6 +27,8 @@ class TestNotificationIntegration:
         obj = MyNotification(
             notification_type="comment.reply",
             title="Someone replied",
+            actor_type="User",
+            actor_id="1",
         )
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyNotification)
@@ -40,6 +42,8 @@ class TestNotificationIntegration:
             notification_type="order.shipped",
             title="Order shipped",
             level=NotificationLevel.SUCCESS,
+            actor_type="System",
+            actor_id="system",
         )
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyNotification)
@@ -49,13 +53,13 @@ class TestNotificationIntegration:
         obj = MyNotification(
             notification_type="system.alert",
             title="Alert",
+            actor_type="System",
+            actor_id="system",
         )
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyNotification)
         assert loaded is not None
         assert loaded.description is None
-        assert loaded.actor_type is None
-        assert loaded.actor_id is None
         assert loaded.seen_at is None
         assert loaded.read_at is None
         assert loaded.archived_at is None

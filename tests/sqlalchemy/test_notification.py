@@ -23,6 +23,8 @@ class TestSQLAlchemyNotification:
             obj = MyNotification(
                 notification_type="comment.reply",
                 title="Someone replied",
+                actor_type="User",
+                actor_id="1",
             )
             session.add(obj)
             session.commit()
@@ -30,6 +32,8 @@ class TestSQLAlchemyNotification:
             assert obj.notification_type == "comment.reply"
             assert obj.title == "Someone replied"
             assert obj.level == NotificationLevel.INFO
+            assert obj.actor_type == "User"
+            assert obj.actor_id == "1"
 
     def test_create_with_all_fields(self) -> None:
         now = datetime.datetime.now(datetime.timezone.utc)
@@ -61,6 +65,8 @@ class TestSQLAlchemyNotification:
             obj = MyNotification(
                 notification_type="system.alert",
                 title="Alert",
+                actor_type="System",
+                actor_id="system",
             )
             session.add(obj)
             session.commit()
@@ -72,14 +78,14 @@ class TestSQLAlchemyNotification:
             obj = MyNotification(
                 notification_type="comment.reply",
                 title="Reply",
+                actor_type="User",
+                actor_id="1",
             )
             session.add(obj)
             session.commit()
             session.refresh(obj)
             assert obj.description is None
             assert obj.data is None
-            assert obj.actor_type is None
-            assert obj.actor_id is None
             assert obj.action_url is None
             assert obj.group_key is None
             assert obj.seen_at is None
