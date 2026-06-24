@@ -40,7 +40,7 @@ path = "src/opinionated_mixins/__about__.py"
 dev = [
   "coverage[toml]>=7.14.1",
   "pytest==9.1.1",
-  "sqlalchemy==2.0.50",
+  "sqlalchemy==2.0.51",
   "mongoengine==0.29.3",
   "odmantic==1.1.0",
   "mongomock>=4.3.0",
