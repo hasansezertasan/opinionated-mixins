@@ -32,6 +32,14 @@ Every field name, enum value, and default is chosen by researching what popular 
 
 The same mixin is implemented across all supported frameworks with **identical field names and behavior**, adapted to each framework's idioms.
 
+## Related Projects and Inspiration
+
+These adjacent projects helped shape the way this library thinks about shared conventions, schemas, and reusable model contracts:
+
+- [**awesome-json-schema**](https://github.com/zinnia-ai/awesome-json-schema) — a curated collection of JSON Schema resources, tools, and examples
+- [**OpenDTO Specification**](https://github.com/dreamscale-io/OpenDTO-Specification) — an open specification for standardized DTO design and interoperability
+- [**Schema.org**](https://github.com/schemaorg/schemaorg) — a large, established shared vocabulary project for structured data
+
 ### Example
 
 ```python
