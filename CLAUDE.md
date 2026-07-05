@@ -100,13 +100,31 @@ Each framework expresses the same fields differently:
 
 When adding a mixin:
 
-1. Research field names and enum values against real-world platforms (minimum 3 references)
+1. **Write an RFC first** (see `docs/rfcs/TEMPLATE.md`). This includes the research step — a minimum of 3 real-world references for any field-naming or enum-value decision. Implementation begins only after the RFC is accepted. See `docs/rfcs/README.md` for the full process.
 2. Add shared enums to `src/opinionated_mixins/enums.py`
 3. Implement in all applicable contrib modules with consistent field names
 4. Each mixin gets its own file per framework (e.g., `contrib/sqlalchemy/announcement.py`) and is re-exported from that framework's `__init__.py`
 5. For SQLModel, re-export the SQLAlchemy implementation
 6. Tests mirror the contrib structure: `tests/<framework>/test_<mixin>.py`
-7. Use issue templates "Model Proposal" (for new mixin classes) and "Field Proposal" (for new fields on existing mixins)
+7. The issue templates "Model Proposal" / "Field Proposal" / "Framework Proposal" are the optional low-friction intake for an RFC — see `docs/rfcs/README.md`
+
+## Documentation & Decision Records
+
+This project preserves design rationale in-repo via RFCs, so the "why" behind
+every mixin is readable offline — without GitHub access.
+
+- **RFC docs**: `docs/rfcs/` — every mixin, field addition, framework adoption, and breaking change has an RFC documenting research, alternatives considered, and consequences.
+- **RFC index**: `docs/rfcs/INDEX.md` — auto-generated table (never hand-edit it).
+- **Process**: `docs/rfcs/README.md` — the full guide.
+
+When asked to **add** a new mixin, field, or framework:
+
+1. Read existing RFCs for similar work to understand established patterns.
+2. Write the RFC first (`docs/rfcs/TEMPLATE.md`); implementation follows acceptance.
+
+When asked **"why is field X named Y?"** or **"why does mixin Z work this way?"**,
+the answer is in the corresponding RFC — read it before explaining, rather than
+inventing rationale.
 
 ## Code Style
 

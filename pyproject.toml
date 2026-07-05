@@ -87,6 +87,13 @@ ignore = [
   "S105",    # Possible hardcoded password (test fixtures)
   "S106",    # Possible hardcoded password in argument (test fixtures)
 ]
+"scripts/**/*.py" = [
+  "D102",    # Missing docstring in public method (CLI plumbing)
+  "D103",    # Missing docstring in public function (CLI plumbing)
+  "D107",    # Missing docstring in __init__ (CLI plumbing)
+  "INP001",  # Implicit namespace package (scripts aren't a package)
+  "T201",    # print() usage (script output)
+]
 "examples/**/*.py" = [
   "D101",    # Missing docstring in public class (model definitions)
   "D106",    # Missing docstring in public nested class (Meta)

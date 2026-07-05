@@ -1,0 +1,96 @@
+name: RFC
+
+# Syncs RFC frontmatter from PR labels and regenerates INDEX.md after an RFC
+# PR is merged. Runs *after* merge — branch protection gates the merge itself
+# on the required labels; this workflow only records the outcome.
+
+on:
+  pull_request:
+    types: [closed]
+    paths:
+      - "docs/rfcs/**.md"
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  sync:
+    # Only for merged (not merely closed) RFC PRs carrying the `rfc` label.
+    if: >-
+      github.event.pull_request.merged == true &&
+      contains(github.event.pull_request.labels.*.name, 'rfc')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Resolve status label and changed RFC files
+        id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+        run: |
+          set -euo pipefail
+
+          status=""
+          for want in accepted rejected deferred withdrawn; do
+            if echo "$LABELS" | grep -q "\"status:$want\""; then
+              status="$want"
+              break
+            fi
+          done
+          if [ -z "$status" ]; then
+            echo "::error::RFC PR is missing a status:* label" >&2
+            exit 1
+          fi
+
+          gh pr diff "$PR" --name-only \
+            | grep -E '^docs/rfcs/[0-9]{4}-.*\.md$' > changed.txt || true
+
+          {
+            echo "status=$status"
+            echo "date=$(date -u +%Y-%m-%d)"
+          } >> "$GITHUB_OUTPUT"
+
+          echo "Status: $status"
+          echo "Changed RFC files:"
+          cat changed.txt
+
+      - name: Sync frontmatter and regenerate index
+        env:
+          STATUS: ${{ steps.resolve.outputs.status }}
+          DATE: ${{ steps.resolve.outputs.date }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          if [ -s changed.txt ]; then
+            # shellcheck disable=SC2046
+            python scripts/rfc.py set-status \
+              --status "$STATUS" --pr "$PR" --date "$DATE" \
+              $(cat changed.txt)
+          fi
+          python scripts/rfc.py sync-supersedes --date "$DATE"
+          python scripts/rfc.py index
+
+      - name: Commit changes
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git add docs/rfcs
+          git commit -m "chore(rfc): sync status from PR labels [skip ci]"
+          git push origin main
