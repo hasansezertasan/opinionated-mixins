@@ -262,6 +262,10 @@ def cmd_sync_supersedes(args: argparse.Namespace) -> int:
     by_number = {r.rfc: r for r in rfcs}
     changed = 0
     for r in rfcs:
+        # Only an accepted RFC supersedes another. A replacement merged as
+        # rejected/deferred/withdrawn must not retire the older accepted RFC.
+        if r.status != "accepted":
+            continue
         target = r.get("supersedes")
         if target and target in by_number:
             old = by_number[target]

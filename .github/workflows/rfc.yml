@@ -3,9 +3,14 @@ name: RFC
 # Syncs RFC frontmatter from PR labels and regenerates INDEX.md after an RFC
 # PR is merged. Runs *after* merge — branch protection gates the merge itself
 # on the required labels; this workflow only records the outcome.
+#
+# Uses `pull_request_target` (not `pull_request`) so that RFC PRs opened from
+# forks still get a read-write GITHUB_TOKEN for the post-merge `git push`.
+# This is safe here because the job checks out `main` and only runs the repo's
+# own committed script + `gh` — it never executes code from the PR branch.
 
 on:
-  pull_request:
+  pull_request_target:
     types: [closed]
     paths:
       - "docs/rfcs/**.md"
