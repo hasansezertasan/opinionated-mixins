@@ -1,9 +1,14 @@
-"""Integration tests for ODMantic UpdatedAt mixin."""
+"""Integration tests for ODMantic UpdatedAt mixin.
+
+The model is built inside each test via the ``build_mixin_model`` fixture — not
+at module level — because composing an ODMantic ``Model`` with a mixin parent
+raises at class-creation time under pydantic >= 2.13 (see the fixture's
+docstring and issue #39). Building at import time would break collection.
+"""
 
 import datetime
 
 import pytest
-from odmantic import Field, Model
 from opinionated_mixins.contrib.odmantic import UpdatedAt
 from pydantic import ValidationError
 
@@ -15,28 +20,11 @@ pytestmark = pytest.mark.xfail(
 )
 
 
-def _build_model() -> type[Model]:
-    """Build the test model composing the mixin with an ODMantic ``Model``.
-
-    This composition currently fails (see the module-level xfail). Under
-    pydantic >= 2.13 the failure surfaces at *class-creation* time as a
-    ``TypeError`` rather than at instantiation, so the model is built inside
-    each test — where the xfail marker can catch it — instead of at import
-    time, which would otherwise break test collection.
-    """
-
-    class MyModel(UpdatedAt, Model):
-        model_config = {"collection": "test_updated_at"}
-        name: str = Field(...)
-
-    return MyModel
-
-
 class TestUpdatedAtIntegration:
     """Test UpdatedAt mixin composition, instantiation, and roundtrip."""
 
-    async def test_updated_at_set_on_save(self, mock_engine) -> None:
-        model_cls = _build_model()
+    async def test_updated_at_set_on_save(self, mock_engine, build_mixin_model) -> None:
+        model_cls = build_mixin_model(UpdatedAt, "test_updated_at")
         obj = model_cls(name="test")
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(model_cls)
@@ -44,8 +32,8 @@ class TestUpdatedAtIntegration:
         assert loaded.updated_at is not None
         assert isinstance(loaded.updated_at, datetime.datetime)
 
-    async def test_updated_at_is_recent(self, mock_engine) -> None:
-        model_cls = _build_model()
+    async def test_updated_at_is_recent(self, mock_engine, build_mixin_model) -> None:
+        model_cls = build_mixin_model(UpdatedAt, "test_updated_at")
         obj = model_cls(name="test")
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(model_cls)
@@ -54,8 +42,12 @@ class TestUpdatedAtIntegration:
         delta = (now - loaded.updated_at.replace(tzinfo=utc)).total_seconds()
         assert delta < 5
 
-    async def test_updated_at_survives_roundtrip(self, mock_engine) -> None:
-        model_cls = _build_model()
+    async def test_updated_at_survives_roundtrip(
+        self,
+        mock_engine,
+        build_mixin_model,
+    ) -> None:
+        model_cls = build_mixin_model(UpdatedAt, "test_updated_at")
         obj = model_cls(name="test")
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(model_cls)
@@ -63,8 +55,12 @@ class TestUpdatedAtIntegration:
         diff = loaded.updated_at - obj.updated_at.replace(tzinfo=None)
         assert abs(diff.total_seconds()) < 0.01
 
-    async def test_updated_at_can_be_manually_refreshed(self, mock_engine) -> None:
-        model_cls = _build_model()
+    async def test_updated_at_can_be_manually_refreshed(
+        self,
+        mock_engine,
+        build_mixin_model,
+    ) -> None:
+        model_cls = build_mixin_model(UpdatedAt, "test_updated_at")
         obj = model_cls(name="test")
         await mock_engine.save(obj)
         first_updated = obj.updated_at
