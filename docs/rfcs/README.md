@@ -99,6 +99,12 @@ derived data.
 new RFC declares `supersedes: "NNNN"`, the workflow flips RFC-NNNN to
 `superseded` and links the two.
 
+To create these labels in the repository (idempotent):
+
+```bash
+scripts/create-rfc-labels.sh
+```
+
 ## Section requirements by type
 
 | Section | mixin | field | framework | breaking-change |
