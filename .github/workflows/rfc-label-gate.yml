@@ -1,0 +1,58 @@
+name: RFC Label Gate
+
+# Gates merging of RFC PRs on the required labels. GitHub branch protection
+# cannot require a label directly, so this posts a required *status check*:
+# a PR that touches docs/rfcs/**.md must carry the `rfc` label and exactly one
+# `status:*` label. PRs that touch no RFC files pass unconditionally, so this
+# check is safe to mark "required" for every PR to main.
+#
+# Uses `pull_request` (read-only, no push) and re-runs on label changes so the
+# check clears as soon as the right labels are applied.
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  rfc-label-gate:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      PR: ${{ github.event.pull_request.number }}
+      LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+    steps:
+      - name: Require RFC labels when RFC files change
+        run: |
+          set -euo pipefail
+
+          # Does this PR touch any numbered RFC document?
+          touches_rfc="$(gh pr diff "$PR" --repo "$REPO" --name-only \
+            | grep -Ec '^docs/rfcs/[0-9]{4}-.*\.md$' || true)"
+          if [ "$touches_rfc" -eq 0 ]; then
+            echo "No RFC documents changed — gate not applicable."
+            exit 0
+          fi
+
+          if ! echo "$LABELS" | grep -q '"rfc"'; then
+            echo "::error::RFC PR must carry the 'rfc' label (see docs/rfcs/README.md)" >&2
+            exit 1
+          fi
+
+          count=0
+          for want in accepted rejected deferred withdrawn; do
+            if echo "$LABELS" | grep -q "\"status:$want\""; then
+              count=$((count + 1))
+            fi
+          done
+          if [ "$count" -ne 1 ]; then
+            echo "::error::RFC PR must carry exactly one status:* label (found $count)" >&2
+            exit 1
+          fi
+
+          echo "RFC labels present: rfc + one status:* label. Gate passed."
