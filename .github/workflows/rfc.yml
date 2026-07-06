@@ -19,6 +19,13 @@ permissions:
   contents: write
   pull-requests: read
 
+# Serialize runs so two RFC PRs merged close together can't race the push to
+# main (the second run would otherwise rebase or fail). Never cancel: every
+# merged RFC must have its status recorded.
+concurrency:
+  group: rfc-sync
+  cancel-in-progress: false
+
 jobs:
   sync:
     # Only for merged (not merely closed) RFC PRs carrying the `rfc` label.
@@ -44,27 +51,46 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR: ${{ github.event.pull_request.number }}
           LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+          MERGED_AT: ${{ github.event.pull_request.merged_at }}
         run: |
           set -euo pipefail
 
+          # Exactly one status:* label is required (see docs/rfcs/README.md).
+          # Collect every match rather than first-wins, so a stray/duplicate
+          # label fails loudly instead of silently stamping the wrong status.
           status=""
+          count=0
           for want in accepted rejected deferred withdrawn; do
             if echo "$LABELS" | grep -q "\"status:$want\""; then
               status="$want"
-              break
+              count=$((count + 1))
             fi
           done
-          if [ -z "$status" ]; then
+          if [ "$count" -eq 0 ]; then
             echo "::error::RFC PR is missing a status:* label" >&2
             exit 1
           fi
+          if [ "$count" -gt 1 ]; then
+            echo "::error::RFC PR has multiple status:* labels; exactly one is required" >&2
+            exit 1
+          fi
 
-          gh pr diff "$PR" --name-only \
+          # Capture the diff first so a `gh` failure (auth/network) fails the
+          # step; grep's exit 1 (no match) is the only case `|| true` absorbs.
+          files="$(gh pr diff "$PR" --name-only)"
+          printf '%s\n' "$files" \
             | grep -E '^docs/rfcs/[0-9]{4}-.*\.md$' > changed.txt || true
+
+          # Prefer the PR's merge timestamp over the runner clock so the recorded
+          # date is deterministic and tied to the event (re-runs stay stable).
+          date="${MERGED_AT%%T*}"
+          if [ -z "$date" ]; then
+            date="$(date -u +%Y-%m-%d)"
+          fi
 
           {
             echo "status=$status"
-            echo "date=$(date -u +%Y-%m-%d)"
+            echo "date=$date"
           } >> "$GITHUB_OUTPUT"
 
           echo "Status: $status"
@@ -98,4 +124,7 @@ jobs:
           fi
           git add docs/rfcs
           git commit -m "chore(rfc): sync status from PR labels [skip ci]"
+          # Another RFC PR may have merged since checkout; rebase before pushing
+          # so concurrent syncs don't hit a non-fast-forward rejection.
+          git pull --rebase origin main
           git push origin main

@@ -68,9 +68,9 @@ class Rfc:
             return False
         self.meta[key] = value
         for i, line in enumerate(self.fm_lines):
-            m = re.match(rf"^(\s*{re.escape(key)}\s*:\s*)(.*?)(\s*#.*)?$", line)
+            m = re.match(rf"^(\s*{re.escape(key)}\s*:\s*)(.*)$", line)
             if m:
-                comment = m.group(3) or ""
+                _value, comment = _split_value_comment(m.group(2))
                 self.fm_lines[i] = f"{m.group(1)}{_dump_value(value)}{comment}"
                 return True
         # key absent — append before the closing block
@@ -114,14 +114,35 @@ def _split_frontmatter(text: str, path: Path) -> tuple[list[str], str]:
 def _parse_frontmatter(lines: list[str]) -> dict[str, str]:
     meta: dict[str, str] = {}
     for line in lines:
-        m = re.match(r"^\s*([A-Za-z0-9_]+)\s*:\s*(.*?)(\s*#.*)?$", line)
+        m = re.match(r"^\s*([A-Za-z0-9_]+)\s*:\s*(.*)$", line)
         if m:
             meta[m.group(1)] = _load_value(m.group(2))
     return meta
 
 
+def _split_value_comment(raw: str) -> tuple[str, str]:
+    """Split a raw value into (value, comment_suffix).
+
+    A ``#`` starts a YAML-style comment only when preceded by whitespace and
+    outside a quoted scalar — so ``proposed # note`` splits into
+    ``("proposed", " # note")`` while ``Add C# support`` or ``"has # hash"``
+    keep their ``#`` in the value. The comment suffix keeps its leading
+    whitespace so it can be re-appended verbatim on write.
+    """
+    r = raw.strip()
+    if r[:1] in ('"', "'"):
+        end = r.find(r[0], 1)
+        if end != -1:  # closing quote found — value is the quoted span
+            tail = r[end + 1 :]
+            return r[: end + 1], tail if re.match(r"\s+#", tail) else ""
+    m = re.search(r"(\s+#.*)$", r)
+    if m:
+        return r[: m.start()].rstrip(), m.group(1)
+    return r, ""
+
+
 def _load_value(raw: str) -> str:
-    raw = raw.strip()
+    raw, _comment = _split_value_comment(raw)
     quoted = len(raw) >= _MIN_QUOTED_LEN and raw[0] in "\"'" and raw[-1] == raw[0]
     if quoted:
         return raw[1:-1]
@@ -238,10 +259,15 @@ def cmd_index(_args: argparse.Namespace) -> int:
 
 def cmd_set_status(args: argparse.Namespace) -> int:
     changed = 0
+    missing = 0
     for file in args.files:
         path = Path(file)
-        if path.name in RESERVED or not path.exists():
-            print(f"skip {file}")
+        if path.name in RESERVED:
+            print(f"skip reserved {file}")
+            continue
+        if not path.exists():
+            print(f"::error::{file}: file not found", file=sys.stderr)
+            missing += 1
             continue
         r = Rfc(path)
         dirty = r.set("status", args.status)
@@ -254,31 +280,41 @@ def cmd_set_status(args: argparse.Namespace) -> int:
             changed += 1
             print(f"updated {path.name} -> status={args.status}")
     print(f"{changed} file(s) updated")
-    return 0
+    return 1 if missing else 0
 
 
 def cmd_sync_supersedes(args: argparse.Namespace) -> int:
     rfcs = load_rfcs()
     by_number = {r.rfc: r for r in rfcs}
     changed = 0
+    errors = 0
     for r in rfcs:
         # Only an accepted RFC supersedes another. A replacement merged as
         # rejected/deferred/withdrawn must not retire the older accepted RFC.
         if r.status != "accepted":
             continue
         target = r.get("supersedes")
-        if target and target in by_number:
-            old = by_number[target]
-            dirty = old.set("status", "superseded")
-            dirty |= old.set("superseded_by", r.rfc)
-            if args.date:
-                dirty |= old.set("updated", args.date)
-            if dirty:
-                old.write()
-                changed += 1
-                print(f"{old.path.name} -> superseded by {r.rfc}")
+        if not target:
+            continue
+        if target not in by_number:
+            print(
+                f"::error::{r.path.name}: supersedes {target!r} which does not "
+                "exist (check the number and zero-padding)",
+                file=sys.stderr,
+            )
+            errors += 1
+            continue
+        old = by_number[target]
+        dirty = old.set("status", "superseded")
+        dirty |= old.set("superseded_by", r.rfc)
+        if args.date:
+            dirty |= old.set("updated", args.date)
+        if dirty:
+            old.write()
+            changed += 1
+            print(f"{old.path.name} -> superseded by {r.rfc}")
     print(f"{changed} file(s) updated")
-    return 0
+    return 1 if errors else 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -303,7 +339,7 @@ def main(argv: list[str] | None = None) -> int:
     p_sup.set_defaults(func=cmd_sync_supersedes)
 
     args = parser.parse_args(argv)
-    return args.func(args)
+    return int(args.func(args))
 
 
 if __name__ == "__main__":
