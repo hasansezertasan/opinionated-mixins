@@ -8,6 +8,23 @@ name: RFC
 # forks still get a read-write GITHUB_TOKEN for the post-merge `git push`.
 # This is safe here because the job checks out `main` and only runs the repo's
 # own committed script + `gh` — it never executes code from the PR branch.
+#
+# ── KNOWN LIMITATION: protected `main` blocks the final push ──────────────────
+# `main` is protected by a ruleset that requires a pull request (no direct
+# pushes). The default GITHUB_TOKEN CANNOT be granted a ruleset bypass on a
+# user-owned (non-org) repo — GitHub rejects the Actions integration as a bypass
+# actor — so the `git push origin main` step below will fail as-is. Wiring this
+# up would require authenticating the push with a fine-grained PAT / GitHub App
+# token whose owner is a ruleset bypass actor (e.g. the Admin role), stored as a
+# secret and used in the checkout + push steps.
+#
+# What we forgo by NOT doing that: automatic status stamping and INDEX.md
+# regeneration on merge. Until a bypass token is configured, run the sync by
+# hand inside the RFC PR itself:
+#     python scripts/rfc.py set-status --status <s> --pr <n> --date <iso> <files>
+#     python scripts/rfc.py sync-supersedes --date <iso>
+#     python scripts/rfc.py index
+# (See PR #71 for the full rationale.)
 
 on:
   pull_request_target:
