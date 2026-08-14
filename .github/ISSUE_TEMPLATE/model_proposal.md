@@ -7,6 +7,11 @@ assignees: ''
 
 ---
 
+> **Note**: This issue is for discussion only. Once the proposal has traction,
+> the next step is a formal RFC. See the [RFC process](../../docs/rfcs/README.md)
+> for details. If you have already done the research and want to skip the issue
+> stage, you can [open an RFC PR directly](../../docs/rfcs/TEMPLATE.md).
+
 **Why do you need this model? What does it solve? Please describe.**
 A clear and concise explanation of why you need this model.
 

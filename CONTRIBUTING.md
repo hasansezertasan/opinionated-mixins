@@ -19,10 +19,13 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 - [I Want To Contribute](#i-want-to-contribute)
   - [Reporting Bugs](#reporting-bugs)
   - [Suggesting Enhancements](#suggesting-enhancements)
+  - [Proposing Changes (RFCs)](#proposing-changes-rfcs)
   - [Your First Code Contribution](#your-first-code-contribution)
   - [Improving The Documentation](#improving-the-documentation)
 - [Styleguides](#styleguides)
   - [Commit Messages](#commit-messages)
+  - [Branch Names](#branch-names)
+  - [Pull Request Titles](#pull-request-titles)
 - [Join The Project Team](#join-the-project-team)
 
 ## Code of Conduct
@@ -128,28 +131,95 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/hasans
 - You may want to **include screenshots and animated GIFs** which help you demonstrate the steps or point out the part which the suggestion is related to. You can use [this tool](https://www.cockos.com/licecap/) to record GIFs on macOS and Windows, and [this tool](https://github.com/colinkeenan/silentcast) or [this tool](https://github.com/GNOME/byzanz) on Linux. <!-- this should only be included if the project has a GUI -->
 - **Explain why this enhancement would be useful** to most Opinionated Mixins users. You may also want to point out the other projects that solved it better and which could serve as inspiration.
 
+> **New mixins, new fields, new framework support, and breaking changes** go
+> through the RFC process — see [Proposing Changes (RFCs)](#proposing-changes-rfcs).
+> The issue templates (model / field / framework proposal) are a low-friction
+> way to start that conversation.
+
 <!-- You might want to create an issue template for enhancement suggestions that can be used as a guide and that defines the structure of the information to be included. If you do so, reference it here in the description. -->
 
-### Your First Code Contribution
-<!-- TODO
-include Setup of env, IDE and typical getting started instructions?
+### Proposing Changes (RFCs)
 
--->
+Any of the following must be documented as an **RFC** before implementation:
+
+- A new mixin class
+- A new field on an existing mixin
+- Support for a new framework
+- A breaking change to an existing mixin
+
+RFCs live in [`docs/rfcs/`](docs/rfcs/) and are the canonical, offline-readable
+record of *what* was proposed, *why*, and *what alternatives were rejected* —
+so the rationale survives even without GitHub access. There are two ways in:
+
+- **Issue first** — open an issue with a proposal template (model / field /
+  framework), discuss, then write the RFC once the idea has traction.
+- **Direct RFC PR** — if you have already done the research, copy
+  [`docs/rfcs/TEMPLATE.md`](docs/rfcs/TEMPLATE.md), fill it in, and open a PR
+  labeled `rfc` plus one `status:*` label.
+
+The full process — required sections per RFC type, the status lifecycle, and
+the label rules — is documented in [`docs/rfcs/README.md`](docs/rfcs/README.md).
+
+### Your First Code Contribution
+
+This project uses [**uv**](https://docs.astral.sh/uv/) for dependency
+management. To get set up:
+
+```bash
+# Install dependencies (including dev and type-checking groups)
+uv sync --group dev --group types
+
+# Run the test suite
+uv run pytest tests
+
+# Lint and format
+uv run ruff check .
+uv run ruff format --check .
+
+# Type-check
+uv run mypy --install-types --non-interactive src/opinionated_mixins
+```
+
+If your contribution adds or changes a mixin, field, framework, or introduces
+a breaking change, start with an [RFC](#proposing-changes-rfcs) — implementation
+happens in a separate PR once the RFC is accepted.
 
 ### Improving The Documentation
-<!-- TODO
-Updating, improving and correcting the documentation
 
--->
+Documentation lives in a few places:
+
+- **`README.md`** — user-facing overview and usage.
+- **`CLAUDE.md`** — architecture and conventions (also read by AI agents).
+- **`docs/rfcs/`** — design rationale for every mixin (see the RFC process above).
+
+Corrections, clarifications, and expanded examples are always welcome and do
+not require an RFC.
 
 ## Styleguides
-### Commit Messages
-<!-- TODO
 
--->
+This project follows the conventions below (see also the linked specs):
+
+### Commit Messages
+
+Use [Conventional Commits v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/),
+e.g. `feat: add TaggableMixin`, `fix(mongoengine): correct default factory`,
+`docs(rfc): add RFC-0011`. Breaking changes use `!` (`feat!: ...`) or a
+`BREAKING CHANGE:` footer.
+
+### Branch Names
+
+Use [Conventional Branch](https://conventional-branch.github.io/) names, e.g.
+`feat/taggable-mixin`, `fix/notification-default`, `docs/rfc-process`. RFC
+branches use the `rfc/<slug>` prefix.
+
+### Pull Request Titles
+
+PR titles follow the same Conventional Commits format as commit messages.
+RFC PRs are titled `RFC-XXXX: <Title>`.
 
 ## Join The Project Team
-<!-- TODO -->
+
+This project is currently maintained by [@hasansezertasan](https://github.com/hasansezertasan).
 
 <!-- omit in toc -->
 ## Attribution
