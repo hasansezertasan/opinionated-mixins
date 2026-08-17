@@ -1,0 +1,5 @@
+python-dotenv
+uvicorn
+fastapi
+fastapi-admin
+tortoise-orm

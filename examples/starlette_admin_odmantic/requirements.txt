@@ -3,4 +3,4 @@ uvicorn
 starlette
 starlette-admin
 odmantic==0.9.1
-pydantic[email]==1.10.9
+pydantic[email]==1.10.13

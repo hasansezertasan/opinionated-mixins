@@ -3,7 +3,7 @@
 import datetime
 from typing import Optional
 
-# from opinionated_mixins.contrib.odmantic.person import Person as ODMPerson  # noqa: ERA001
+from opinionated_mixins.contrib.odmantic.person import Person as ODMPerson  # noqa: ERA001
 from odmantic import Field, Model
 
 

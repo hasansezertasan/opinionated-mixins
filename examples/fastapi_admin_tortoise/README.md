@@ -1,6 +1,6 @@
-# MongoEngine Kitchen Sink with Starlette Admin
+# TortoiseORM Kitchen Sink with FastAPI Admin
 
-This example shows how to use any MongoEngine mixin and bring them together in a Starlette Admin application.
+This example shows how to use any TortoiseORM mixin and bring them together in a FastAPI Admin application.
 
 ## Clone the repo
 
@@ -34,7 +34,7 @@ source venv/bin/activate
 - Install requirements:
 
 ```shell
-pip install -r 'examples/starlette_admin_mongoengine/requirements.txt'
+pip install -r 'examples/fastapi_admin_tortoise/requirements.txt'
 ```
 
 > To install current version of `opinionated-mixins`, run `pip install -e .`.
@@ -42,5 +42,5 @@ pip install -r 'examples/starlette_admin_mongoengine/requirements.txt'
 ## Run the application
 
 ```shell
-uvicorn examples.starlette_admin_mongoengine.main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn examples.fastapi_admin_tortoise.main:app --host 0.0.0.0 --port 8000 --reload
 ```
