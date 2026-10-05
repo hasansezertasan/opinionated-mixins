@@ -59,7 +59,7 @@ contexts as required (the names are the **check runs**, not the workflow files):
 - ``check`` — ``ci.yml``'s aggregate gate. It is the single context that covers
   the tests, the per-component coverage gates, style, hooks and the documentation
   build; without it a PR whose entire test suite failed still satisfies
-  protection, because the four metadata gates below say nothing about the code.
+  protection, because the metadata gates below say nothing about the code.
 - ``Validate PR title`` — the Conventional Commits PR-title lint
   (``check-pr-title.yml``), which release-please depends on.
 - ``Validate branch name`` — the Conventional Branch lint
@@ -67,6 +67,9 @@ contexts as required (the names are the **check runs**, not the workflow files):
   follow the ``<type>/<description>`` format.
 - ``Verify linked issue`` — the linked-issue check (``check-linked-issues.yml``),
   which fails a PR with no linked issue.
+- ``rfc-label-gate`` — the RFC label gate (``rfc-label-gate.yml``), which checks
+  that an RFC PR carries the ``rfc`` and exactly one ``status:*`` label while
+  passing unconditionally for PRs that do not change RFC documents.
 - ``Task Completed Checker`` — the PR task-list gate (``task-completed-check.yml``),
   which fails while any unticked checkbox remains in the PR description. This is
   the name of the **check run** the action publishes, not of the job around it
@@ -82,7 +85,7 @@ contexts as required (the names are the **check runs**, not the workflow files):
    {
      "required_status_checks": {
        "strict": true,
-       "contexts": ["check", "Validate PR title", "Validate branch name", "Verify linked issue", "Task Completed Checker"]
+       "contexts": ["check", "Validate PR title", "Validate branch name", "Verify linked issue", "rfc-label-gate", "Task Completed Checker"]
      },
      "enforce_admins": null,
      "required_pull_request_reviews": null,
@@ -95,11 +98,11 @@ contexts as required (the names are the **check runs**, not the workflow files):
 .. code-block:: sh
 
    gh api repos/hasansezertasan/opinionated-mixins/branches/main/protection \
-     --jq '(.required_status_checks.strict == true) and ((["check","Validate PR title","Validate branch name","Verify linked issue","Task Completed Checker"] - (.required_status_checks.contexts // [])) == [])' | grep -qx true
+     --jq '(.required_status_checks.strict == true) and ((["check","Validate PR title","Validate branch name","Verify linked issue","rfc-label-gate","Task Completed Checker"] - (.required_status_checks.contexts // [])) == [])' | grep -qx true
 
 UI equivalent: **Settings → Branches → Add branch ruleset** (or **Add rule** for
 ``main``) — enable **Require status checks to pass before merging**, then search
-for and add the five contexts above. The contexts only appear in the picker
+for and add the six contexts above. The contexts only appear in the picker
 after each check has run at least once.
 
 .. _setup-first-pr:
