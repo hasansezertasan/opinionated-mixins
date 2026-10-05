@@ -1,5 +1,5 @@
 python-dotenv
 uvicorn
-starlette
-starlette-admin
+starlette<1
+starlette-admin==0.17.1
 mongoengine

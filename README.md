@@ -128,3 +128,10 @@ Both require real-world references — this project runs on consensus, not opini
 ## License
 
 `opinionated-mixins` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
+
+## More documentation
+
+- [Architecture](ARCHITECTURE.md)
+- [Frequently asked questions](FAQ.md)
+- [Roadmap](ROADMAP.md)
+- [Changelog](CHANGELOG.md)

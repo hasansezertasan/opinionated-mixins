@@ -822,7 +822,7 @@ types = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "coverage", extras = ["toml"], specifier = ">=7.16.0" },
+    { name = "coverage", extras = ["toml"], specifier = ">=7.16.2" },
     { name = "mongoengine", specifier = "==0.29.3" },
     { name = "mongomock", specifier = ">=4.3.0" },
     { name = "mongomock-motor", specifier = ">=0.0.36" },

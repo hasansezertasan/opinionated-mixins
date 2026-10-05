@@ -2,6 +2,7 @@
 
 import datetime
 
+import pytest
 from mongoengine import Document
 from opinionated_mixins.contrib.mongoengine import Person
 
@@ -64,3 +65,27 @@ class TestPersonIntegration:
         assert loaded.country is None
         assert loaded.date_of_birth is None
         assert loaded.bio is None
+
+
+@pytest.mark.parametrize("mixin_first", [True, False])
+def test_person_fields_persist_in_both_base_orders(*, mixin_first: bool) -> None:
+    """Plain mixin fields survive composition and a database roundtrip."""
+    bases = (Person, Document) if mixin_first else (Document, Person)
+    model = type("ComposedPerson", bases, {"meta": {"collection": "composed_persons"}})
+    values = {
+        "first_name": "Alice",
+        "last_name": "Smith",
+        "middle_name": "M",
+        "phone_number": "+1234567890",
+        "email": "alice@example.com",
+        "street_address": "123 Main St",
+        "postal_code": "12345",
+        "city": "Springfield",
+        "country": "US",
+        "date_of_birth": datetime.date(1990, 1, 15),
+        "bio": "All inherited fields persist",
+    }
+    model(**values).save()
+    loaded = model.objects.get()
+    assert set(values) <= set(model._fields)
+    assert {name: getattr(loaded, name) for name in values} == values

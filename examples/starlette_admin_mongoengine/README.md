@@ -37,7 +37,10 @@ source venv/bin/activate
 pip install -r 'examples/starlette_admin_mongoengine/requirements.txt'
 ```
 
-> To install current version of `opinionated-mixins`, run `pip install -e .`.
+Install the current checkout with `pip install -e .`. Start MongoDB locally, or copy
+`examples/starlette_admin_mongoengine/.env.example` to `.env` in that same directory
+and set `MONGO_URI` and `MONGODB_NAME` for your server. The defaults are
+`mongodb://localhost:27017` and `opinionated_mixins`.
 
 ## Run the application
 

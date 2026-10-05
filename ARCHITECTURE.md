@@ -1,54 +1,24 @@
 # Architecture
 
-This document provides an overview of the architecture and design decisions of the opinionated-mixins project.
+opinionated-mixins provides reusable fields for Python storage frameworks. Consumers compose plain mixin classes with their own ORM or ODM base classes.
 
-## Overview
+## Supported frameworks
 
-The opinionated-mixins project is designed to provide reusable mixins for various Python frameworks, allowing developers to easily add common functionality to their models without duplicating code.
+- SQLAlchemy supplies declarative mixins with columns.
+- SQLModel re-exports the SQLAlchemy implementations.
+- MongoEngine supplies document field mixins.
+- ODMantic supplies annotated field definitions. Its metaclass does not currently collect fields from plain mixin parents; see [issue #39](https://github.com/hasansezertasan/opinionated-mixins/issues/39) and the expected-failure integration tests.
 
-## Core Components
+## Layout
 
-### 1. Mixins
+`src/opinionated_mixins/contrib/<framework>/` contains one file per mixin. Each framework's `__init__.py` exports its mixins. Shared enums live in `src/opinionated_mixins/enums.py`, and tests mirror the framework layout.
 
-- **PersonMixin**: A basic mixin for representing a person with common fields like name, email, and address.
-- **Future Mixins**: Additional mixins for common functionality like timestamps, auditing, and soft deletion.
+Available mixins cover people, users, announcements, feedback, leads, templates, activity, notifications, timestamps, identifiers, and active flags. Field names and defaults follow the contracts recorded in [the RFC index](docs/rfcs/INDEX.md).
 
-### 2. Framework Support
+## Design and verification
 
-- The project supports multiple frameworks, including:
-  - Pydantic
-  - SQLAlchemy
-  - MongoEngine
-  - ODMantic
-  - Beanie
-  - Tortoise
-  - WTForms
-  - Dataclasses
+Mixins remain plain classes so consumers choose the framework base and can combine several mixins. Tests check field definitions, consistency across frameworks, and persistence using SQLite or MongoDB mocks. Optional MongoDB integration tests use testcontainers.
 
-### 3. Example Projects
+The package has no runtime dependencies. Consumers install their framework; contributors use the development and type-checking groups described in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-- Example projects demonstrate how to use the mixins with different frameworks and admin panels.
-
-## Design Decisions
-
-### 1. Mixin Design
-
-- Mixins are designed to be framework-agnostic where possible, allowing for easy integration with different frameworks.
-- Each mixin is documented with clear examples and usage instructions.
-
-### 2. Testing Strategy
-
-- Unit tests for each mixin and framework.
-- Integration tests to ensure compatibility with different frameworks.
-
-### 3. Documentation
-
-- Comprehensive documentation for each mixin, including examples and edge cases.
-- Automatic API documentation using Sphinx or MkDocs.
-
-## Future Considerations
-
-### Community Feedback
-
-- Gather feedback from the community to guide future development.
-- Consider user suggestions for new mixins and features.
+New mixins, fields, framework support, and breaking changes require an accepted [RFC](docs/rfcs/README.md). Documentation corrections and examples do not require one.

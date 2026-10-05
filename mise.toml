@@ -30,27 +30,16 @@ mise exec taplo -- taplo format .
 """
 
 
-[tasks."docs:serve"]
-description = "Serving Docs"
-run = "mise exec pipx:mkdocs -- mkdocs serve"
-
-
-[tasks."docs:build"]
-description = "Building Docs"
-depends = ["style:lint", "style:format"]
-run = "mise exec pipx:mkdocs -- mkdocs build --clean"
-
-
 [tasks."test"]
 description = "Run the tests"
-run = "pytest"
+run = "uv run pytest tests"
 
 
 [tasks."test:cov"]
 description = "Run the tests with coverage"
-run = "coverage run -m pytest"
+run = "uv run coverage run -m pytest tests"
 
 
 [tasks."test:cov:report"]
 description = "Run the tests with coverage and generate report"
-run = "coverage report"
+run = "uv run coverage combine && uv run coverage report"

@@ -1,35 +1,17 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
+## Unreleased
 
 ### Added
 
-- Initial release of opinionated-mixins.
-- Basic mixin for Person model in various frameworks (Pydantic, SQLAlchemy, MongoEngine, ODMantic, Beanie, Tortoise, WTForms, Dataclasses).
-- Example projects for Flask-Admin, Starlette-Admin, FastAPI-Admin, and Femto-Admin integrations.
-- Basic test structure for each framework.
+- Architecture overview, FAQ, roadmap, and pull request template.
+- Setup instructions for Flask-Admin and Starlette-Admin examples.
+- MongoEngine persistence coverage for both mixin inheritance orders.
+- Local tooling configuration in `mise.toml` and `.pre-commit-config.yaml`.
 
 ### Changed
 
-- None yet.
+- Bug reports collect installation, framework, Python, and operating system details.
+- Examples use the current Person field names and document the ODMantic composition workaround.
 
-### Deprecated
-
-- None yet.
-
-### Removed
-
-- None yet.
-
-### Fixed
-
-- None yet.
-
-### Security
-
-- None yet.
+Earlier design decisions and changes are recorded in [the RFC index](docs/rfcs/INDEX.md) and [Git history](https://github.com/hasansezertasan/opinionated-mixins/commits/main/).

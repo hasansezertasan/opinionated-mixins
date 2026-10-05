@@ -37,7 +37,10 @@ source venv/bin/activate
 pip install -r 'examples/flask_admin_sqlalchemy/requirements.txt'
 ```
 
-> To install current version of `opinionated-mixins`, run `pip install -e .`.
+Install the current checkout with `pip install -e .`.
+
+The example uses Flask-Admin 1.6.1, matching its `template_mode` API.
+It creates and seeds a SQLite database named `demo.db` in the working directory.
 
 ## Run the application
 

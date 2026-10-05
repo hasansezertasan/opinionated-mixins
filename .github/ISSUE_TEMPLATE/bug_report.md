@@ -7,8 +7,8 @@ assignees: 'hasansezertasan'
 ---
 ## Contrib
 
-Which contrib(s) and version(s) does this bug occurs?
-Pydantic, SQLAlchemy, MongoEngine, SQLModel.
+Which contrib(s) and version(s) does this bug occur?
+SQLAlchemy, SQLModel, MongoEngine, ODMantic.
 
 ## Describe the bug
 
@@ -25,7 +25,7 @@ You can find help for creating such an example [here](https://stackoverflow.com/
 
 - Installation method: [e.g. pip, conda, from source]
 - opinionated-mixins version: [e.g. 0.1.2]
-- Python version: [e.g. 3.8]
+- Python version: [e.g. 3.14]
 - OS: [e.g. Ubuntu 20.04]
 - Other relevant software versions: [e.g. Django 3.2, PostgreSQL 13]
 

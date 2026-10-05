@@ -1,6 +1,6 @@
 python-dotenv
 uvicorn
-starlette
-starlette-admin
-odmantic==0.9.1
-pydantic[email]==1.10.13
+starlette<1
+starlette-admin==0.17.1
+odmantic==1.1.0
+pydantic[email]>=2.13.5,<3
