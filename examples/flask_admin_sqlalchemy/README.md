@@ -10,8 +10,8 @@ Open <http://127.0.0.1:5000/admin/>. The example creates and seeds `demo.db` in 
 
 The script declares its dependencies using PEP 723 and loads this checkout of `opinionated-mixins`. Configuration uses Pydantic Settings. Override `DATABASE_URL`, `SECRET_KEY`, `HOST`, `PORT`, or `DEBUG` through environment variables.
 
-For an in-memory database:
+To use a different database file:
 
 ```sh
-DATABASE_URL=sqlite:///:memory: uv run examples/flask_admin_sqlalchemy/app.py
+DATABASE_URL=sqlite:///custom-demo.db uv run examples/flask_admin_sqlalchemy/app.py
 ```
