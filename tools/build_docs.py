@@ -1,9 +1,10 @@
 """Build versioned documentation and assemble the full GitHub Pages site.
 
-Only the *current* release is built here; every previously published version is
-copied across from the ``gh-pages`` branch untouched — old versions are never
-rebuilt. The version list is derived from the ``gh-pages`` directory listing, so
-there is no committed ``versions.json`` to maintain. See ADR-027.
+Only the *current* release is built here; previously published versions are
+copied from ``gh-pages`` without rebuilding their pages. Their version-menu
+script and shared manifest are refreshed so the menu still lists later releases.
+The version list is derived from the ``gh-pages`` directory listing, so there is
+no committed ``versions.json`` to maintain. See ADR-027.
 
 Usage::
 
@@ -187,6 +188,36 @@ def write_versions_json(slugs: list[str], latest: str) -> None:
     VERSIONS_JSON.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
 
+def inject_version_switcher(version_root: Path, script_source: Path) -> None:
+    """Install the live version menu script in every HTML page under a version.
+
+    Args:
+        version_root: Root directory for one published version or ``latest``.
+        script_source: Current script built from ``docs/_static``.
+
+    Raises:
+        RuntimeError: If a page has no closing body tag to inject before.
+    """
+    static_dir = version_root / "_static"
+    static_dir.mkdir(parents=True, exist_ok=True)
+    script_target = static_dir / "versions-switcher.js"
+    shutil.copyfile(script_source, script_target)
+
+    for page in version_root.rglob("*.html"):
+        contents = page.read_text(encoding="utf-8")
+        if "versions-switcher.js" in contents:
+            continue
+
+        relative_script = Path(os.path.relpath(script_target, page.parent)).as_posix()
+        script_tag = f'<script src="{relative_script}" defer></script>'
+        closing_body = contents.lower().rfind("</body>")
+        if closing_body < 0:
+            msg = f"Cannot inject version switcher into {page}: no </body> tag"
+            raise RuntimeError(msg)
+        contents = f"{contents[:closing_body]}{script_tag}\n{contents[closing_body:]}"
+        page.write_text(contents, encoding="utf-8")
+
+
 def build_sphinx() -> None:
     """Run the same warning-gated build the docs-build tox env uses."""
     WARNINGS_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -250,6 +281,52 @@ def preserve_from_gh_pages(
         tar.extractall(out, filter="data")
 
 
+def preserve_previous_versions(
+    out: Path, slug: str, latest: str, all_slugs: list[str]
+) -> set[str]:
+    """Extract the previously published versions needed in the assembled site.
+
+    Args:
+        out: The output directory to assemble the full site into.
+        slug: The slug just built from the current release.
+        latest: The slug the ``latest`` alias points at.
+        all_slugs: Every known version slug.
+
+    Returns:
+        The existing version directories copied from gh-pages.
+    """
+    ref = _gh_pages_ref()
+    if ref is None:
+        return set()
+
+    preserved = {version_slug for version_slug in all_slugs if version_slug != slug}
+    if slug != latest:
+        preserved.add("latest")
+    for name in preserved:
+        preserve_from_gh_pages(name, out, ref, required=name != "latest")
+    return preserved
+
+
+def refresh_version_switchers(out: Path, version_dirs: set[str]) -> None:
+    """Refresh switcher code and its shared manifest for published versions.
+
+    Args:
+        out: The assembled documentation site root.
+        version_dirs: Version and alias directories present in the site.
+    """
+    switcher_source = HTML_DIR / "_static" / "versions-switcher.js"
+    manifest_source = HTML_DIR / "_static" / "versions.json"
+    for name in version_dirs:
+        version_root = out / name
+        if not version_root.is_dir():
+            continue
+        if name == "latest":
+            latest_static = version_root / "_static"
+            latest_static.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(manifest_source, latest_static / "versions.json")
+        inject_version_switcher(version_root, switcher_source)
+
+
 def assemble_site(out: Path, slug: str, latest: str, all_slugs: list[str]) -> None:
     """Assemble ``out`` from the fresh build plus preserved prior versions.
 
@@ -267,14 +344,8 @@ def assemble_site(out: Path, slug: str, latest: str, all_slugs: list[str]) -> No
     if slug == latest:
         shutil.copytree(HTML_DIR, out / "latest", dirs_exist_ok=True)
 
-    ref = _gh_pages_ref()
-    if ref is None:
-        return
-    preserved = {s for s in all_slugs if s != slug}
-    if slug != latest:
-        preserved.add("latest")
-    for name in preserved:
-        preserve_from_gh_pages(name, out, ref, required=name != "latest")
+    preserved = preserve_previous_versions(out, slug, latest, all_slugs)
+    refresh_version_switchers(out, {slug, "latest", *preserved})
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:

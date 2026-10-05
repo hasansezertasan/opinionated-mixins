@@ -45,6 +45,7 @@ extensions = [
 
 # Both reStructuredText and (via MyST) Markdown source files are supported.
 source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
+html_static_path = ["_static"]
 # ``_generated`` holds machine-generated reference material (CLI Markdown, etc.)
 # that is ``{include}``d/``literalinclude``d into real pages; exclude it so those
 # fragments are not also built as standalone orphan documents.
