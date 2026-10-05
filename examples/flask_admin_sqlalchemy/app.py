@@ -1,10 +1,20 @@
-"""Flask-Admin example showcasing all opinionated-mixins with SQLAlchemy.
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "flask",
+#     "flask-admin==2.2.0",
+#     "opinionated-mixins",
+#     "pydantic-settings>=2,<3",
+#     "sqlalchemy==2.0.54",
+# ]
+#
+# [tool.uv.sources]
+# opinionated-mixins = { path = "../..", editable = true }
+# ///
+"""Flask-Admin example showcasing sqlalchemy mixins.
 
-Run:
-    pip install flask flask-admin sqlalchemy opinionated-mixins
-    python app.py
-
-Then visit http://localhost:5000/admin/
+Run with ``uv run examples/flask_admin_sqlalchemy/app.py`` and visit http://127.0.0.1:5000/admin/.
 """
 
 from __future__ import annotations
@@ -12,6 +22,7 @@ from __future__ import annotations
 from flask import Flask
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_admin.theme import Bootstrap4Theme
 from opinionated_mixins.contrib.sqlalchemy import (
     UUIDID,
     Announcement,
@@ -35,8 +46,23 @@ from opinionated_mixins.enums import (
     TemplateFormat,
     TemplateType,
 )
+from pydantic_settings import BaseSettings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, scoped_session, sessionmaker
+
+
+class Settings(BaseSettings):
+    """Example configuration, read from environment variables."""
+
+    host: str = "127.0.0.1"
+    port: int = 5000
+    debug: bool = False
+    secret_key: str = "dev-only-secret-key"
+    database_url: str = "sqlite:///demo.db"
+
+
+settings = Settings()
+
 
 # ---------------------------------------------------------------------------
 # Database setup
@@ -267,10 +293,9 @@ def seed(session: Session) -> None:
 def create_app() -> Flask:
     """Create and configure the Flask application."""
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = "dev-only-secret-key"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///demo.db"
+    app.config["SECRET_KEY"] = settings.secret_key
 
-    engine = create_engine("sqlite:///demo.db")
+    engine = create_engine(settings.database_url)
     Base.metadata.create_all(engine)
     session_factory = sessionmaker(bind=engine)
     session = scoped_session(session_factory)
@@ -278,7 +303,7 @@ def create_app() -> Flask:
     with session_factory() as seed_session:
         seed(seed_session)
 
-    admin = Admin(app, name="Opinionated Mixins", template_mode="bootstrap4")
+    admin = Admin(app, name="Opinionated Mixins", theme=Bootstrap4Theme())
     admin.add_view(AnnouncementAdmin(AnnouncementModel, session, name="Announcements"))
     admin.add_view(FeedbackAdmin(FeedbackModel, session, name="Feedback"))
     admin.add_view(TemplateAdmin(TemplateModel, session, name="Templates"))
@@ -290,4 +315,4 @@ def create_app() -> Flask:
 
 
 if __name__ == "__main__":
-    create_app().run(debug=True)
+    create_app().run(host=settings.host, port=settings.port, debug=settings.debug)

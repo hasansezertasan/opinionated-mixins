@@ -1,24 +1,29 @@
-"""Flask-Admin example showcasing all opinionated-mixins with MongoEngine.
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#     "flask",
+#     "flask-admin[mongoengine]==2.2.0",
+#     "mongomock",
+#     "opinionated-mixins",
+#     "pydantic-settings>=2,<3",
+# ]
+#
+# [tool.uv.sources]
+# opinionated-mixins = { path = "../..", editable = true }
+# ///
+"""Flask-Admin example showcasing mongoengine mixins.
 
-Run with real MongoDB:
-    pip install flask flask-admin mongoengine opinionated-mixins
-    python app.py
-
-Run without MongoDB (mongomock):
-    pip install flask flask-admin mongoengine mongomock opinionated-mixins
-    MONGOMOCK=1 python app.py
-
-Then visit http://localhost:5000/admin/
+Run with ``uv run examples/flask_admin_mongoengine/app.py`` and visit http://127.0.0.1:5000/admin/.
 """
 
 from __future__ import annotations
-
-import os
 
 import mongoengine
 from flask import Flask
 from flask_admin import Admin
 from flask_admin.contrib.mongoengine import ModelView
+from flask_admin.theme import Bootstrap4Theme
 from mongoengine import Document
 from opinionated_mixins.contrib.mongoengine import (
     Announcement,
@@ -41,6 +46,23 @@ from opinionated_mixins.enums import (
     TemplateFormat,
     TemplateType,
 )
+from pydantic_settings import BaseSettings
+
+
+class Settings(BaseSettings):
+    """Example configuration, read from environment variables."""
+
+    host: str = "127.0.0.1"
+    port: int = 5000
+    debug: bool = False
+    secret_key: str = "dev-only-secret-key"
+    mongo_uri: str = "mongodb://localhost:27017"
+    mongodb_name: str = "opinionated_mixins_demo"
+    mongomock: bool = False
+
+
+settings = Settings()
+
 
 # ---------------------------------------------------------------------------
 # Document models
@@ -234,24 +256,25 @@ def seed() -> None:
 def create_app() -> Flask:
     """Create and configure the Flask application."""
     app = Flask(__name__)
-    app.config["SECRET_KEY"] = "dev-only-secret-key"
+    app.config["SECRET_KEY"] = settings.secret_key
 
-    if os.environ.get("MONGOMOCK"):
+    if settings.mongomock:
         import mongomock
 
         mongoengine.connect(
-            "opinionated_mixins_demo",
+            settings.mongodb_name,
+            host=settings.mongo_uri,
             mongo_client_class=mongomock.MongoClient,
         )
     else:
         mongoengine.connect(
-            "opinionated_mixins_demo",
-            host="mongodb://localhost:27017",
+            settings.mongodb_name,
+            host=settings.mongo_uri,
         )
 
     seed()
 
-    admin = Admin(app, name="Opinionated Mixins (Mongo)", template_mode="bootstrap4")
+    admin = Admin(app, name="Opinionated Mixins (Mongo)", theme=Bootstrap4Theme())
     admin.add_view(AnnouncementAdmin(AnnouncementDoc, name="Announcements"))
     admin.add_view(FeedbackAdmin(FeedbackDoc, name="Feedback"))
     admin.add_view(TemplateAdmin(TemplateDoc, name="Templates"))
@@ -263,4 +286,4 @@ def create_app() -> Flask:
 
 
 if __name__ == "__main__":
-    create_app().run(debug=True)
+    create_app().run(host=settings.host, port=settings.port, debug=settings.debug)
