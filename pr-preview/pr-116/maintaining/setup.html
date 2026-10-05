@@ -194,7 +194,7 @@ contexts as required (the names are the <strong>check runs</strong>, not the wor
 <li><p><code class="docutils literal notranslate"><span class="pre">check</span></code> — <code class="docutils literal notranslate"><span class="pre">ci.yml</span></code>’s aggregate gate. It is the single context that covers
 the tests, the per-component coverage gates, style, hooks and the documentation
 build; without it a PR whose entire test suite failed still satisfies
-protection, because the four metadata gates below say nothing about the code.</p></li>
+protection, because the metadata gates below say nothing about the code.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Validate</span> <span class="pre">PR</span> <span class="pre">title</span></code> — the Conventional Commits PR-title lint
 (<code class="docutils literal notranslate"><span class="pre">check-pr-title.yml</span></code>), which release-please depends on.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Validate</span> <span class="pre">branch</span> <span class="pre">name</span></code> — the Conventional Branch lint
@@ -202,6 +202,9 @@ protection, because the four metadata gates below say nothing about the code.</p
 follow the <code class="docutils literal notranslate"><span class="pre">&lt;type&gt;/&lt;description&gt;</span></code> format.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Verify</span> <span class="pre">linked</span> <span class="pre">issue</span></code> — the linked-issue check (<code class="docutils literal notranslate"><span class="pre">check-linked-issues.yml</span></code>),
 which fails a PR with no linked issue.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rfc-label-gate</span></code> — the RFC label gate (<code class="docutils literal notranslate"><span class="pre">rfc-label-gate.yml</span></code>), which checks
+that an RFC PR carries the <code class="docutils literal notranslate"><span class="pre">rfc</span></code> and exactly one <code class="docutils literal notranslate"><span class="pre">status:*</span></code> label while
+passing unconditionally for PRs that do not change RFC documents.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Task</span> <span class="pre">Completed</span> <span class="pre">Checker</span></code> — the PR task-list gate (<code class="docutils literal notranslate"><span class="pre">task-completed-check.yml</span></code>),
 which fails while any unticked checkbox remains in the PR description. This is
 the name of the <strong>check run</strong> the action publishes, not of the job around it
@@ -214,7 +217,7 @@ requiring the job name would not gate anything.</p></li>
 </span><span data-line="3"><span class="s">{</span>
 </span><span data-line="4"><span class="s">  "required_status_checks": {</span>
 </span><span data-line="5"><span class="s">    "strict": true,</span>
-</span><span data-line="6"><span class="s">    "contexts": ["check", "Validate PR title", "Validate branch name", "Verify linked issue", "Task Completed Checker"]</span>
+</span><span data-line="6"><span class="s">    "contexts": ["check", "Validate PR title", "Validate branch name", "Verify linked issue", "rfc-label-gate", "Task Completed Checker"]</span>
 </span><span data-line="7"><span class="s">  },</span>
 </span><span data-line="8"><span class="s">  "enforce_admins": null,</span>
 </span><span data-line="9"><span class="s">  "required_pull_request_reviews": null,</span>
@@ -225,12 +228,12 @@ requiring the job name would not gate anything.</p></li>
 </div>
 <p><strong>[CHECK]</strong></p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span data-line="1">gh<span class="w"> </span>api<span class="w"> </span>repos/hasansezertasan/opinionated-mixins/branches/main/protection<span class="w"> </span><span class="se">\</span>
-</span><span data-line="2"><span class="w">  </span>--jq<span class="w"> </span><span class="s1">'(.required_status_checks.strict == true) and ((["check","Validate PR title","Validate branch name","Verify linked issue","Task Completed Checker"] - (.required_status_checks.contexts // [])) == [])'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-qx<span class="w"> </span><span class="nb">true</span>
+</span><span data-line="2"><span class="w">  </span>--jq<span class="w"> </span><span class="s1">'(.required_status_checks.strict == true) and ((["check","Validate PR title","Validate branch name","Verify linked issue","rfc-label-gate","Task Completed Checker"] - (.required_status_checks.contexts // [])) == [])'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-qx<span class="w"> </span><span class="nb">true</span>
 </span></pre></div>
 </div>
 <p>UI equivalent: <strong>Settings → Branches → Add branch ruleset</strong> (or <strong>Add rule</strong> for
 <code class="docutils literal notranslate"><span class="pre">main</span></code>) — enable <strong>Require status checks to pass before merging</strong>, then search
-for and add the five contexts above. The contexts only appear in the picker
+for and add the six contexts above. The contexts only appear in the picker
 after each check has run at least once.</p>
 <section id="apply-protection-after-the-first-merge">
 <span id="setup-first-pr"></span><h3>Apply protection <em>after</em> the first merge<a class="headerlink" href="#apply-protection-after-the-first-merge" title="Link to this heading">#</a></h3>
