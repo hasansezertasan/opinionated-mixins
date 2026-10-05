@@ -3,6 +3,8 @@ from typing import Any, ClassVar
 
 from mongoengine import DateTimeField
 
+__all__ = ["CreatedAt"]
+
 
 class CreatedAt:
     """CreatedAt mixin for MongoEngine documents."""

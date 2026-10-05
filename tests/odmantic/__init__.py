@@ -1,1 +1,1 @@
-
+"""ODMantic adapter tests."""

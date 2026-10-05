@@ -3,6 +3,8 @@ from typing import Any
 
 from odmantic import Field
 
+__all__ = ["Activity"]
+
 
 class Activity:
     """Activity mixin for ODMantic models.

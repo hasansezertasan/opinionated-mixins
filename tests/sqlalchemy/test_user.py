@@ -24,7 +24,7 @@ class TestSQLAlchemyUser:
             session.commit()
             session.refresh(obj)
             assert obj.username == "janedoe"
-            assert obj.hashed_password == "hashed123"
+            assert obj.hashed_password == "hashed123"  # pragma: allowlist secret
             assert obj.email is None
             assert obj.date_email_verified is None
 
@@ -33,7 +33,7 @@ class TestSQLAlchemyUser:
             now = datetime.datetime(2024, 1, 15, 12, 0, 0)
             obj = MyUser(
                 username="janedoe",
-                hashed_password="hashed123",
+                hashed_password="hashed123",  # pragma: allowlist secret
                 email="jane@example.com",
                 date_email_verified=now,
             )

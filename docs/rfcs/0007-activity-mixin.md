@@ -157,7 +157,7 @@ class Activity:
     action_object_id: str | None = Field(default=None, max_length=255)
     public: bool = Field(default=True)
     created_at: datetime.datetime = Field(
-        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc)
+        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),
     )
 ```
 

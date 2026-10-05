@@ -3,6 +3,8 @@ from opinionated_mixins.enums import AnnouncementCategory
 from sqlalchemy import Column, Enum, String, Text
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["Announcement"]
+
 
 @declarative_mixin
 class Announcement:

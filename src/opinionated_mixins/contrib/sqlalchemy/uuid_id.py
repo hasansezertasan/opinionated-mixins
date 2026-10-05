@@ -3,6 +3,8 @@ import uuid
 from sqlalchemy import Column, Uuid
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["UUIDID"]
+
 
 @declarative_mixin
 class UUIDID:

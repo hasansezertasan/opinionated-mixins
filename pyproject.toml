@@ -77,7 +77,7 @@ style = [
 # ever executes in the Linux-only `style` job. The tox `style` env lists this
 # group explicitly. Still a single version source, same as every other pin.
 sast = [
-  "semgrep==1.177.0",
+  "semgrep==1.179.0",
 ]
 test = [
   "coverage-enable-subprocess==1.0",
@@ -115,6 +115,10 @@ docs = [
   # published versions and pick the `latest` alias (ADR-027). Also a Sphinx
   # transitive dependency; pinned here for the explicit direct use.
   "packaging>=24.0",
+  # The API reference imports each adapter so Sphinx must have their frameworks.
+  "sqlalchemy==2.0.54",
+  "mongoengine==0.29.3",
+  "odmantic==1.1.0",
 ]
 tool = [
   "commitizen==4.17.0",
@@ -212,7 +216,11 @@ branch = true
 # Match `_version.py` wherever it resolves: `src/...` in editable dev installs and
 # `.../site-packages/...` when tox/CI installs the built wheel or sdist. A
 # `src/**`-only pattern silently misses the installed copy and reports it at 0%.
-omit = ["*/_version.py"]
+# The RFC version compatibility shim is a one-line import and the generated
+# module is intentionally excluded. ODMantic integration tests are expected
+# xfails while upstream issue #39 prevents composite-model construction; retain
+# their execution but exclude those impossible paths from coverage.
+omit = ["*/_version.py", "*/__about__.py", "tests/odmantic/*_integration.py"]
 parallel = true
 # Store data-file paths relative to the project root so `.coverage` files produced
 # on different runners/OSes merge in the `coverage-combine` CI job without
@@ -270,7 +278,33 @@ ignore_decorators = [
 # names (CSS/compose/on_mount/title/BINDINGS) are invoked by the TUI framework,
 # and ``pytestmark``/``pytest_*`` (conftest hooks) are consumed by pytest at
 # collection time.
-ignore_names = ["CONFIG_FILE_PATH", "logger", "main", "model_config", "pytest_*", "collect_ignore_glob"]
+ignore_names = [
+  "CONFIG_FILE_PATH",
+  "logger",
+  "main",
+  "model_config",
+  "pytest_*",
+  "collect_ignore_glob",
+  "meta",
+  "website",
+  "linkedin_url",
+  "industry",
+  "last_contacted",
+  "next_follow_up",
+  "_generate_next_value_",
+  "UPDATE",
+  "EVENT",
+  "RECYCLED",
+  "CLOSED",
+  "EXISTING_CUSTOMER",
+  "PUBLIC_RELATIONS",
+  "CAMPAIGN",
+  "BUG",
+  "DISMISSED",
+  "CRITICAL",
+  "_mongomock_connection",
+  "pytestmark",
+]
 min_confidence = 60
 paths = ["src", "tests"]
 
@@ -320,6 +354,7 @@ show-fixes = true
 src = ["src", "tests", "examples", "docs/examples"]
 target-version = "py310"
 unsafe-fixes = true
+extend-exclude = ["docs/rfcs/**"]
 
 
 [tool.ruff.analyze]
@@ -738,7 +773,7 @@ commands = [
   ["sphinx-build", "-w", "docs/_build/warnings.txt", "-b", "html", "docs", "docs/_build/html"],
   ["python", "docs/check_warnings.py"],
 ]
-dependency_groups = ["docs", "test"]
+dependency_groups = ["docs"]
 description = "Build Docs"
 runner = "uv-venv-runner"
 # Keep build log output unbuffered/ordered. Reproducible builds pin Sphinx's
@@ -756,7 +791,7 @@ set_env = { PYTHONUNBUFFERED = "1" }
 # rewrites it on every Sphinx build, so watching it would make each rebuild
 # trigger the next in an endless live-reload loop.
 commands = [["sphinx-autobuild", "--ignore", "*/_generated/*", "docs", "docs/_build/html"]]
-dependency_groups = ["docs", "test"]
+dependency_groups = ["docs"]
 description = "Start the live-reloading docs server"
 runner = "uv-venv-runner"
 set_env = { PYTHONUNBUFFERED = "1" }
@@ -767,7 +802,7 @@ set_env = { PYTHONUNBUFFERED = "1" }
 # separate builder executes the occasional ``>>>`` snippet that belongs inline
 # with prose.
 commands = [["sphinx-build", "-b", "doctest", "docs", "docs/_build/doctest"]]
-dependency_groups = ["docs", "test"]
+dependency_groups = ["docs"]
 description = "Run documentation doctests"
 runner = "uv-venv-runner"
 set_env = { PYTHONUNBUFFERED = "1" }
@@ -777,7 +812,7 @@ set_env = { PYTHONUNBUFFERED = "1" }
 # On-demand link checker. Also run weekly (non-blocking) by docs-linkcheck.yml.
 # Hits the network, so it is deliberately not part of the `style` env or PR CI.
 commands = [["sphinx-build", "-b", "linkcheck", "docs", "docs/_build/linkcheck"]]
-dependency_groups = ["docs", "test"]
+dependency_groups = ["docs"]
 description = "Check documentation for broken links"
 runner = "uv-venv-runner"
 set_env = { PYTHONUNBUFFERED = "1" }

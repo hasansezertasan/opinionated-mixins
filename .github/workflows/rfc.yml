@@ -1,3 +1,4 @@
+---
 name: RFC
 
 # Syncs RFC frontmatter from PR labels and regenerates INDEX.md after an RFC
@@ -27,6 +28,9 @@ name: RFC
 # (See PR #71 for the full rationale.)
 
 on:
+  # This post-merge handler checks out main only and runs repository-owned code;
+  # it never executes content from the pull request head.
+  # zizmor: ignore[dangerous-triggers] The job checks out main and never executes PR code.
   pull_request_target:
     types: [closed]
     paths:
@@ -47,18 +51,19 @@ jobs:
   sync:
     # Only for merged (not merely closed) RFC PRs carrying the `rfc` label.
     if: >-
-      github.event.pull_request.merged == true &&
-      contains(github.event.pull_request.labels.*.name, 'rfc')
+      github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'rfc')
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Check out main
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
         with:
           ref: main
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7
         with:
           python-version: "3.14"
 

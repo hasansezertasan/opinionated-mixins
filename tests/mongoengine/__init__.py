@@ -1,1 +1,1 @@
-
+"""MongoEngine adapter tests."""

@@ -4,6 +4,8 @@ from opinionated_mixins.enums import TemplateFormat, TemplateType
 
 from mongoengine import StringField
 
+__all__ = ["Template"]
+
 
 class Template:
     """Template mixin for MongoEngine documents."""

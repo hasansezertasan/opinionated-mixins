@@ -5,6 +5,8 @@ from opinionated_mixins.enums import NotificationLevel
 from sqlalchemy import JSON, Column, DateTime, Enum, String, Text
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["Notification"]
+
 
 @declarative_mixin
 class Notification:

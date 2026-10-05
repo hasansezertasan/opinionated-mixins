@@ -241,7 +241,7 @@ def seed() -> None:
     ).save()
     UserDoc(
         username="admin",
-        hashed_password="pbkdf2:sha256:placeholder",
+        hashed_password="pbkdf2:sha256:placeholder",  # pragma: allowlist secret
         email="admin@example.com",
     ).save()
 

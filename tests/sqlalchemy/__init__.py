@@ -1,1 +1,1 @@
-
+"""SQLAlchemy adapter tests."""

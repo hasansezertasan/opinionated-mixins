@@ -2,6 +2,8 @@ from opinionated_mixins.enums import AnnouncementCategory
 
 from odmantic import Field
 
+__all__ = ["Announcement"]
+
 
 class Announcement:
     """Announcement mixin for ODMantic models."""

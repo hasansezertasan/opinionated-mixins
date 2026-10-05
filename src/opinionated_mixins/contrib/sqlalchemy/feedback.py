@@ -3,6 +3,8 @@ from opinionated_mixins.enums import FeedbackCategory, FeedbackStatus
 from sqlalchemy import Column, Enum, String, Text
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["Feedback"]
+
 
 @declarative_mixin
 class Feedback:

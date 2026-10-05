@@ -5,6 +5,8 @@ from opinionated_mixins.enums import NotificationLevel
 
 from mongoengine import DateTimeField, DictField, StringField
 
+__all__ = ["Notification"]
+
 
 class Notification:
     """Notification mixin for MongoEngine documents.

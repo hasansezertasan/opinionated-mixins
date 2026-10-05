@@ -3,6 +3,8 @@ import datetime
 from sqlalchemy import JSON, Boolean, Column, DateTime, String, Text
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["Activity"]
+
 
 @declarative_mixin
 class Activity:

@@ -166,8 +166,8 @@ This project uses [**uv**](https://docs.astral.sh/uv/) for dependency
 management. To get set up:
 
 ```bash
-# Install dependencies (including dev and type-checking groups)
-uv sync --group dev --group types
+# Install development, test, and style dependencies
+uv sync
 
 # Run the test suite
 uv run pytest tests

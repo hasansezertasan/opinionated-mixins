@@ -4,6 +4,8 @@ from opinionated_mixins.enums import FeedbackCategory, FeedbackStatus
 
 from mongoengine import StringField
 
+__all__ = ["Feedback"]
+
 
 class Feedback:
     """Feedback mixin for MongoEngine documents."""

@@ -1,3 +1,4 @@
+---
 name: RFC Label Gate
 
 # Gates merging of RFC PRs on the required labels. GitHub branch protection
@@ -21,6 +22,7 @@ permissions:
 jobs:
   rfc-label-gate:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}

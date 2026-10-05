@@ -5,6 +5,8 @@ from opinionated_mixins.enums import NotificationLevel
 
 from odmantic import Field
 
+__all__ = ["Notification"]
+
 
 class Notification:
     """Notification mixin for ODMantic models.

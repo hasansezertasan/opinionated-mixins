@@ -4,6 +4,8 @@ from opinionated_mixins.enums import AnnouncementCategory
 
 from mongoengine import StringField
 
+__all__ = ["Announcement"]
+
 
 class Announcement:
     """Announcement mixin for MongoEngine documents."""

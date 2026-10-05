@@ -1,1 +1,1 @@
-
+"""SQLModel adapter tests."""

@@ -4,6 +4,8 @@ from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
 
 from mongoengine import BooleanField, DateField, DecimalField, IntField, StringField
 
+__all__ = ["Lead"]
+
 
 class Lead:
     """Lead mixin for MongoEngine documents."""

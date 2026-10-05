@@ -13,11 +13,11 @@ python = "{{ get_env(name='PYTHON_VERSION', default=read_file(path=config_root ~
 # prek `ghalint` hook and the CI `hooks` job invoke this binary.
 "aqua:suzuki-shunsuke/ghalint" = "1.5.6"
 # cobo (copy boilerplates) manages the .gitignore fenced block from the
-# github/gitignore templates recorded in cobo.lock. Delivered via mise's pipx
-# backend (Renovate-tracked) and invoked as `mise exec -- cobo` by the
-# gitignore-check task and the gitignore-drift.yml workflow. 0.4.0+ ships the
-# `--eol` policy the block was sealed with.
-"pipx:cobo" = "0.4.0"
+# github/gitignore templates recorded in cobo.lock. Use the PyPI backend so
+# mise installs it with this project's selected Python (cobo requires >=3.14).
+# Renovate tracks the pinned version; invoked as `mise exec -- cobo` by the
+# gitignore-check task and gitignore-drift.yml workflow.
+"pypi:cobo" = "0.4.0"
 
 [tasks.install]
 description = "Install dependencies"

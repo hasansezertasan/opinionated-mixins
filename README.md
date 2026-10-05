@@ -114,7 +114,7 @@ Available mixins cover people, users, announcements, feedback, leads, templates,
 
 Mixins remain plain classes so consumers choose the framework base and can combine several mixins. Tests check field definitions, consistency across frameworks, and persistence using SQLite or MongoDB mocks. Optional MongoDB integration tests use testcontainers.
 
-The package has no runtime dependencies. Consumers install their framework; contributors use the development and type-checking groups described in [CONTRIBUTING.md](CONTRIBUTING.md).
+The package has no runtime dependencies. Consumers install their framework; contributors install development, test, and style tools with `uv sync`.
 
 New mixins, fields, framework support, and breaking changes require an accepted [RFC](docs/rfcs/README.md). Documentation corrections and examples do not require one.
 
@@ -125,7 +125,7 @@ New mixins, fields, framework support, and breaking changes require an accepted 
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Install all dependencies
-uv sync --group dev --group types
+uv sync
 
 # Run tests
 uv run pytest tests
@@ -239,7 +239,7 @@ ODMantic's metaclass does not collect annotations from plain mixin parents. This
 ### How do I run the checks?
 
 ```sh
-uv sync --group dev --group types
+uv sync
 uv run pytest tests
 uv run ruff check .
 uv run ruff format --check .

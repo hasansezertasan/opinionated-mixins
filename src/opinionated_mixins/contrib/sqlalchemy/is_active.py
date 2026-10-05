@@ -1,6 +1,8 @@
 from sqlalchemy import Boolean, Column
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["IsActive"]
+
 
 @declarative_mixin
 class IsActive:

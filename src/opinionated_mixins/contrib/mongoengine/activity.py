@@ -3,6 +3,8 @@ from typing import Any, ClassVar
 
 from mongoengine import BooleanField, DateTimeField, DictField, StringField
 
+__all__ = ["Activity"]
+
 
 class Activity:
     """Activity mixin for MongoEngine documents.

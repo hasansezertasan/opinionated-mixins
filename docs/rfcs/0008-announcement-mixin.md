@@ -100,7 +100,9 @@ class Announcement:
     title = Column(String(255), nullable=False, index=True)
     content = Column(Text, nullable=False)
     category = Column(
-        Enum(AnnouncementCategory), nullable=False, default=AnnouncementCategory.GENERAL
+        Enum(AnnouncementCategory),
+        nullable=False,
+        default=AnnouncementCategory.GENERAL,
     )
 ```
 

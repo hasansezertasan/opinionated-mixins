@@ -28,22 +28,23 @@ Guidance for AI coding agents working in this repository.
 ## Package Structure
 
 **Do not create new top-level subpackages under `src/opinionated_mixins/`.**
-New feature code goes inside an existing layer:
+New mixins go inside their framework adapter; shared enum definitions stay in
+`enums.py`:
 
 | What you are adding | Where it goes |
 | ------------------- | ------------- |
-| Business logic, domain models, app behavior | `core/` |
-| External integrations (APIs, storage, brokers) | `core/` |
-| Config / settings | `core/config.py` |
-| Dependency-free helpers (no internal imports) | `utils/` |
+| SQLAlchemy mixin | `contrib/sqlalchemy/` |
+| SQLModel re-export | `contrib/sqlmodel/` |
+| MongoEngine mixin | `contrib/mongoengine/` |
+| ODMantic mixin | `contrib/odmantic/` |
+| Shared enum | `enums.py` |
 
 The layering is enforced in CI by import-linter (`[tool.importlinter]` in
 `pyproject.toml`), whose contract is **exhaustive**: a subpackage not listed in
-its `layers` fails `tox run -e style`. `core` may import `utils`; `utils` imports
-nothing internal.
+its `layers` fails `tox run -e style`. `sqlmodel` may re-export `sqlalchemy`
+mixins; MongoEngine and ODMantic remain independent.
 
-Adding a top-level subpackage is an architecture change: propose it first, and if
-agreed, add it to the import-linter contract in the same PR.
+Add a new framework adapter only with an architecture update to that contract.
 
 ## Key Conventions
 
