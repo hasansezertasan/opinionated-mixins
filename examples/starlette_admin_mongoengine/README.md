@@ -1,49 +1,11 @@
-# MongoEngine Kitchen Sink with Starlette Admin
+# MongoEngine with Starlette-Admin
 
-This example shows how to use any MongoEngine mixin and bring them together in a Starlette Admin application.
+With MongoDB running locally, run from the repository root:
 
-## Clone the repo
-
-```shell
-git clone https://github.com/hasansezertasan/opinionated-mixins.git
-cd opinionated-mixins
+```sh
+uv run examples/starlette_admin_mongoengine/main.py
 ```
 
-## Install dependencies with virtualenv
+Open <http://127.0.0.1:8000/> to manage Person documents. The example composes the Person mixin with MongoEngine's Document and overrides the name fields.
 
-- Create a virtual environment:
-
-```shell
-python3 -m venv venv
-```
-
-- Activate the virtual environment:
-
-> On Windows:
-
-```shell
-venv/Scripts/activate.bat
-```
-
-> On Unix or MacOS:
-
-```shell
-source venv/bin/activate
-```
-
-- Install requirements:
-
-```shell
-pip install -r 'examples/starlette_admin_mongoengine/requirements.txt'
-```
-
-Install the current checkout with `pip install -e .`. Start MongoDB locally, or copy
-`examples/starlette_admin_mongoengine/.env.example` to `.env` in that same directory
-and set `MONGO_URI` and `MONGODB_NAME` for your server. The defaults are
-`mongodb://localhost:27017` and `opinionated_mixins`.
-
-## Run the application
-
-```shell
-uvicorn examples.starlette_admin_mongoengine.main:app --host 0.0.0.0 --port 8000 --reload
-```
+The script declares its dependencies using PEP 723 and loads this checkout of `opinionated-mixins`. Configuration uses Pydantic Settings. Override `MONGO_URI`, `MONGODB_NAME`, `HOST`, or `PORT` through environment variables. MongoDB defaults to `mongodb://localhost:27017` and database `opinionated_mixins`.

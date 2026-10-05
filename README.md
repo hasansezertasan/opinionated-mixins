@@ -119,6 +119,110 @@ uv run ruff format .
 uv run mypy --install-types --non-interactive src/opinionated_mixins
 ```
 
+## Roadmap
+
+The [RFC index](docs/rfcs/INDEX.md) records accepted designs and the status of proposals. [Open issues](https://github.com/hasansezertasan/opinionated-mixins/issues) track implementation work.
+
+### Priorities
+
+- Investigate ODMantic composition support, tracked in [issue #39](https://github.com/hasansezertasan/opinionated-mixins/issues/39).
+- Expand working examples and document framework-specific limitations.
+- Extend integration coverage for storage behavior and mixin composition.
+
+The library already includes timestamp, active-flag, integer-ID, and UUID-ID mixins. CI runs linting, formatting, type checking, and tests on Python 3.10 and 3.14.
+
+Additional mixins, fields, or storage frameworks require research and an accepted RFC. See [CONTRIBUTING.md](CONTRIBUTING.md) to propose work.
+
+### Proposed additional mixins
+
+The earlier design discussion proposed the following mixins. These are candidates for RFCs; the remaining field names and contracts are provisional.
+
+[Issue #115](https://github.com/hasansezertasan/opinionated-mixins/issues/115) tracks the partial and unimplemented proposals below, along with framework coverage candidates.
+
+| Proposal | Current coverage | Remaining work |
+| --- | --- | --- |
+| Timestamp | [CreatedAt](docs/rfcs/0001-created-at-mixin.md) and [UpdatedAt](docs/rfcs/0002-updated-at-mixin.md) provide `created_at` and `updated_at`. | Implemented as separate composable mixins. |
+| UUID | [UUIDID](docs/rfcs/0005-uuid-id-mixin.md) provides UUID primary keys for SQLAlchemy and SQLModel. | Implemented for SQL storage; MongoDB models use their native identifiers. |
+| SoftDelete | [IsActive](docs/rfcs/0003-is-active-mixin.md) provides an active flag. | A dedicated `deleted_at` / `deleted_by` contract. |
+| Audit | [Activity](docs/rfcs/0007-activity-mixin.md) records events and their actors. | Record-level `created_by` / `updated_by` fields. |
+| Address | [Person](docs/rfcs/0009-person-mixin.md) includes street address, city, postal code, and country. | A dedicated address mixin, including additional address lines and state/province. |
+| Contact | Person includes email and phone number; Lead includes website and LinkedIn URL. | A dedicated contact mixin and a decision on mobile/fax fields. |
+| Status | Feedback and Lead have domain-specific status enums. | A general status mixin with change reason, time, and actor. |
+| Slug | No dedicated implementation. | URL-friendly slug fields and uniqueness rules. |
+| Metadata | Activity and Notification include JSON `data`. | A general metadata/tags contract. |
+| Version | No dedicated implementation. | Version, latest-version flag, and parent reference. |
+| Priority | No dedicated implementation. | Priority and ordering fields. |
+| Expiration | No dedicated implementation. | Expiration time and computed expiry behavior. |
+
+### Framework considerations
+
+Each accepted mixin should provide consistent field names and behavior across applicable supported frameworks, using the framework's native field types, constraints, and validation.
+
+- **SQLAlchemy**: supported; declarative columns, types, and constraints.
+- **MongoEngine**: supported; document fields and validation.
+- **ODMantic**: supported field definitions; resolve the plain-mixin composition limitation before promising inherited model fields.
+- **SQLModel**: supported through re-exports of SQLAlchemy implementations.
+- **TortoiseORM**: proposed expansion; native ORM field definitions and persistence tests.
+- **Beanie**: proposed expansion; document fields compatible with Pydantic validation, with the consumer choosing the document base.
+- **Pydantic**: proposed input-layer expansion; annotated fields and validation, with the consumer choosing the model base.
+- **Dataclasses**: proposed expansion; field annotations and defaults.
+- **WTForms**: proposed input-layer expansion; form fields and validators.
+
+The last five frameworks are roadmap candidates, not current support. Adding them requires accepted framework RFCs; Pydantic, dataclasses, and WTForms also require revisiting the current storage-only scope.
+
+## Frequently asked questions
+
+### Which frameworks are supported?
+
+SQLAlchemy, SQLModel, MongoEngine, and ODMantic. These are storage frameworks; input validation libraries and form frameworks are outside the current scope. See [ARCHITECTURE.md](ARCHITECTURE.md) for framework limitations.
+
+### How do I install the package?
+
+```sh
+pip install opinionated-mixins
+```
+
+Install your chosen framework separately. The base package has no runtime dependencies and requires Python 3.10 or newer.
+
+### How do I use a mixin?
+
+Compose it with your application's framework base:
+
+```python
+from opinionated_mixins.contrib.sqlalchemy import Person
+from sqlalchemy import Column, Integer
+from sqlalchemy.orm import DeclarativeBase
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+class Contact(Person, Base):
+    __tablename__ = "contacts"
+    id = Column(Integer, primary_key=True)
+```
+
+`Contact` receives the Person fields, including `first_name`, `last_name`, `phone_number`, `street_address`, and `date_of_birth`. You can override columns on the concrete model.
+
+### Why does ODMantic inheritance fail?
+
+ODMantic's metaclass does not collect annotations from plain mixin parents. This is tracked in [issue #39](https://github.com/hasansezertasan/opinionated-mixins/issues/39). The [Starlette example](examples/starlette_admin_odmantic/README.md) declares fields directly as a workaround.
+
+### How do I run the checks?
+
+```sh
+uv sync --group dev --group types
+uv run pytest tests
+uv run ruff check .
+uv run ruff format --check .
+uv run mypy src/opinionated_mixins
+```
+
+### How do I propose a change or report a bug?
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). New mixins, fields, framework support, and breaking changes follow the [RFC process](docs/rfcs/README.md). For bugs, use the [bug report template](.github/ISSUE_TEMPLATE/bug_report.md) and include a minimal reproduction.
+
 ## Contributing
 
 New mixin ideas? Open a [Model Proposal](https://github.com/hasansezertasan/opinionated-mixins/issues/new?template=model_proposal.md). New fields on existing mixins? Open a [Field Proposal](https://github.com/hasansezertasan/opinionated-mixins/issues/new?template=field_proposal.md).
@@ -132,6 +236,3 @@ Both require real-world references — this project runs on consensus, not opini
 ## More documentation
 
 - [Architecture](ARCHITECTURE.md)
-- [Frequently asked questions](FAQ.md)
-- [Roadmap](ROADMAP.md)
-- [Changelog](CHANGELOG.md)

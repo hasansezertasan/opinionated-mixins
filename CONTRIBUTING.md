@@ -224,10 +224,3 @@ This project is currently maintained by [@hasansezertasan](https://github.com/ha
 <!-- omit in toc -->
 ## Attribution
 This guide is based on the **contributing-gen**. [Make your own](https://github.com/bttger/contributing-gen)!
-
-## More documentation
-
-- [Architecture](ARCHITECTURE.md)
-- [Frequently asked questions](FAQ.md)
-- [Roadmap](ROADMAP.md)
-- [Changelog](CHANGELOG.md)
