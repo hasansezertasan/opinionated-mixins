@@ -45,12 +45,7 @@ class TestSQLAlchemyUser:
 
     def test_fields_exist(self) -> None:
         columns = {c.name for c in MyUser.__table__.columns}
-        expected = {
-            "username",
-            "hashed_password",
-            "email",
-            "date_email_verified",
-        }
+        expected = {"username", "hashed_password", "email", "date_email_verified"}
         assert expected.issubset(columns)
 
     def test_username_unique_constraint(self) -> None:

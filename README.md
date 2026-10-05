@@ -45,6 +45,7 @@ These adjacent projects helped shape the way this library thinks about shared co
 ```python
 from opinionated_mixins.contrib.sqlalchemy import Announcement
 
+
 class MyAnnouncement(Base, Announcement):
     __tablename__ = "announcements"
     id = Column(Integer, primary_key=True)
@@ -55,6 +56,7 @@ Switch to MongoDB? Same fields, same names:
 
 ```python
 from opinionated_mixins.contrib.mongoengine import Announcement
+
 
 class MyAnnouncement(Document, Announcement):
     pass

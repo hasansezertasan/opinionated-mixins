@@ -53,15 +53,24 @@ None of the existing libraries provide:
 ```python
 # SQLAlchemy
 from opinionated_mixins.contrib.sqlalchemy import TimestampMixin
+
+
 class User(Base, TimestampMixin): ...
+
 
 # MongoEngine
 from opinionated_mixins.contrib.mongoengine import TimestampMixin
+
+
 class User(Document, TimestampMixin): ...
+
 
 # Pydantic
 from opinionated_mixins.contrib.pydantic import TimestampMixin
+
+
 class User(BaseModel, TimestampMixin): ...
+
 
 # All three have identical: created_at, updated_at fields
 ```

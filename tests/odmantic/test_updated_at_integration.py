@@ -43,9 +43,7 @@ class TestUpdatedAtIntegration:
         assert delta < 5
 
     async def test_updated_at_survives_roundtrip(
-        self,
-        mock_engine,
-        build_mixin_model,
+        self, mock_engine, build_mixin_model
     ) -> None:
         model_cls = build_mixin_model(UpdatedAt, "test_updated_at")
         obj = model_cls(name="test")
@@ -56,9 +54,7 @@ class TestUpdatedAtIntegration:
         assert abs(diff.total_seconds()) < 0.01
 
     async def test_updated_at_can_be_manually_refreshed(
-        self,
-        mock_engine,
-        build_mixin_model,
+        self, mock_engine, build_mixin_model
     ) -> None:
         model_cls = build_mixin_model(UpdatedAt, "test_updated_at")
         obj = model_cls(name="test")

@@ -1,18 +1,18 @@
 ---
 rfc: "XXXX"
-title: <Title>
+title: "<Title>"
 type: mixin # mixin | field | framework | breaking-change
 status: draft # draft | proposed | accepted | rejected | deferred | withdrawn | superseded
 created: YYYY-MM-DD # ISO date when the RFC PR is opened
 updated: YYYY-MM-DD # ISO date of the last status change
-author: <github-username>
+author: "<github-username>"
 github_issue: null # originating issue number, or null for the direct path
 github_pr: null # auto-filled by the workflow on merge
 supersedes: null # RFC number this replaces (e.g. "0003"), or null
 superseded_by: null # RFC number that replaces this one, or null
 ---
 
-# RFC-XXXX: <Title>
+# RFC-XXXX: `<Title>`
 
 > Delete section-guidance blockquotes (like this one) before opening the PR.
 > See [`README.md`](README.md) for which sections are required for your `type`.
@@ -103,7 +103,7 @@ superseded_by: null # RFC number that replaces this one, or null
 
 > Each alternative with a one-line rejection reason.
 
-1. **<Alternative>** — rejected because ...
+1. **`<Alternative>`** — rejected because ...
 
 ## Discussion Summary
 
@@ -124,4 +124,4 @@ superseded_by: null # RFC number that replaces this one, or null
 
 ## References
 
-- <links to issue, PR, external docs cited in Research>
+- `<links to issue, PR, external docs cited in Research>`

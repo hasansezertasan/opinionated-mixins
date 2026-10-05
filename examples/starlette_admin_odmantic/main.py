@@ -61,8 +61,7 @@ class Person(Model):
 
 
 engine = AIOEngine(
-    client=AsyncIOMotorClient(settings.mongo_uri),
-    database=settings.mongodb_name,
+    client=AsyncIOMotorClient(settings.mongo_uri), database=settings.mongodb_name
 )
 
 

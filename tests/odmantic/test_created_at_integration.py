@@ -43,9 +43,7 @@ class TestCreatedAtIntegration:
         assert delta < 5
 
     async def test_created_at_survives_roundtrip(
-        self,
-        mock_engine,
-        build_mixin_model,
+        self, mock_engine, build_mixin_model
     ) -> None:
         model_cls = build_mixin_model(CreatedAt, "test_created_at")
         obj = model_cls(name="test")

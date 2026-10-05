@@ -26,9 +26,7 @@ class Activity:
         doc="Action performed (e.g. 'created', 'commented', 'merged')",
     )
     description = Column(
-        Text,
-        nullable=True,
-        doc="Human-readable summary of the activity",
+        Text, nullable=True, doc="Human-readable summary of the activity"
     )
     data = Column(
         JSON,

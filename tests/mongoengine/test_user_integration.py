@@ -40,9 +40,7 @@ class TestUserIntegration:
 
     def test_roundtrip_preserves_all_fields(self) -> None:
         obj = MyUser(
-            username="charlie",
-            hashed_password="hashed789",
-            email="charlie@example.com",
+            username="charlie", hashed_password="hashed789", email="charlie@example.com"
         )
         obj.save()
         loaded = MyUser.objects.first()

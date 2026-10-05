@@ -121,31 +121,16 @@ class UserModel(UUIDID, CreatedAt, User, Base):
 class AnnouncementAdmin(ModelView):
     """Admin view for announcements."""
 
-    column_list = [
-        "id",
-        "title",
-        "category",
-        "is_active",
-        "created_at",
-    ]
+    column_list = ["id", "title", "category", "is_active", "created_at"]
     column_searchable_list = ["title", "content"]
     column_filters = ["category", "is_active", "created_at"]
-    form_choices = {
-        "category": [(c.value, c.name) for c in AnnouncementCategory],
-    }
+    form_choices = {"category": [(c.value, c.name) for c in AnnouncementCategory]}
 
 
 class FeedbackAdmin(ModelView):
     """Admin view for feedback submissions."""
 
-    column_list = [
-        "id",
-        "subject",
-        "category",
-        "status",
-        "created_at",
-        "updated_at",
-    ]
+    column_list = ["id", "subject", "category", "status", "created_at", "updated_at"]
     column_searchable_list = ["subject", "content"]
     column_filters = ["category", "status"]
     form_choices = {
@@ -157,14 +142,7 @@ class FeedbackAdmin(ModelView):
 class TemplateAdmin(ModelView):
     """Admin view for templates."""
 
-    column_list = [
-        "id",
-        "name",
-        "format",
-        "type",
-        "created_at",
-        "updated_at",
-    ]
+    column_list = ["id", "name", "format", "type", "created_at", "updated_at"]
     column_searchable_list = ["name", "content"]
     column_filters = ["format", "type"]
     form_choices = {
@@ -215,13 +193,7 @@ class PersonAdmin(ModelView):
 class UserAdmin(ModelView):
     """Admin view for users."""
 
-    column_list = [
-        "id",
-        "username",
-        "email",
-        "date_email_verified",
-        "created_at",
-    ]
+    column_list = ["id", "username", "email", "date_email_verified", "created_at"]
     column_searchable_list = ["username", "email"]
     column_filters = ["date_email_verified", "created_at"]
     form_excluded_columns = ["hashed_password"]
@@ -237,51 +209,49 @@ def seed(session: Session) -> None:
     if session.query(AnnouncementModel).count():
         return
 
-    session.add_all(
-        [
-            AnnouncementModel(
-                title="Scheduled maintenance",
-                content="Systems will be down Saturday 02:00-04:00 UTC.",
-                category=AnnouncementCategory.MAINTENANCE,
-            ),
-            AnnouncementModel(
-                title="New feature: Dark mode",
-                content="Dark mode is now available in settings.",
-                category=AnnouncementCategory.UPDATE,
-            ),
-            FeedbackModel(
-                subject="Login page slow",
-                content="Takes 5+ seconds to load on mobile.",
-                category=FeedbackCategory.BUG,
-                status=FeedbackStatus.PENDING,
-            ),
-            TemplateModel(
-                name="Welcome email",
-                content="Hi {{ name }}, welcome aboard!",
-                format=TemplateFormat.HTML,
-                type=TemplateType.EMAIL,
-            ),
-            LeadModel(
-                title="Mr.",
-                company_name="Acme Corp",
-                status=LeadStatus.IN_PROCESS,
-                source=LeadSource.CALL,
-                rating=LeadRating.HOT,
-            ),
-            PersonModel(
-                first_name="Ada",
-                last_name="Lovelace",
-                email="ada@example.com",
-                city="London",
-                country="GB",
-            ),
-            UserModel(
-                username="admin",
-                hashed_password="pbkdf2:sha256:placeholder",
-                email="admin@example.com",
-            ),
-        ],
-    )
+    session.add_all([
+        AnnouncementModel(
+            title="Scheduled maintenance",
+            content="Systems will be down Saturday 02:00-04:00 UTC.",
+            category=AnnouncementCategory.MAINTENANCE,
+        ),
+        AnnouncementModel(
+            title="New feature: Dark mode",
+            content="Dark mode is now available in settings.",
+            category=AnnouncementCategory.UPDATE,
+        ),
+        FeedbackModel(
+            subject="Login page slow",
+            content="Takes 5+ seconds to load on mobile.",
+            category=FeedbackCategory.BUG,
+            status=FeedbackStatus.PENDING,
+        ),
+        TemplateModel(
+            name="Welcome email",
+            content="Hi {{ name }}, welcome aboard!",
+            format=TemplateFormat.HTML,
+            type=TemplateType.EMAIL,
+        ),
+        LeadModel(
+            title="Mr.",
+            company_name="Acme Corp",
+            status=LeadStatus.IN_PROCESS,
+            source=LeadSource.CALL,
+            rating=LeadRating.HOT,
+        ),
+        PersonModel(
+            first_name="Ada",
+            last_name="Lovelace",
+            email="ada@example.com",
+            city="London",
+            country="GB",
+        ),
+        UserModel(
+            username="admin",
+            hashed_password="pbkdf2:sha256:placeholder",
+            email="admin@example.com",
+        ),
+    ])
     session.commit()
 
 

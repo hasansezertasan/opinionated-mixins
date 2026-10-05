@@ -75,6 +75,7 @@ A mixin is a plain class that provides fields/methods to other classes through m
 class Announcement:
     title: str = Field(..., min_length=1, max_length=255)
 
+
 # ❌ Wrong — couples to framework base
 class Announcement(BaseModel):
     title: str = Field(..., min_length=1, max_length=255)

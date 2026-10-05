@@ -163,9 +163,7 @@ class TestRfcParsing:
 class TestSetStatus:
     def test_stamps_status_and_pr(self, tmp_path: Path) -> None:
         path = _write_rfc(tmp_path, "0001", status="proposed")
-        code = rfc.main(
-            ["set-status", "--status", "accepted", "--pr", "71", str(path)],
-        )
+        code = rfc.main(["set-status", "--status", "accepted", "--pr", "71", str(path)])
         assert code == 0
         r = rfc.Rfc(path)
         assert r.status == "accepted"
@@ -205,9 +203,7 @@ class TestSyncSupersedes:
         return rfc.main(["sync-supersedes", "--date", "2026-07-06"])
 
     def test_accepted_rfc_retires_target(
-        self,
-        tmp_path: Path,
-        monkeypatch: pytest.MonkeyPatch,
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _write_rfc(tmp_path, "0002", status="accepted")
         _write_rfc(tmp_path, "0003", status="accepted", supersedes='"0002"')
@@ -217,9 +213,7 @@ class TestSyncSupersedes:
         assert old.get("superseded_by") == "0003"
 
     def test_non_accepted_replacement_does_not_retire(
-        self,
-        tmp_path: Path,
-        monkeypatch: pytest.MonkeyPatch,
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _write_rfc(tmp_path, "0002", status="accepted")
         _write_rfc(tmp_path, "0003", status="rejected", supersedes='"0002"')
@@ -227,9 +221,7 @@ class TestSyncSupersedes:
         assert rfc.Rfc(tmp_path / "0002-example.md").status == "accepted"
 
     def test_nonexistent_target_is_error(
-        self,
-        tmp_path: Path,
-        monkeypatch: pytest.MonkeyPatch,
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _write_rfc(tmp_path, "0003", status="accepted", supersedes='"0099"')
         assert self._run(monkeypatch, tmp_path) == 1
@@ -237,18 +229,11 @@ class TestSyncSupersedes:
 
 class TestGenerateIndex:
     def test_buckets_by_status(
-        self,
-        tmp_path: Path,
-        monkeypatch: pytest.MonkeyPatch,
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         _write_rfc(tmp_path, "0001", status="accepted", title="Kept")
         _write_rfc(tmp_path, "0002", status="rejected", title="Nope")
-        _write_rfc(
-            tmp_path,
-            "0003",
-            status="superseded",
-            title="Old",
-        )
+        _write_rfc(tmp_path, "0003", status="superseded", title="Old")
         monkeypatch.setattr(rfc, "RFC_DIR", tmp_path)
         index = rfc.generate_index()
         assert "## Active RFCs" in index
@@ -259,9 +244,7 @@ class TestGenerateIndex:
         assert "Last updated: 2026-01-01" in index
 
     def test_empty_dir_renders_placeholders(
-        self,
-        tmp_path: Path,
-        monkeypatch: pytest.MonkeyPatch,
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.setattr(rfc, "RFC_DIR", tmp_path)
         index = rfc.generate_index()

@@ -49,9 +49,7 @@ class TestUserIntegration:
 
     async def test_roundtrip_preserves_all_fields(self, mock_engine) -> None:
         obj = MyUser(
-            username="charlie",
-            hashed_password="hashed789",
-            email="charlie@example.com",
+            username="charlie", hashed_password="hashed789", email="charlie@example.com"
         )
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyUser)

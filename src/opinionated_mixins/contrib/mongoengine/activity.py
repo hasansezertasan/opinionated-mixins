@@ -24,13 +24,8 @@ class Activity:
         index=True,
         help_text="Action performed (e.g. 'created', 'commented', 'merged')",
     )
-    description = StringField(
-        help_text="Human-readable summary of the activity",
-    )
-    data = DictField(
-        default=None,
-        help_text="Arbitrary JSON payload for extra context",
-    )
+    description = StringField(help_text="Human-readable summary of the activity")
+    data = DictField(default=None, help_text="Arbitrary JSON payload for extra context")
     actor_type = StringField(
         required=True,
         max_length=255,

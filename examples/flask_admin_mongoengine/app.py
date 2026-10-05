@@ -120,9 +120,7 @@ class AnnouncementAdmin(ModelView):
     column_list = ["title", "category", "is_active", "created_at"]
     column_searchable_list = ["title", "content"]
     column_filters = ["category", "is_active", "created_at"]
-    form_choices = {
-        "category": [(c.value, c.name) for c in AnnouncementCategory],
-    }
+    form_choices = {"category": [(c.value, c.name) for c in AnnouncementCategory]}
 
 
 class FeedbackAdmin(ModelView):
@@ -267,10 +265,7 @@ def create_app() -> Flask:
             mongo_client_class=mongomock.MongoClient,
         )
     else:
-        mongoengine.connect(
-            settings.mongodb_name,
-            host=settings.mongo_uri,
-        )
+        mongoengine.connect(settings.mongodb_name, host=settings.mongo_uri)
 
     seed()
 

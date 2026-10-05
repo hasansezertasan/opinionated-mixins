@@ -16,11 +16,7 @@ class TestActivityIntegration:
     """Test Activity mixin composition, instantiation, and roundtrip."""
 
     def test_create_with_required_fields(self) -> None:
-        obj = MyActivity(
-            verb="commented",
-            actor_type="User",
-            actor_id="42",
-        )
+        obj = MyActivity(verb="commented", actor_type="User", actor_id="42")
         obj.save()
         loaded = MyActivity.objects.first()
         assert loaded is not None
@@ -30,11 +26,7 @@ class TestActivityIntegration:
         assert loaded.public is True
 
     def test_optional_fields_null_by_default(self) -> None:
-        obj = MyActivity(
-            verb="deployed",
-            actor_type="System",
-            actor_id="system",
-        )
+        obj = MyActivity(verb="deployed", actor_type="System", actor_id="system")
         obj.save()
         loaded = MyActivity.objects.first()
         assert loaded is not None
@@ -46,11 +38,7 @@ class TestActivityIntegration:
         assert loaded.data is None
 
     def test_public_defaults_true(self) -> None:
-        obj = MyActivity(
-            verb="created",
-            actor_type="User",
-            actor_id="1",
-        )
+        obj = MyActivity(verb="created", actor_type="User", actor_id="1")
         obj.save()
         loaded = MyActivity.objects.first()
         assert loaded is not None
@@ -83,11 +71,7 @@ class TestActivityIntegration:
         assert loaded.public is False
 
     def test_created_at_set_on_insert(self) -> None:
-        obj = MyActivity(
-            verb="merged",
-            actor_type="User",
-            actor_id="1",
-        )
+        obj = MyActivity(verb="merged", actor_type="User", actor_id="1")
         obj.save()
         loaded = MyActivity.objects.first()
         assert loaded.created_at is not None

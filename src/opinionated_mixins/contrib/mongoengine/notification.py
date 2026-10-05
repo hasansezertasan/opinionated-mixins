@@ -34,16 +34,10 @@ class Notification:
         help_text="Severity/criticality level of notification",
     )
     title = StringField(
-        required=True,
-        max_length=255,
-        help_text="Short human-readable title",
+        required=True, max_length=255, help_text="Short human-readable title"
     )
-    description = StringField(
-        help_text="Longer human-readable body",
-    )
-    data = DictField(
-        help_text="Arbitrary JSON payload for extra context",
-    )
+    description = StringField(help_text="Longer human-readable body")
+    data = DictField(help_text="Arbitrary JSON payload for extra context")
     actor_type = StringField(
         required=True,
         max_length=255,
@@ -57,8 +51,7 @@ class Notification:
         help_text="Polymorphic ID of entity that triggered notification",
     )
     action_url = StringField(
-        max_length=2048,
-        help_text="Click-through URL for the notification",
+        max_length=2048, help_text="Click-through URL for the notification"
     )
     group_key = StringField(
         max_length=255,
@@ -66,12 +59,10 @@ class Notification:
         help_text="Grouping key for batching similar notifications",
     )
     seen_at = DateTimeField(
-        index=True,
-        help_text="When notification appeared in user's feed; None = unseen",
+        index=True, help_text="When notification appeared in user's feed; None = unseen"
     )
     read_at = DateTimeField(
-        index=True,
-        help_text="When user clicked/opened notification; None = unread",
+        index=True, help_text="When user clicked/opened notification; None = unread"
     )
     archived_at = DateTimeField(
         index=True,

@@ -22,12 +22,10 @@ class Activity:
         description="Action performed (e.g. 'created', 'commented', 'merged')",
     )
     description: str | None = Field(
-        default=None,
-        description="Human-readable summary of the activity",
+        default=None, description="Human-readable summary of the activity"
     )
     data: dict[str, Any] | None = Field(
-        default=None,
-        description="Arbitrary JSON payload for extra context",
+        default=None, description="Arbitrary JSON payload for extra context"
     )
     actor_type: str = Field(
         ...,
@@ -60,8 +58,7 @@ class Activity:
         description="Polymorphic ID of entity created/used by the action",
     )
     public: bool = Field(
-        default=True,
-        description="Whether activity is visible to non-participants",
+        default=True, description="Whether activity is visible to non-participants"
     )
     created_at: datetime.datetime = Field(
         default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),

@@ -25,11 +25,7 @@ class TestActivityIntegration:
     """Test Activity mixin composition, instantiation, and roundtrip."""
 
     async def test_create_with_required_fields(self, mock_engine) -> None:
-        obj = MyActivity(
-            verb="commented",
-            actor_type="User",
-            actor_id="42",
-        )
+        obj = MyActivity(verb="commented", actor_type="User", actor_id="42")
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyActivity)
         assert loaded is not None
@@ -39,11 +35,7 @@ class TestActivityIntegration:
         assert loaded.public is True
 
     async def test_optional_fields_null_by_default(self, mock_engine) -> None:
-        obj = MyActivity(
-            verb="deployed",
-            actor_type="System",
-            actor_id="system",
-        )
+        obj = MyActivity(verb="deployed", actor_type="System", actor_id="system")
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyActivity)
         assert loaded is not None
@@ -80,11 +72,7 @@ class TestActivityIntegration:
         assert loaded.public is False
 
     async def test_created_at_set_on_insert(self, mock_engine) -> None:
-        obj = MyActivity(
-            verb="merged",
-            actor_type="User",
-            actor_id="1",
-        )
+        obj = MyActivity(verb="merged", actor_type="User", actor_id="1")
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyActivity)
         assert loaded.created_at is not None

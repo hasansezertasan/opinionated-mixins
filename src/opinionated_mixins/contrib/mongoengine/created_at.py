@@ -9,6 +9,5 @@ class CreatedAt:
 
     meta: ClassVar[dict[str, Any]] = {"allow_inheritance": True}
     created_at = DateTimeField(
-        required=True,
-        default=lambda: datetime.datetime.now(datetime.timezone.utc),
+        required=True, default=lambda: datetime.datetime.now(datetime.timezone.utc)
     )

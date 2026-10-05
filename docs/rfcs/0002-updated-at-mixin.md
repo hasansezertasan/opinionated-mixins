@@ -89,8 +89,7 @@ class UpdatedAt:
     meta: ClassVar[dict[str, Any]] = {"allow_inheritance": True}
 
     updated_at = DateTimeField(
-        required=True,
-        default=lambda: datetime.datetime.now(datetime.timezone.utc),
+        required=True, default=lambda: datetime.datetime.now(datetime.timezone.utc)
     )
 ```
 
@@ -105,7 +104,7 @@ class UpdatedAt:
     """UpdatedAt mixin for ODMantic models."""
 
     updated_at: datetime.datetime = Field(
-        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),
+        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc)
     )
 ```
 
