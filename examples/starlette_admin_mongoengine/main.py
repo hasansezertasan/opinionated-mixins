@@ -44,8 +44,8 @@ settings = Settings()
 
 
 class Person(Document, MEPerson):
-    first_name = StringField(required=False, min_length=1, max_length=64)
-    last_name = StringField(required=False, min_length=1, max_length=64)
+    first_name = StringField(required=True, min_length=1, max_length=64)
+    last_name = StringField(required=True, min_length=1, max_length=64)
 
 
 @asynccontextmanager
