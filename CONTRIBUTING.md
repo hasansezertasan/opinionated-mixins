@@ -189,7 +189,6 @@ happens in a separate PR once the RFC is accepted.
 Documentation lives in a few places:
 
 - **`README.md`** — user-facing overview and usage.
-- **`CLAUDE.md`** — architecture and conventions (also read by AI agents).
 - **`docs/rfcs/`** — design rationale for every mixin (see the RFC process above).
 
 Corrections, clarifications, and expanded examples are always welcome and do
