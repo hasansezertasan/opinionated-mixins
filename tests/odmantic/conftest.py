@@ -14,7 +14,7 @@ class _NullAsyncSession:
         """Return no driver session so ODMantic calls mongomock without sessions."""
         return
 
-    async def __aexit__(self, *exc_info: object) -> None:
+    async def __aexit__(self, *_: object) -> None:
         """Exit the no-op session context."""
 
 

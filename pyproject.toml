@@ -486,6 +486,10 @@ disable_error_code = ["var-annotated"]
 module = "opinionated_mixins.contrib.mongoengine.*"
 disable_error_code = ["import-untyped"]
 
+[[tool.mypy.overrides]]
+module = "pymongo.*"
+follow_imports = "skip"
+
 
 [tool.basedpyright]
 exclude = [".venv"]
