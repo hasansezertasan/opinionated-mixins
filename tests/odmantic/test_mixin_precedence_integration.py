@@ -29,6 +29,22 @@ class RightMixin(metaclass=ODManticMixinMetaclass):
     flag: str = Field(default="right")
 
 
+class CommonMixin(metaclass=ODManticMixinMetaclass):
+    """Common mixin with a field shared through a diamond."""
+
+    status: str = Field(default="common")
+
+
+class DiamondLeftMixin(CommonMixin):
+    """Left diamond branch that inherits the common field."""
+
+
+class DiamondRightMixin(CommonMixin):
+    """Right diamond branch that overrides the common field."""
+
+    status: str = Field(default="right")
+
+
 class TestODManticMixinPrecedence:
     """Test that copied mixin fields follow Python MRO precedence."""
 
@@ -45,3 +61,10 @@ class TestODManticMixinPrecedence:
 
         obj = MyModel()
         assert obj.priority == 2
+
+    def test_c3_mro_wins_diamond_duplicate_field(self) -> None:
+        class MyModel(DiamondLeftMixin, DiamondRightMixin, Model):
+            model_config = {"collection": "test_mixin_precedence_diamond"}
+
+        obj = MyModel()
+        assert obj.status == "right"

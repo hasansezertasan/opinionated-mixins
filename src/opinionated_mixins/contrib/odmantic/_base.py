@@ -70,14 +70,58 @@ def _copy_mixin_fields(bases: tuple[type, ...], namespace: dict[str, Any]) -> No
     """Copy annotated fields from opinionated mixins into a model namespace."""
     annotations = _namespace_annotations(namespace)
     direct_field_names = set(annotations)
-    for base in bases:
-        if _is_odmantic_model_base(base):
+    for mixin in _mro_for_bases(bases):
+        if mixin is object or _is_odmantic_model_base(mixin):
             continue
-        for mixin in base.__mro__:
-            if mixin is object or _is_odmantic_model_base(mixin):
-                continue
-            _copy_fields_from_mixin(mixin, direct_field_names, annotations, namespace)
+        _copy_fields_from_mixin(mixin, direct_field_names, annotations, namespace)
     namespace["__annotations__"] = annotations
+
+
+def _mro_for_bases(bases: tuple[type, ...]) -> list[type]:
+    """Return non-model bases in Python C3 MRO order.
+
+    Returns:
+        MRO sequence for non-ODMantic-model bases, excluding the new class itself.
+    """
+    base_list = [base for base in bases if not _is_odmantic_model_base(base)]
+    seqs = [list(base.__mro__) for base in base_list]
+    seqs.append(base_list.copy())
+    return _merge_mro(seqs)
+
+
+def _merge_mro(seqs: list[list[type]]) -> list[type]:
+    """Merge MRO candidate sequences using Python's C3 linearization.
+
+    Returns:
+        The merged MRO sequence.
+    """
+    result: list[type] = []
+    while True:
+        seqs = [seq for seq in seqs if seq]
+        if not seqs:
+            return result
+        candidate = _next_mro_candidate(seqs)
+        result.append(candidate)
+        for seq in seqs:
+            if seq[0] is candidate:
+                _ = seq.pop(0)
+
+
+def _next_mro_candidate(seqs: list[list[type]]) -> type:
+    """Return the next valid C3 MRO candidate.
+
+    Returns:
+        The next class that does not appear in any sequence tail.
+
+    Raises:
+        TypeError: If the base classes do not have a consistent MRO.
+    """
+    for seq in seqs:
+        candidate = seq[0]
+        if not any(candidate in other_seq[1:] for other_seq in seqs):
+            return candidate
+    msg = "Cannot create a consistent method resolution order"
+    raise TypeError(msg)
 
 
 def _namespace_annotations(namespace: dict[str, Any]) -> dict[str, Any]:
