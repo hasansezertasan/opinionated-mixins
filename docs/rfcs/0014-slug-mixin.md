@@ -112,7 +112,9 @@ slugs that fully match `[a-z0-9]+(?:-[a-z0-9]+)*` (check with `re.fullmatch`;
 SQLAlchemy column is `NOT NULL` but, like `Template.name` and `User.username`,
 does not reject `""` at the database level. A mixin-level `CheckConstraint`
 would collide with the consumer's own `__table_args__`. Consumers that need
-the guarantee on SQL add it themselves. Note that slugifying text with no ASCII
+the guarantee on SQL add it themselves. SQLite also ignores the `VARCHAR`
+length, so the 255-character maximum is enforced there only by the
+application. Note that slugifying text with no ASCII
 letters or digits (for example `slugify("日本語")`) returns `""`.
 
 **Uniqueness and indexing.** The field is not declared `unique` in any
@@ -130,10 +132,12 @@ extends it to the document adapters:
 
 Caveats the docstrings point out:
 
-- In SQL, a compound unique constraint does not treat `NULL`s as equal, so two
-  root rows `(NULL, "about")` are both accepted. Use a partial unique index on
-  `slug` where `parent_id IS NULL`, or a non-null root reference. MongoDB
-  compound unique indexes do reject them.
+- Most SQL dialects (PostgreSQL by default, SQLite, MySQL) treat `NULL`s as
+  distinct in a compound unique constraint, so two root rows `(NULL, "about")`
+  are both accepted. SQL Server rejects the second row, and PostgreSQL 15+
+  offers `NULLS NOT DISTINCT`. Where duplicates are allowed, use a partial
+  unique index on `slug` where `parent_id IS NULL`, or a non-null root
+  reference. MongoDB compound unique indexes reject them.
 - MongoEngine adds `_cls` to indexes on inheritable documents, so the index
   needs `"cls": False` to make `slug` unique across the collection.
 - Uniqueness follows the database collation. MySQL's default collations treat
@@ -171,7 +175,7 @@ class Slug:
     Example:
         .. code-block:: python
 
-            from sqlalchemy import Index
+            from sqlalchemy import Column, Index, Integer
 
 
             class Article(Slug, Base):
