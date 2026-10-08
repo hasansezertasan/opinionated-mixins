@@ -39,6 +39,16 @@ def decimal_to_decimal128_for_bson(value: object) -> object:
     return value
 
 
+def bson_key_for_field(model: type, field_name: str) -> str:
+    """Return the BSON document key for an ODMantic field.
+
+    Returns:
+        The field key name used in document dumps.
+    """
+    odm_field = cast("Any", model).__odm_fields__[field_name]
+    return cast("str", odm_field.key_name)
+
+
 class ODManticMixinMetaclass(_ModelMetaclass):  # type: ignore[misc, valid-type]
     """Metaclass that makes plain mixin fields visible to ODMantic.
 

@@ -8,6 +8,7 @@ from odmantic import Field
 
 from ._base import (
     ODManticMixinMetaclass,
+    bson_key_for_field,
     date_to_datetime_for_bson,
     decimal_to_decimal128_for_bson,
 )
@@ -48,10 +49,10 @@ class Lead(metaclass=ODManticMixinMetaclass):
         base = cast("Any", super())
         document = cast("dict[str, Any]", base.model_dump_doc(include=include))
         for field_name in ("close_date", "last_contacted", "next_follow_up"):
-            if field_name in document:
-                document[field_name] = date_to_datetime_for_bson(document[field_name])
-        if "opportunity_amount" in document:
-            document["opportunity_amount"] = decimal_to_decimal128_for_bson(
-                document["opportunity_amount"]
-            )
+            key_name = bson_key_for_field(type(self), field_name)
+            if key_name in document:
+                document[key_name] = date_to_datetime_for_bson(document[key_name])
+        key_name = bson_key_for_field(type(self), "opportunity_amount")
+        if key_name in document:
+            document[key_name] = decimal_to_decimal128_for_bson(document[key_name])
         return document

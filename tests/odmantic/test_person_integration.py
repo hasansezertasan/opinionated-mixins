@@ -2,7 +2,7 @@
 
 import datetime
 
-from odmantic import Model
+from odmantic import Field, Model
 from opinionated_mixins.contrib.odmantic import Person
 
 
@@ -10,6 +10,13 @@ class MyPerson(Person, Model):
     """Test model composing Person with Model."""
 
     model_config = {"collection": "test_persons"}
+
+
+class RenamedPerson(Person, Model):
+    """Test model overriding Person BSON field keys."""
+
+    model_config = {"collection": "test_renamed_persons"}
+    date_of_birth: datetime.date | None = Field(default=None, key_name="dob")
 
 
 class TestPersonIntegration:
@@ -68,6 +75,15 @@ class TestPersonIntegration:
         assert document_dump["date_of_birth"] == datetime.datetime.combine(
             dob, datetime.time()
         )
+
+    def test_bson_document_serializes_renamed_birth_date(self) -> None:
+        """BSON conversion honors concrete ODMantic key_name overrides."""
+        dob = datetime.date(1990, 1, 15)
+        obj = RenamedPerson(first_name="Bob", last_name="Jones", date_of_birth=dob)
+
+        document_dump = obj.model_dump_doc()
+
+        assert document_dump["dob"] == datetime.datetime.combine(dob, datetime.time())
 
     async def test_optional_fields_default_none(self, mock_engine) -> None:
         obj = MyPerson(first_name="C", last_name="D")
