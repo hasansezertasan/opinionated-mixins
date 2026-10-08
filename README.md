@@ -175,7 +175,7 @@ The earlier design discussion proposed the following mixins. These are candidate
 | Address | [Person](docs/rfcs/0009-person-mixin.md) includes street address, city, postal code, and country. | A dedicated address mixin, including additional address lines and state/province. |
 | Contact | Person includes email and phone number; Lead includes website and LinkedIn URL. | A dedicated contact mixin and a decision on mobile/fax fields. |
 | Status | Feedback and Lead have domain-specific status enums. | A general status mixin with change reason, time, and actor. |
-| Slug | No dedicated implementation. | URL-friendly slug fields and uniqueness rules. |
+| Slug | No dedicated implementation; [RFC-0014](docs/rfcs/0014-slug-mixin.md) is proposed. | Accept the RFC, then implement the `slug` field across adapters. |
 | Metadata | Activity and Notification include JSON `data`. | A general metadata/tags contract. |
 | Version | No dedicated implementation. | Version, latest-version flag, and parent reference. |
 | Priority | No dedicated implementation. | Priority and ordering fields. |
