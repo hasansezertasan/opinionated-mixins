@@ -82,7 +82,10 @@ data-aria-dark="Switch to auto color mode">
     <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#indexing-recommendations">Indexing Recommendations</a></li>
+</ul>
+</div><div id="ethical-ad-placement" data-ea-publisher="readthedocs"></div></div>
   </aside>
   <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -122,6 +125,34 @@ directly from its integration package:</p>
 <p>See the <a class="reference internal" href="modules.html"><span class="doc">Modules</span></a> reference for the supported framework integrations and
 the <a class="reference external" href="https://github.com/hasansezertasan/opinionated-mixins#readme">README</a>
 for usage examples.</p>
+<section id="indexing-recommendations">
+<h2>Indexing Recommendations<a class="headerlink" href="#indexing-recommendations" title="Link to this heading">#</a></h2>
+<p>SQLAlchemy mixins intentionally do not set <code class="docutils literal notranslate"><span class="pre">index=True</span></code> on any column.
+The library cannot anticipate an application’s specific query patterns, and baked-in
+indexes add unnecessary write overhead and are difficult to opt out of.</p>
+<p>Consumers should declare indexes explicitly on their concrete models using
+<code class="docutils literal notranslate"><span class="pre">__table_args__</span></code> according to their query and access patterns:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">from</span><span class="w"> </span><span class="nn">opinionated_mixins.contrib.sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Announcement</span>
+</span><span data-line="2"><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Index</span><span class="p">,</span> <span class="n">Integer</span>
+</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeclarativeBase</span>
+</span><span data-line="4">
+</span><span data-line="5">
+</span><span data-line="6"><span class="k">class</span><span class="w"> </span><span class="nc">Base</span><span class="p">(</span><span class="n">DeclarativeBase</span><span class="p">):</span>
+</span><span data-line="7">    <span class="k">pass</span>
+</span><span data-line="8">
+</span><span data-line="9">
+</span><span data-line="10"><span class="k">class</span><span class="w"> </span><span class="nc">MyAnnouncement</span><span class="p">(</span><span class="n">Announcement</span><span class="p">,</span> <span class="n">Base</span><span class="p">):</span>
+</span><span data-line="11">    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s2">"announcements"</span>
+</span><span data-line="12">
+</span><span data-line="13">    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span data-line="14">
+</span><span data-line="15">    <span class="n">__table_args__</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="16">        <span class="n">Index</span><span class="p">(</span><span class="s2">"ix_announcements_title"</span><span class="p">,</span> <span class="s2">"title"</span><span class="p">),</span>
+</span><span data-line="17">    <span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Each mixin docstring includes specific indexing recommendations and examples for its fields.</p>
+</section>
 </section>
 
         </article><button class="back-to-top" type="button">
