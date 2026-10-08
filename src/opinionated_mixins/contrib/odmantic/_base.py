@@ -70,10 +70,10 @@ def _copy_mixin_fields(bases: tuple[type, ...], namespace: dict[str, Any]) -> No
     """Copy annotated fields from opinionated mixins into a model namespace."""
     annotations = _namespace_annotations(namespace)
     direct_field_names = set(annotations)
-    for base in reversed(bases):
+    for base in bases:
         if _is_odmantic_model_base(base):
             continue
-        for mixin in reversed(base.__mro__):
+        for mixin in base.__mro__:
             if mixin is object or _is_odmantic_model_base(mixin):
                 continue
             _copy_fields_from_mixin(mixin, direct_field_names, annotations, namespace)
