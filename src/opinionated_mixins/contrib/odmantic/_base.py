@@ -49,6 +49,19 @@ def bson_key_for_field(model: type, field_name: str) -> str:
     return cast("str", odm_field.key_name)
 
 
+def utc_datetime(value: object) -> object:
+    """Return UTC-aware datetimes for decoded BSON values.
+
+    Returns:
+        A UTC-aware datetime for datetime values, otherwise the original value.
+    """
+    if not isinstance(value, datetime.datetime):
+        return value
+    if value.tzinfo is None:
+        return value.replace(tzinfo=datetime.timezone.utc)
+    return value.astimezone(datetime.timezone.utc)
+
+
 class ODManticMixinMetaclass(_ModelMetaclass):  # type: ignore[misc, valid-type]
     """Metaclass that makes plain mixin fields visible to ODMantic.
 
@@ -183,6 +196,27 @@ def _namespace_annotations(namespace: dict[str, Any]) -> dict[str, Any]:
     )
 
 
+def _class_annotations(cls: type) -> dict[str, Any]:
+    """Return class annotations without forcing Python 3.14 value resolution.
+
+    Returns:
+        Class annotations resolved from eager or lazy annotation storage.
+    """
+    annotations = vars(cls).get("__annotations__")
+    if annotations is not None:
+        return dict(annotations)
+    annotate = vars(cls).get("__annotate_func__")
+    if annotate is None:
+        return {}
+    try:
+        annotationlib = importlib.import_module("annotationlib")
+    except ModuleNotFoundError:  # pragma: no cover - Python < 3.14 fallback.
+        return dict(annotate(1))
+    return dict(
+        annotationlib.call_annotate_function(annotate, annotationlib.Format.FORWARDREF)
+    )
+
+
 def _copy_fields_from_mixin(
     mixin: type,
     copied_field_names: set[str],
@@ -191,7 +225,7 @@ def _copy_fields_from_mixin(
 ) -> None:
     """Copy one mixin's annotations and defaults unless the model overrides them."""
     declared_defaults = mixin.__dict__
-    for field_name, annotation in getattr(mixin, "__annotations__", {}).items():
+    for field_name, annotation in _class_annotations(mixin).items():
         annotations.setdefault(field_name, annotation)
         if field_name in copied_field_names:
             continue

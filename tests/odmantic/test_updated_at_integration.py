@@ -23,8 +23,7 @@ class TestUpdatedAtIntegration:
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(model_cls)
         now = datetime.datetime.now(datetime.timezone.utc)
-        utc = datetime.timezone.utc
-        delta = (now - loaded.updated_at.replace(tzinfo=utc)).total_seconds()
+        delta = (now - loaded.updated_at).total_seconds()
         assert delta < 5
 
     async def test_updated_at_survives_roundtrip(
@@ -35,7 +34,7 @@ class TestUpdatedAtIntegration:
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(model_cls)
         # mongomock may truncate microseconds; compare up to millisecond precision
-        diff = loaded.updated_at - obj.updated_at.replace(tzinfo=None)
+        diff = loaded.updated_at - obj.updated_at
         assert abs(diff.total_seconds()) < 0.01
 
     async def test_updated_at_can_be_manually_refreshed(
@@ -44,7 +43,7 @@ class TestUpdatedAtIntegration:
         model_cls = build_mixin_model(UpdatedAt, "test_updated_at")
         obj = model_cls(name="test")
         await mock_engine.save(obj)
-        first_updated = obj.updated_at.replace(tzinfo=None)
+        first_updated = obj.updated_at
         # Mixin provides the field; consumer is responsible for updating it
         obj.updated_at = datetime.datetime.now(datetime.timezone.utc)
         obj.name = "changed"
@@ -52,3 +51,4 @@ class TestUpdatedAtIntegration:
         loaded = await mock_engine.find_one(model_cls)
         assert loaded.name == "changed"
         assert loaded.updated_at >= first_updated
+        assert loaded.updated_at.tzinfo == datetime.timezone.utc

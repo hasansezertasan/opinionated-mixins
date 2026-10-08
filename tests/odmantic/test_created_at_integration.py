@@ -23,8 +23,7 @@ class TestCreatedAtIntegration:
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(model_cls)
         now = datetime.datetime.now(datetime.timezone.utc)
-        utc = datetime.timezone.utc
-        delta = (now - loaded.created_at.replace(tzinfo=utc)).total_seconds()
+        delta = (now - loaded.created_at).total_seconds()
         assert delta < 5
 
     async def test_created_at_survives_roundtrip(
@@ -35,5 +34,6 @@ class TestCreatedAtIntegration:
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(model_cls)
         # mongomock may truncate microseconds; compare up to millisecond precision
-        diff = loaded.created_at - obj.created_at.replace(tzinfo=None)
+        diff = loaded.created_at - obj.created_at
         assert abs(diff.total_seconds()) < 0.01
+        assert loaded.created_at.tzinfo == datetime.timezone.utc

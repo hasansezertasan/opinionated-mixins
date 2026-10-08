@@ -8,6 +8,7 @@ from pydantic import ValidationError
 
 from opinionated_mixins.contrib.odmantic._base import (
     ODManticMixinMetaclass,
+    _class_annotations,
     _namespace_annotations,
 )
 
@@ -102,5 +103,16 @@ class TestODManticMixinPrecedence:
         namespace = {"__annotate_func__": MyModel.__annotate_func__}
 
         annotations = _namespace_annotations(namespace)
+
+        assert set(annotations) == {"related"}
+
+    @pytest.mark.skipif(
+        sys.version_info < (3, 14), reason="native lazy annotations require Python 3.14"
+    )
+    def test_lazy_mixin_annotations_preserve_forward_references(self) -> None:
+        class RelatedMixin(metaclass=ODManticMixinMetaclass):
+            related: NotYetDefined  # noqa: F821
+
+        annotations = _class_annotations(RelatedMixin)
 
         assert set(annotations) == {"related"}

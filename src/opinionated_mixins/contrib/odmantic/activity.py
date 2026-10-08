@@ -2,8 +2,9 @@ import datetime
 from typing import Any
 
 from odmantic import Field
+from pydantic import field_validator
 
-from ._base import ODManticMixinMetaclass
+from ._base import ODManticMixinMetaclass, utc_datetime
 
 __all__ = ["Activity"]
 
@@ -68,3 +69,5 @@ class Activity(metaclass=ODManticMixinMetaclass):
         default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),
         description="When activity occurred",
     )
+
+    _restore_created_at_utc = field_validator("created_at", mode="before")(utc_datetime)
