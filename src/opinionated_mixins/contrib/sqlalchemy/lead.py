@@ -8,7 +8,28 @@ __all__ = ["Lead"]
 
 @declarative_mixin
 class Lead:
-    """Lead mixin for SQLAlchemy models."""
+    """Lead mixin for SQLAlchemy models.
+
+    Indexing recommendations:
+    - ``status``: index recommended if filtering leads by pipeline stage.
+    - ``rating``: index recommended if querying high-priority leads.
+    - ``company_name``: index recommended if searching leads by company.
+
+    Example:
+        .. code-block:: python
+
+            from sqlalchemy import Index
+
+
+            class MyLead(Lead, Base):
+                __tablename__ = "leads"
+                id = Column(Integer, primary_key=True)
+
+                __table_args__ = (
+                    Index("ix_leads_status", "status"),
+                    Index("ix_leads_company_name", "company_name"),
+                )
+    """
 
     __abstract__ = True
 

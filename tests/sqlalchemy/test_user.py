@@ -1,7 +1,7 @@
 import datetime
 
 from opinionated_mixins.contrib.sqlalchemy import User
-from sqlalchemy import Column, Integer, create_engine
+from sqlalchemy import Column, Index, Integer, create_engine
 from sqlalchemy.orm import Session, declarative_base
 
 Base = declarative_base()
@@ -52,14 +52,25 @@ class TestSQLAlchemyUser:
         col = MyUser.__table__.c.username
         assert col.unique is True
 
-    def test_username_index(self) -> None:
-        col = MyUser.__table__.c.username
-        assert col.index is True
-
     def test_email_unique_constraint(self) -> None:
         col = MyUser.__table__.c.email
         assert col.unique is True
 
-    def test_email_index(self) -> None:
-        col = MyUser.__table__.c.email
-        assert col.index is True
+    def test_no_default_indexes(self) -> None:
+        table = MyUser.__table__
+        indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
+        assert indexed_columns == set()
+        assert table.c.username.index is not True
+        assert table.c.email.index is not True
+
+    def test_consumer_can_declare_indexes(self) -> None:
+        class IndexedUser(User, Base):  # type: ignore[misc]
+            __tablename__ = "indexed_users"
+            id = Column(Integer, primary_key=True)
+            __table_args__ = (
+                Index("ix_users_date_email_verified", "date_email_verified"),
+            )
+
+        table = IndexedUser.__table__
+        indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
+        assert "date_email_verified" in indexed_columns

@@ -49,7 +49,7 @@ from opinionated_mixins.contrib.sqlalchemy import Announcement
 class MyAnnouncement(Base, Announcement):
     __tablename__ = "announcements"
     id = Column(Integer, primary_key=True)
-    # Gets: title (str, indexed), content (text), category (enum)
+    # Gets: title (str), content (text), category (enum)
 ```
 
 Switch to MongoDB? Same fields, same names:
