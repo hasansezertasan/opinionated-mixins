@@ -17,7 +17,7 @@ class User:
     Example:
         .. code-block:: python
 
-            from sqlalchemy import Index, func
+            from sqlalchemy import Index
 
 
             class MyUser(User, Base):
@@ -25,7 +25,8 @@ class User:
                 id = Column(Integer, primary_key=True)
 
                 __table_args__ = (
-                    Index("ix_users_lower_email", func.lower(User.email)),
+                    Index("ix_users_username", "username"),
+                    Index("ix_users_email", "email"),
                 )
     """
 
