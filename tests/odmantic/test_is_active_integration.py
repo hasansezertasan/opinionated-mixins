@@ -1,21 +1,6 @@
-"""Integration tests for ODMantic IsActive mixin.
+"""Integration tests for ODMantic IsActive mixin."""
 
-The model is built inside each test via the ``build_mixin_model`` fixture — not
-at module level — because composing an ODMantic ``Model`` with a mixin parent
-raises at class-creation time under pydantic >= 2.13 (see the fixture's
-docstring and issue #39). Building at import time would break collection.
-"""
-
-import pytest
 from opinionated_mixins.contrib.odmantic import IsActive
-from pydantic import ValidationError
-
-pytestmark = pytest.mark.xfail(
-    raises=(TypeError, ValidationError, NotImplementedError),
-    reason="ODMantic metaclass does not process annotations from mixin parents. "
-    "See: https://github.com/hasansezertasan/opinionated-mixins/issues/39",
-    strict=True,
-)
 
 
 class TestIsActiveIntegration:

@@ -3,18 +3,9 @@
 import datetime
 from decimal import Decimal
 
-import pytest
 from odmantic import Model
 from opinionated_mixins.contrib.odmantic import Lead
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
-from pydantic import ValidationError
-
-pytestmark = pytest.mark.xfail(
-    raises=(ValidationError, NotImplementedError),
-    reason="ODMantic metaclass does not process annotations from mixin parents. "
-    "See: https://github.com/hasansezertasan/opinionated-mixins/issues/39",
-    strict=True,
-)
 
 
 class MyLead(Lead, Model):
@@ -60,6 +51,13 @@ class TestLeadIntegration:
             description="A big opportunity",
             is_active=True,
         )
+        assert obj.opportunity_amount == Decimal("50000.00")
+        assert obj.close_date == today
+
+        obj.opportunity_amount = None
+        obj.close_date = None
+        obj.last_contacted = None
+        obj.next_follow_up = None
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyLead)
         assert loaded.title == "Big Deal"

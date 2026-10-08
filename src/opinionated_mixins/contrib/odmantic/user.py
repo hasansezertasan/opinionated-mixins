@@ -2,10 +2,12 @@ import datetime
 
 from odmantic import Field
 
+from ._base import ODManticMixinMetaclass
+
 __all__ = ["User"]
 
 
-class User:
+class User(metaclass=ODManticMixinMetaclass):
     """User mixin for ODMantic models."""
 
     username: str = Field(..., min_length=1, max_length=255)

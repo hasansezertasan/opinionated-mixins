@@ -5,10 +5,12 @@ from opinionated_mixins.enums import NotificationLevel
 
 from odmantic import Field
 
+from ._base import ODManticMixinMetaclass
+
 __all__ = ["Notification"]
 
 
-class Notification:
+class Notification(metaclass=ODManticMixinMetaclass):
     """Notification mixin for ODMantic models.
 
     Tracks per-recipient notification state: type, severity, read/seen status,

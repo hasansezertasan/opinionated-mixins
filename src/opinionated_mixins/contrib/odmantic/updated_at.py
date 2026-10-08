@@ -2,10 +2,12 @@ import datetime
 
 from odmantic import Field
 
+from ._base import ODManticMixinMetaclass
+
 __all__ = ["UpdatedAt"]
 
 
-class UpdatedAt:
+class UpdatedAt(metaclass=ODManticMixinMetaclass):
     """UpdatedAt mixin for ODMantic models."""
 
     updated_at: datetime.datetime = Field(

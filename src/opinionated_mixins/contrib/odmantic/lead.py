@@ -5,10 +5,12 @@ from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
 
 from odmantic import Field
 
+from ._base import ODManticMixinMetaclass
+
 __all__ = ["Lead"]
 
 
-class Lead:
+class Lead(metaclass=ODManticMixinMetaclass):
     """Lead mixin for ODMantic models."""
 
     title: str | None = Field(default=None, max_length=255)

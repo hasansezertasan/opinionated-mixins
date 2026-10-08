@@ -1,17 +1,8 @@
 """Integration tests for ODMantic Notification mixin."""
 
-import pytest
 from odmantic import Model
 from opinionated_mixins.contrib.odmantic import Notification
 from opinionated_mixins.enums import NotificationLevel
-from pydantic import ValidationError
-
-pytestmark = pytest.mark.xfail(
-    raises=(ValidationError, NotImplementedError),
-    reason="ODMantic metaclass does not process annotations from mixin parents. "
-    "See: https://github.com/hasansezertasan/opinionated-mixins/issues/39",
-    strict=False,
-)
 
 
 class MyNotification(Notification, Model):

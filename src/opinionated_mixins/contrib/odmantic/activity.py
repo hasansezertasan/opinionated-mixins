@@ -3,10 +3,12 @@ from typing import Any
 
 from odmantic import Field
 
+from ._base import ODManticMixinMetaclass
+
 __all__ = ["Activity"]
 
 
-class Activity:
+class Activity(metaclass=ODManticMixinMetaclass):
     """Activity mixin for ODMantic models.
 
     Event-level activity record following the W3C Activity Streams 2.0

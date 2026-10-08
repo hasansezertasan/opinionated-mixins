@@ -1,17 +1,8 @@
 """Integration tests for ODMantic Feedback mixin."""
 
-import pytest
 from odmantic import Model
 from opinionated_mixins.contrib.odmantic import Feedback
 from opinionated_mixins.enums import FeedbackCategory, FeedbackStatus
-from pydantic import ValidationError
-
-pytestmark = pytest.mark.xfail(
-    raises=(ValidationError, NotImplementedError),
-    reason="ODMantic metaclass does not process annotations from mixin parents. "
-    "See: https://github.com/hasansezertasan/opinionated-mixins/issues/39",
-    strict=True,
-)
 
 
 class MyFeedback(Feedback, Model):

@@ -7,28 +7,32 @@ from mongomock_motor import AsyncMongoMockClient
 from odmantic import AIOEngine, Field, Model
 
 
+class _NullAsyncSession:
+    """Async context manager replacing MongoDB sessions in mongomock tests."""
+
+    async def __aenter__(self) -> None:
+        """Return no driver session so ODMantic calls mongomock without sessions."""
+        return
+
+    async def __aexit__(self, *exc_info: object) -> None:
+        """Exit the no-op session context."""
+
+
 @pytest.fixture
 async def mock_engine() -> AIOEngine:
-    """AIOEngine backed by mongomock-motor."""
+    """AIOEngine backed by mongomock-motor without unsupported sessions."""
     client = AsyncMongoMockClient()
+
+    async def start_session() -> _NullAsyncSession:
+        return _NullAsyncSession()
+
+    client.start_session = start_session
     return AIOEngine(client=client, database="testdb")
 
 
 @pytest.fixture
 def build_mixin_model() -> Callable[[type, str], type[Model]]:
-    """Return a factory that composes an ODMantic ``Model`` with a mixin.
-
-    Composing a ``Model`` with a mixin parent currently fails (issue #39:
-    ODMantic's metaclass does not process annotations inherited from mixin
-    parents). Under pydantic >= 2.13 that failure surfaces at *class-creation*
-    time as ``TypeError`` rather than at instantiation.
-
-    The model must therefore be built *inside the test body* — by calling the
-    returned factory — so the exception is raised during the test's call phase,
-    where the strict ``xfail`` marker can catch it. Building the class at import
-    time (module level) would instead raise during collection and break the
-    whole test run.
-    """
+    """Return a factory that composes an ODMantic ``Model`` with a mixin."""
 
     def _build(mixin: type, collection: str) -> type[Model]:
         class MyModel(mixin, Model):

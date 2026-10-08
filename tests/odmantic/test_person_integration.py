@@ -2,17 +2,8 @@
 
 import datetime
 
-import pytest
 from odmantic import Model
 from opinionated_mixins.contrib.odmantic import Person
-from pydantic import ValidationError
-
-pytestmark = pytest.mark.xfail(
-    raises=(ValidationError, NotImplementedError),
-    reason="ODMantic metaclass does not process annotations from mixin parents. "
-    "See: https://github.com/hasansezertasan/opinionated-mixins/issues/39",
-    strict=True,
-)
 
 
 class MyPerson(Person, Model):
@@ -50,6 +41,9 @@ class TestPersonIntegration:
             date_of_birth=dob,
             bio="A test person",
         )
+        assert obj.date_of_birth == dob
+
+        obj.date_of_birth = None
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyPerson)
         assert loaded.first_name == "Bob"
@@ -60,7 +54,7 @@ class TestPersonIntegration:
         assert loaded.postal_code == "12345"
         assert loaded.city == "Springfield"
         assert loaded.country == "US"
-        assert loaded.date_of_birth == dob
+        assert loaded.date_of_birth is None
         assert loaded.bio == "A test person"
 
     async def test_optional_fields_default_none(self, mock_engine) -> None:

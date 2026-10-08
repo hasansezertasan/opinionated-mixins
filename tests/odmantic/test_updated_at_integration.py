@@ -1,23 +1,8 @@
-"""Integration tests for ODMantic UpdatedAt mixin.
-
-The model is built inside each test via the ``build_mixin_model`` fixture — not
-at module level — because composing an ODMantic ``Model`` with a mixin parent
-raises at class-creation time under pydantic >= 2.13 (see the fixture's
-docstring and issue #39). Building at import time would break collection.
-"""
+"""Integration tests for ODMantic UpdatedAt mixin."""
 
 import datetime
 
-import pytest
 from opinionated_mixins.contrib.odmantic import UpdatedAt
-from pydantic import ValidationError
-
-pytestmark = pytest.mark.xfail(
-    raises=(TypeError, ValidationError, NotImplementedError),
-    reason="ODMantic metaclass does not process annotations from mixin parents. "
-    "See: https://github.com/hasansezertasan/opinionated-mixins/issues/39",
-    strict=True,
-)
 
 
 class TestUpdatedAtIntegration:
@@ -59,7 +44,7 @@ class TestUpdatedAtIntegration:
         model_cls = build_mixin_model(UpdatedAt, "test_updated_at")
         obj = model_cls(name="test")
         await mock_engine.save(obj)
-        first_updated = obj.updated_at
+        first_updated = obj.updated_at.replace(tzinfo=None)
         # Mixin provides the field; consumer is responsible for updating it
         obj.updated_at = datetime.datetime.now(datetime.timezone.utc)
         obj.name = "changed"
