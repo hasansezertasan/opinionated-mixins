@@ -2,17 +2,22 @@
 # pyright: reportSelfClsParameterName=false
 
 import datetime
+from collections.abc import Callable
 from decimal import Decimal
-from typing import Any, cast
+from typing import Annotated, Any, cast, get_args, get_origin
 import importlib
+import types
+import typing
 import warnings
 
 from bson.decimal128 import Decimal128
-from odmantic import Model
+from odmantic import EmbeddedModel, Model
+from odmantic.field import ODMField
 
 __all__ = ["ODManticMixinMetaclass"]
 
 _ModelMetaclass = type(Model)
+_EmbeddedModelMetaclass = type(EmbeddedModel)
 
 
 def date_to_datetime_for_bson(value: object) -> object:
@@ -62,7 +67,7 @@ def utc_datetime(value: object) -> object:
     return value.astimezone(datetime.timezone.utc)
 
 
-class ODManticMixinMetaclass(_ModelMetaclass):  # type: ignore[misc, valid-type]
+class ODManticMixinMetaclass(_EmbeddedModelMetaclass, _ModelMetaclass):  # type: ignore[misc, valid-type]
     """Metaclass that makes plain mixin fields visible to ODMantic.
 
     ODMantic only inspects annotations present directly on the concrete model
@@ -87,13 +92,83 @@ class ODManticMixinMetaclass(_ModelMetaclass):  # type: ignore[misc, valid-type]
                     message=r'Field name ".*" in ".*" shadows an attribute in parent',
                     category=UserWarning,
                 )
-                return cast(
-                    "type",
-                    super().__new__(  # pyright: ignore[reportUnknownMemberType]
-                        cls, name, bases, namespace, **kwargs
-                    ),
-                )
+                return _create_odmantic_class(cls, name, bases, namespace, kwargs)
         return cast("type", type.__new__(cast("Any", cls), name, bases, namespace))
+
+
+def _create_odmantic_class(
+    metaclass: type,
+    name: str,
+    bases: tuple[type, ...],
+    namespace: dict[str, Any],
+    kwargs: dict[str, object],
+) -> type:
+    """Dispatch to collection or embedded model creation without sibling validation.
+
+    Returns:
+        The concrete ODMantic model class.
+
+    Raises:
+        TypeError: If an embedded model declares a primary field.
+    """
+    if any(issubclass(base, Model) for base in bases):
+        creator = super(cast("Any", _EmbeddedModelMetaclass), cast("Any", metaclass))
+    else:
+        # EmbeddedModelMetaclass's super() would also run ModelMetaclass in this
+        # combined MRO, incorrectly adding a primary key and collection metadata.
+        cast("Any", metaclass).__validate_cls_namespace__(name, namespace)
+        for field in namespace["__odm_fields__"].values():
+            if isinstance(field, ODMField) and field.primary_field:
+                msg = f"cannot define a primary field in {name} embedded document"
+                raise TypeError(msg)
+        creator = super(cast("Any", _ModelMetaclass), cast("Any", metaclass))
+    model = cast(
+        "type",
+        cast("Any", creator).__new__(metaclass, name, bases, namespace, **kwargs),
+    )
+    _register_bson_serializers(model)
+    return model
+
+
+def _register_bson_serializers(model: type) -> None:
+    """Register BSON conversions for nested documents as well as top-level dumps."""
+    for field_name, field in cast("Any", model).model_fields.items():
+        serializer = _bson_serializer_for_annotation(field.annotation)
+        if serializer is not None:
+            cast("Any", model).__bson_serializers__.setdefault(field_name, serializer)
+
+
+def _bson_serializer_for_annotation(
+    annotation: object,
+) -> Callable[[object], object] | None:
+    """Find a date or decimal converter through optional and annotated types.
+
+    Returns:
+        A BSON converter, or None for fields that do not need conversion.
+    """
+    if annotation is datetime.date:
+        return date_to_datetime_for_bson
+    if annotation is Decimal:
+        return decimal_to_decimal128_for_bson
+    for argument in _scalar_annotation_arguments(annotation):
+        serializer = _bson_serializer_for_annotation(argument)
+        if serializer is not None:
+            return serializer
+    return None
+
+
+def _scalar_annotation_arguments(annotation: object) -> tuple[Any, ...]:
+    """Unwrap scalar annotation metadata and unions, but leave containers alone.
+
+    Returns:
+        Inner scalar annotations, or an empty tuple for other types.
+    """
+    if get_origin(annotation) is Annotated:
+        return get_args(annotation)[:1]
+    # ODMantic uses both legacy typing unions and PEP 604 unions at runtime.
+    if get_origin(annotation) in {typing.Union, types.UnionType}:  # pyright: ignore[reportDeprecated]
+        return get_args(annotation)
+    return ()
 
 
 def _has_odmantic_model_base(bases: tuple[type, ...]) -> bool:
@@ -109,10 +184,10 @@ def _is_odmantic_model_base(base: type) -> bool:
     """Return whether ``base`` is an ODMantic model class.
 
     Returns:
-        Whether ``base`` subclasses ``odmantic.Model``.
+        Whether ``base`` subclasses ``odmantic.Model`` or ``EmbeddedModel``.
     """
     try:
-        return issubclass(base, Model)
+        return issubclass(base, (Model, EmbeddedModel))
     except TypeError:  # pragma: no cover - defensive for non-class bases
         return False
 
@@ -122,7 +197,7 @@ def _copy_mixin_fields(bases: tuple[type, ...], namespace: dict[str, Any]) -> No
     annotations = _namespace_annotations(namespace)
     copied_field_names = set(annotations)
     for mixin in _mro_for_bases(bases):
-        if mixin is object or _is_odmantic_model_base(mixin):
+        if not isinstance(cast("Any", mixin), ODManticMixinMetaclass):
             continue
         _copy_fields_from_mixin(mixin, copied_field_names, annotations, namespace)
     namespace["__annotations__"] = annotations

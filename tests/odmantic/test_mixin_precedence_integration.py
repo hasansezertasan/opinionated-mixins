@@ -104,6 +104,19 @@ class TestODManticMixinPrecedence:
         with pytest.raises(TypeError, match="consistent method resolution order"):
             _mro_for_bases((LeftFirstMixin, RightFirstMixin, Model))
 
+    def test_unrelated_annotated_base_is_not_persisted(self) -> None:
+        class CacheBase:
+            timeout: int = 30
+
+        class MyModel(LeftMixin, CacheBase, Model):
+            pass
+
+        obj = MyModel()
+
+        assert obj.timeout == 30
+        assert "timeout" not in MyModel.__odm_fields__
+        assert "timeout" not in obj.model_dump_doc()
+
     @pytest.mark.skipif(
         sys.version_info < (3, 14), reason="native lazy annotations require Python 3.14"
     )
