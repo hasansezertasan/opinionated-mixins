@@ -44,4 +44,3 @@ Consumers should declare indexes explicitly on their concrete models using
        )
 
 Each mixin docstring includes specific indexing recommendations and examples for its fields.
-
