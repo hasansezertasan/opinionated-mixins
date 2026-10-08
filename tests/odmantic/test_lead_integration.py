@@ -51,13 +51,6 @@ class TestLeadIntegration:
             description="A big opportunity",
             is_active=True,
         )
-        assert obj.opportunity_amount == Decimal("50000.00")
-        assert obj.close_date == today
-
-        obj.opportunity_amount = None
-        obj.close_date = None
-        obj.last_contacted = None
-        obj.next_follow_up = None
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyLead)
         assert loaded.title == "Big Deal"
@@ -67,7 +60,11 @@ class TestLeadIntegration:
         assert loaded.status == LeadStatus.IN_PROCESS
         assert loaded.source == LeadSource.EMAIL
         assert loaded.rating == LeadRating.HOT
+        assert loaded.opportunity_amount == Decimal("50000.00")
         assert loaded.probability == 75
+        assert loaded.close_date == today
+        assert loaded.last_contacted == today
+        assert loaded.next_follow_up == today
         assert loaded.currency == "USD"
         assert loaded.description == "A big opportunity"
 

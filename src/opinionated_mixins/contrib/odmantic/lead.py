@@ -1,7 +1,9 @@
 import datetime
 from decimal import Decimal
 
+from bson.decimal128 import Decimal128
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
+from pydantic import field_serializer
 
 from odmantic import Field
 
@@ -31,3 +33,27 @@ class Lead(metaclass=ODManticMixinMetaclass):
     next_follow_up: datetime.date | None = Field(default=None)
     description: str | None = Field(default=None)
     is_active: bool = Field(default=True)
+
+    @field_serializer("opportunity_amount")
+    @staticmethod
+    def serialize_opportunity_amount(opportunity_amount: Decimal | None) -> object:
+        """Serialize decimal amounts to BSON Decimal128 values.
+
+        Returns:
+            A BSON-compatible Decimal128 value, or ``None``.
+        """
+        if opportunity_amount is None:
+            return None
+        return Decimal128(opportunity_amount)
+
+    @field_serializer("close_date", "last_contacted", "next_follow_up")
+    @staticmethod
+    def serialize_date(value: datetime.date | None) -> datetime.datetime | None:
+        """Serialize date-only values to BSON-compatible datetimes.
+
+        Returns:
+            A midnight datetime for BSON storage, or ``None``.
+        """
+        if value is None:
+            return None
+        return datetime.datetime.combine(value, datetime.time())
