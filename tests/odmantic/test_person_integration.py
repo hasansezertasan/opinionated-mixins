@@ -54,6 +54,21 @@ class TestPersonIntegration:
         assert loaded.date_of_birth == dob
         assert loaded.bio == "A test person"
 
+    def test_bson_document_serializes_birth_date_without_changing_pydantic_dump(
+        self,
+    ) -> None:
+        """Date values use BSON-safe values only in document dumps."""
+        dob = datetime.date(1990, 1, 15)
+        obj = MyPerson(first_name="Bob", last_name="Jones", date_of_birth=dob)
+
+        pydantic_dump = obj.model_dump()
+        document_dump = obj.model_dump_doc()
+
+        assert pydantic_dump["date_of_birth"] == dob
+        assert document_dump["date_of_birth"] == datetime.datetime.combine(
+            dob, datetime.time()
+        )
+
     async def test_optional_fields_default_none(self, mock_engine) -> None:
         obj = MyPerson(first_name="C", last_name="D")
         await mock_engine.save(obj)

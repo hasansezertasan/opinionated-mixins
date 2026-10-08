@@ -304,7 +304,6 @@ ignore_names = [
   "_mongomock_connection",
   "pytestmark",
   "related",
-  "serialize_*",
 ]
 min_confidence = 60
 paths = ["src", "tests"]
@@ -486,10 +485,6 @@ disable_error_code = ["var-annotated"]
 [[tool.mypy.overrides]]
 module = "opinionated_mixins.contrib.mongoengine.*"
 disable_error_code = ["import-untyped"]
-
-[[tool.mypy.overrides]]
-module = "opinionated_mixins.contrib.odmantic.*"
-disable_error_code = ["untyped-decorator"]
 
 [[tool.mypy.overrides]]
 module = "pymongo.*"

@@ -1,13 +1,16 @@
 import datetime
 from decimal import Decimal
+from typing import Any, cast
 
-from bson.decimal128 import Decimal128
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
-from pydantic import field_serializer
 
 from odmantic import Field
 
-from ._base import ODManticMixinMetaclass
+from ._base import (
+    ODManticMixinMetaclass,
+    date_to_datetime_for_bson,
+    decimal_to_decimal128_for_bson,
+)
 
 __all__ = ["Lead"]
 
@@ -34,26 +37,21 @@ class Lead(metaclass=ODManticMixinMetaclass):
     description: str | None = Field(default=None)
     is_active: bool = Field(default=True)
 
-    @field_serializer("opportunity_amount")
-    @staticmethod
-    def serialize_opportunity_amount(opportunity_amount: Decimal | None) -> object:
-        """Serialize decimal amounts to BSON Decimal128 values.
+    def model_dump_doc(  # pylint: disable=no-member
+        self, include: object = None
+    ) -> dict[str, Any]:
+        """Generate a BSON document while keeping Pydantic dumps date-native.
 
         Returns:
-            A BSON-compatible Decimal128 value, or ``None``.
+            The BSON-ready document representation.
         """
-        if opportunity_amount is None:
-            return None
-        return Decimal128(opportunity_amount)
-
-    @field_serializer("close_date", "last_contacted", "next_follow_up")
-    @staticmethod
-    def serialize_date(value: datetime.date | None) -> datetime.datetime | None:
-        """Serialize date-only values to BSON-compatible datetimes.
-
-        Returns:
-            A midnight datetime for BSON storage, or ``None``.
-        """
-        if value is None:
-            return None
-        return datetime.datetime.combine(value, datetime.time())
+        base = cast("Any", super())
+        document = cast("dict[str, Any]", base.model_dump_doc(include=include))
+        for field_name in ("close_date", "last_contacted", "next_follow_up"):
+            if field_name in document:
+                document[field_name] = date_to_datetime_for_bson(document[field_name])
+        if "opportunity_amount" in document:
+            document["opportunity_amount"] = decimal_to_decimal128_for_bson(
+                document["opportunity_amount"]
+            )
+        return document

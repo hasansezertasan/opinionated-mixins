@@ -1,10 +1,9 @@
 import datetime
-
-from pydantic import field_serializer
+from typing import Any, cast
 
 from odmantic import Field
 
-from ._base import ODManticMixinMetaclass
+from ._base import ODManticMixinMetaclass, date_to_datetime_for_bson
 
 __all__ = ["Person"]
 
@@ -24,16 +23,18 @@ class Person(metaclass=ODManticMixinMetaclass):
     date_of_birth: datetime.date | None = Field(default=None)
     bio: str | None = Field(default=None)
 
-    @field_serializer("date_of_birth")
-    @staticmethod
-    def serialize_date_of_birth(
-        date_of_birth: datetime.date | None,
-    ) -> datetime.datetime | None:
-        """Serialize date-only values to BSON-compatible datetimes.
+    def model_dump_doc(  # pylint: disable=no-member
+        self, include: object = None
+    ) -> dict[str, Any]:
+        """Generate a BSON document while keeping Pydantic dumps date-native.
 
         Returns:
-            A midnight datetime for BSON storage, or ``None``.
+            The BSON-ready document representation.
         """
-        if date_of_birth is None:
-            return None
-        return datetime.datetime.combine(date_of_birth, datetime.time())
+        base = cast("Any", super())
+        document = cast("dict[str, Any]", base.model_dump_doc(include=include))
+        if "date_of_birth" in document:
+            document["date_of_birth"] = date_to_datetime_for_bson(
+                document["date_of_birth"]
+            )
+        return document

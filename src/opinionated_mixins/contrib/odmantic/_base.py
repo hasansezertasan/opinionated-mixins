@@ -1,15 +1,42 @@
 """Shared support for ODMantic mixins."""
 # pyright: reportSelfClsParameterName=false
 
+import datetime
+from decimal import Decimal
 from typing import Any, cast
 import importlib
 import warnings
 
+from bson.decimal128 import Decimal128
 from odmantic import Model
 
 __all__ = ["ODManticMixinMetaclass"]
 
 _ModelMetaclass = type(Model)
+
+
+def date_to_datetime_for_bson(value: object) -> object:
+    """Return a BSON-compatible datetime for date-only values.
+
+    Returns:
+        A midnight datetime for date-only values, otherwise the original value.
+    """
+    if value is None or isinstance(value, datetime.datetime):
+        return value
+    if isinstance(value, datetime.date):
+        return datetime.datetime.combine(value, datetime.time())
+    return value
+
+
+def decimal_to_decimal128_for_bson(value: object) -> object:
+    """Return a BSON-compatible Decimal128 for decimal values.
+
+    Returns:
+        A BSON Decimal128 for Decimal values, otherwise the original value.
+    """
+    if isinstance(value, Decimal):
+        return Decimal128(value)
+    return value
 
 
 class ODManticMixinMetaclass(_ModelMetaclass):  # type: ignore[misc, valid-type]

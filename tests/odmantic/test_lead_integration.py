@@ -3,6 +3,7 @@
 import datetime
 from decimal import Decimal
 
+from bson.decimal128 import Decimal128
 from odmantic import Model
 from opinionated_mixins.contrib.odmantic import Lead
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
@@ -67,6 +68,36 @@ class TestLeadIntegration:
         assert loaded.next_follow_up == today
         assert loaded.currency == "USD"
         assert loaded.description == "A big opportunity"
+
+    def test_bson_document_serializes_dates_without_changing_pydantic_dump(
+        self,
+    ) -> None:
+        """Date and decimal values use BSON-safe values only in document dumps."""
+        today = datetime.date.today()
+        obj = MyLead(
+            opportunity_amount=Decimal("50000.00"),
+            close_date=today,
+            last_contacted=today,
+            next_follow_up=today,
+        )
+
+        pydantic_dump = obj.model_dump()
+        document_dump = obj.model_dump_doc()
+
+        assert pydantic_dump["opportunity_amount"] == Decimal("50000.00")
+        assert pydantic_dump["close_date"] == today
+        assert pydantic_dump["last_contacted"] == today
+        assert pydantic_dump["next_follow_up"] == today
+        assert document_dump["opportunity_amount"] == Decimal128("50000.00")
+        assert document_dump["close_date"] == datetime.datetime.combine(
+            today, datetime.time()
+        )
+        assert document_dump["last_contacted"] == datetime.datetime.combine(
+            today, datetime.time()
+        )
+        assert document_dump["next_follow_up"] == datetime.datetime.combine(
+            today, datetime.time()
+        )
 
     async def test_enum_fields_roundtrip(self, mock_engine) -> None:
         obj = MyLead(
