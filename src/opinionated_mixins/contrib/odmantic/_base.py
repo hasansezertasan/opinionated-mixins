@@ -13,6 +13,7 @@ import warnings
 from bson.decimal128 import Decimal128
 from odmantic import EmbeddedModel, Model
 from odmantic.field import ODMField
+from pydantic.v1.typing import resolve_annotations
 
 __all__ = ["ODManticMixinMetaclass"]
 
@@ -300,7 +301,8 @@ def _copy_fields_from_mixin(
 ) -> None:
     """Copy one mixin's annotations and defaults unless the model overrides them."""
     declared_defaults = mixin.__dict__
-    for field_name, annotation in _class_annotations(mixin).items():
+    mixin_annotations = resolve_annotations(_class_annotations(mixin), mixin.__module__)
+    for field_name, annotation in mixin_annotations.items():
         annotations.setdefault(field_name, annotation)
         if field_name in copied_field_names:
             continue

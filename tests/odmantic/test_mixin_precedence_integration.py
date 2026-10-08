@@ -12,6 +12,7 @@ from opinionated_mixins.contrib.odmantic._base import (
     _mro_for_bases,
     _namespace_annotations,
 )
+from tests.odmantic._annotation_mixins import RelatedPerson
 
 
 class ParentMixin(metaclass=ODManticMixinMetaclass):
@@ -116,6 +117,17 @@ class TestODManticMixinPrecedence:
         assert obj.timeout == 30
         assert "timeout" not in MyModel.__odm_fields__
         assert "timeout" not in obj.model_dump_doc()
+
+    def test_postponed_mixin_annotations_use_defining_module(self) -> None:
+        class MyModel(RelatedPerson, Model):
+            pass
+
+        obj = MyModel(
+            first_name="Alice", last_name="Smith", address={"street": "Main Street"}
+        )
+
+        assert obj.address.street == "Main Street"
+        assert obj.model_dump_doc()["address"] == {"street": "Main Street"}
 
     @pytest.mark.skipif(
         sys.version_info < (3, 14), reason="native lazy annotations require Python 3.14"
