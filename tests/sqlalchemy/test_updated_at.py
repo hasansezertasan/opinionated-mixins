@@ -1,7 +1,7 @@
 import datetime
 
 from opinionated_mixins.contrib.sqlalchemy import UpdatedAt
-from sqlalchemy import Column, Integer, String, create_engine
+from sqlalchemy import Column, Index, Integer, String, create_engine
 from sqlalchemy.orm import Session, declarative_base
 
 Base = declarative_base()
@@ -47,3 +47,18 @@ class TestSQLAlchemyUpdatedAt:
     def test_fields_exist(self) -> None:
         columns = {c.name for c in MyModel.__table__.columns}
         assert "updated_at" in columns
+
+    def test_no_default_indexes(self) -> None:
+        table = MyModel.__table__
+        indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
+        assert indexed_columns == set()
+
+    def test_consumer_can_declare_indexes(self) -> None:
+        class IndexedModel(UpdatedAt, Base):  # type: ignore[misc]
+            __tablename__ = "indexed_items_updated_at"
+            id = Column(Integer, primary_key=True)
+            __table_args__ = (Index("ix_items_updated_at", "updated_at"),)
+
+        table = IndexedModel.__table__
+        indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
+        assert indexed_columns == {"updated_at"}

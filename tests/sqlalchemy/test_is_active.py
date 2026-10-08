@@ -1,5 +1,5 @@
 from opinionated_mixins.contrib.sqlalchemy import IsActive
-from sqlalchemy import Column, Integer, create_engine
+from sqlalchemy import Column, Index, Integer, create_engine
 from sqlalchemy.orm import Session, declarative_base
 
 Base = declarative_base()
@@ -38,3 +38,18 @@ class TestSQLAlchemyIsActive:
     def test_fields_exist(self) -> None:
         columns = {c.name for c in MyModel.__table__.columns}
         assert "is_active" in columns
+
+    def test_no_default_indexes(self) -> None:
+        table = MyModel.__table__
+        indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
+        assert indexed_columns == set()
+
+    def test_consumer_can_declare_indexes(self) -> None:
+        class IndexedModel(IsActive, Base):  # type: ignore[misc]
+            __tablename__ = "indexed_items_is_active"
+            id = Column(Integer, primary_key=True)
+            __table_args__ = (Index("ix_items_is_active", "is_active"),)
+
+        table = IndexedModel.__table__
+        indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
+        assert indexed_columns == {"is_active"}
