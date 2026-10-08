@@ -95,3 +95,16 @@ class TestPersonIntegration:
         assert loaded.country is None
         assert loaded.date_of_birth is None
         assert loaded.bio is None
+
+    async def test_query_birth_date_with_bson_operand(self, mock_engine) -> None:
+        dob = datetime.date(1990, 1, 15)
+        obj = RenamedPerson(first_name="Bob", last_name="Jones", date_of_birth=dob)
+        await mock_engine.save(obj)
+
+        operand = datetime.datetime.combine(dob, datetime.time())
+        loaded = await mock_engine.find_one(
+            RenamedPerson, RenamedPerson.date_of_birth == operand
+        )
+
+        assert loaded is not None
+        assert loaded.date_of_birth == dob

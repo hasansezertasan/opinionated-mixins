@@ -236,6 +236,25 @@ class Contact(Person, Base):
 
 Yes. ODMantic mixins use a compatibility metaclass that copies mixin annotations into the concrete model namespace before ODMantic builds the model. The [Starlette example](examples/starlette_admin_odmantic/README.md) still declares fields directly where it intentionally uses `datetime.datetime` for BSON date storage.
 
+Mixins also compose with `odmantic.EmbeddedModel` for embedded documents.
+
+### How do I query ODMantic date-only fields?
+
+ODMantic does not serialize query operands. The `Person.date_of_birth` and Lead date fields
+are stored as midnight BSON datetimes, so queries must use that same representation:
+
+```python
+import datetime
+
+dob = datetime.date(1990, 1, 15)
+operand = datetime.datetime.combine(dob, datetime.time())
+person = await engine.find_one(MyPerson, MyPerson.date_of_birth == operand)
+```
+
+Use BSON-native operands with comparison methods, membership queries, and standalone
+`odmantic.query` helpers. This also applies to decimal amounts: use `bson.Decimal128`
+when querying `Lead.opportunity_amount`. Ordinary Pydantic dumps retain date and decimal values.
+
 ### How do I run the checks?
 
 ```sh
