@@ -1,8 +1,15 @@
 """Integration tests for ODMantic mixin field precedence."""
 
-from odmantic import Field, Model
+import sys
 
-from opinionated_mixins.contrib.odmantic._base import ODManticMixinMetaclass
+from odmantic import Field, Model
+import pytest
+from pydantic import ValidationError
+
+from opinionated_mixins.contrib.odmantic._base import (
+    ODManticMixinMetaclass,
+    _namespace_annotations,
+)
 
 
 class ParentMixin(metaclass=ODManticMixinMetaclass):
@@ -15,6 +22,12 @@ class ChildMixin(ParentMixin):
     """Child mixin overriding a parent field."""
 
     priority: int = Field(default=2)
+
+
+class RequiredChildMixin(ParentMixin):
+    """Child mixin making a parent field required."""
+
+    priority: int
 
 
 class LeftMixin(metaclass=ODManticMixinMetaclass):
@@ -62,9 +75,32 @@ class TestODManticMixinPrecedence:
         obj = MyModel()
         assert obj.priority == 2
 
+    def test_child_annotation_overrides_parent_default(self) -> None:
+        class MyModel(RequiredChildMixin, Model):
+            model_config = {"collection": "test_mixin_precedence_required_child"}
+
+        with pytest.raises(ValidationError):
+            MyModel()
+
+        obj = MyModel(priority=3)
+        assert obj.priority == 3
+
     def test_c3_mro_wins_diamond_duplicate_field(self) -> None:
         class MyModel(DiamondLeftMixin, DiamondRightMixin, Model):
             model_config = {"collection": "test_mixin_precedence_diamond"}
 
         obj = MyModel()
         assert obj.status == "right"
+
+    @pytest.mark.skipif(
+        sys.version_info < (3, 14), reason="native lazy annotations require Python 3.14"
+    )
+    def test_lazy_annotations_preserve_forward_references(self) -> None:
+        class MyModel:
+            related: NotYetDefined  # noqa: F821
+
+        namespace = {"__annotate_func__": MyModel.__annotate_func__}
+
+        annotations = _namespace_annotations(namespace)
+
+        assert set(annotations) == {"related"}

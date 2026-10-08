@@ -2,6 +2,7 @@
 # pyright: reportSelfClsParameterName=false
 
 from typing import Any, cast
+import importlib
 import warnings
 
 from odmantic import Model
@@ -20,8 +21,8 @@ class ODManticMixinMetaclass(_ModelMetaclass):  # type: ignore[misc, valid-type]
     own metaclass validates it.
     """
 
-    def __new__(
-        mcs,
+    def __new__(  # pylint: disable=bad-mcs-classmethod-argument
+        cls,
         name: str,
         bases: tuple[type, ...],
         namespace: dict[str, Any],
@@ -39,10 +40,10 @@ class ODManticMixinMetaclass(_ModelMetaclass):  # type: ignore[misc, valid-type]
                 return cast(
                     "type",
                     super().__new__(  # pyright: ignore[reportUnknownMemberType]
-                        mcs, name, bases, namespace, **kwargs
+                        cls, name, bases, namespace, **kwargs
                     ),
                 )
-        return cast("type", type.__new__(cast("Any", mcs), name, bases, namespace))
+        return cast("type", type.__new__(cast("Any", cls), name, bases, namespace))
 
 
 def _has_odmantic_model_base(bases: tuple[type, ...]) -> bool:
@@ -69,11 +70,11 @@ def _is_odmantic_model_base(base: type) -> bool:
 def _copy_mixin_fields(bases: tuple[type, ...], namespace: dict[str, Any]) -> None:
     """Copy annotated fields from opinionated mixins into a model namespace."""
     annotations = _namespace_annotations(namespace)
-    direct_field_names = set(annotations)
+    copied_field_names = set(annotations)
     for mixin in _mro_for_bases(bases):
         if mixin is object or _is_odmantic_model_base(mixin):
             continue
-        _copy_fields_from_mixin(mixin, direct_field_names, annotations, namespace)
+        _copy_fields_from_mixin(mixin, copied_field_names, annotations, namespace)
     namespace["__annotations__"] = annotations
 
 
@@ -136,21 +137,27 @@ def _namespace_annotations(namespace: dict[str, Any]) -> dict[str, Any]:
     annotate = namespace.get("__annotate_func__")
     if annotate is None:
         return {}
-    return dict(annotate(1))
+    try:
+        annotationlib = importlib.import_module("annotationlib")
+    except ModuleNotFoundError:  # pragma: no cover - Python < 3.14 fallback.
+        return dict(annotate(1))
+    return dict(
+        annotationlib.call_annotate_function(annotate, annotationlib.Format.FORWARDREF)
+    )
 
 
 def _copy_fields_from_mixin(
     mixin: type,
-    direct_field_names: set[str],
+    copied_field_names: set[str],
     annotations: dict[str, Any],
     namespace: dict[str, Any],
 ) -> None:
     """Copy one mixin's annotations and defaults unless the model overrides them."""
+    declared_defaults = mixin.__dict__
     for field_name, annotation in getattr(mixin, "__annotations__", {}).items():
         annotations.setdefault(field_name, annotation)
-        if (
-            field_name not in direct_field_names
-            and field_name not in namespace
-            and hasattr(mixin, field_name)
-        ):
-            namespace[field_name] = getattr(mixin, field_name)
+        if field_name in copied_field_names:
+            continue
+        copied_field_names.add(field_name)
+        if field_name not in namespace and field_name in declared_defaults:
+            namespace[field_name] = declared_defaults[field_name]

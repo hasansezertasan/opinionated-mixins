@@ -102,7 +102,7 @@ opinionated-mixins provides reusable fields for Python storage frameworks. Consu
 - SQLAlchemy supplies declarative mixins with columns.
 - SQLModel re-exports the SQLAlchemy implementations.
 - MongoEngine supplies document field mixins.
-- ODMantic supplies annotated field definitions. Its metaclass does not currently collect fields from plain mixin parents; see [issue #39](https://github.com/hasansezertasan/opinionated-mixins/issues/39) and the expected-failure integration tests.
+- ODMantic supplies annotated field definitions through a small compatibility metaclass so plain mixin fields become ODMantic model fields when composed with `odmantic.Model`.
 
 ### Layout
 
@@ -152,7 +152,7 @@ The [RFC index](docs/rfcs/INDEX.md) records accepted designs and the status of p
 
 ### Priorities
 
-- Investigate ODMantic composition support, tracked in [issue #39](https://github.com/hasansezertasan/opinionated-mixins/issues/39).
+- Expand ODMantic examples now that plain mixin composition is supported.
 - Expand working examples and document framework-specific limitations.
 - Extend integration coverage for storage behavior and mixin composition.
 
@@ -187,7 +187,7 @@ Each accepted mixin should provide consistent field names and behavior across ap
 
 - **SQLAlchemy**: supported; declarative columns, types, and constraints.
 - **MongoEngine**: supported; document fields and validation.
-- **ODMantic**: supported field definitions; resolve the plain-mixin composition limitation before promising inherited model fields.
+- **ODMantic**: supported annotated field definitions with plain mixin composition.
 - **SQLModel**: supported through re-exports of SQLAlchemy implementations.
 - **TortoiseORM**: proposed expansion; native ORM field definitions and persistence tests.
 - **Beanie**: proposed expansion; document fields compatible with Pydantic validation, with the consumer choosing the document base.
@@ -232,9 +232,9 @@ class Contact(Person, Base):
 
 `Contact` receives the Person fields, including `first_name`, `last_name`, `phone_number`, `street_address`, and `date_of_birth`. You can override columns on the concrete model.
 
-### Why does ODMantic inheritance fail?
+### Can ODMantic models inherit fields from these mixins?
 
-ODMantic's metaclass does not collect annotations from plain mixin parents. This is tracked in [issue #39](https://github.com/hasansezertasan/opinionated-mixins/issues/39). The [Starlette example](examples/starlette_admin_odmantic/README.md) declares fields directly as a workaround.
+Yes. ODMantic mixins use a compatibility metaclass that copies mixin annotations into the concrete model namespace before ODMantic builds the model. The [Starlette example](examples/starlette_admin_odmantic/README.md) still declares fields directly where it intentionally uses `datetime.datetime` for BSON date storage.
 
 ### How do I run the checks?
 
