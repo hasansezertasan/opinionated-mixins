@@ -10,9 +10,10 @@ class User:
 
     Indexing recommendations:
     - ``username``, ``email``: already declared with ``unique=True``, which
-      creates a unique index in most relational databases. If additional indexes
-      (e.g., case-insensitive or functional) are needed, declare them explicitly
-      via ``__table_args__``.
+      creates a unique index in most relational databases; additional indexes
+      on these columns are usually redundant.
+    - ``date_email_verified``: index recommended if frequently filtering or
+      reporting on user verification status.
 
     Example:
         .. code-block:: python
@@ -25,8 +26,7 @@ class User:
                 id = Column(Integer, primary_key=True)
 
                 __table_args__ = (
-                    Index("ix_users_username", "username"),
-                    Index("ix_users_email", "email"),
+                    Index("ix_users_date_email_verified", "date_email_verified"),
                 )
     """
 

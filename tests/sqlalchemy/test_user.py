@@ -67,8 +67,10 @@ class TestSQLAlchemyUser:
         class IndexedUser(User, Base):  # type: ignore[misc]
             __tablename__ = "indexed_users"
             id = Column(Integer, primary_key=True)
-            __table_args__ = (Index("ix_users_username_custom", "username"),)
+            __table_args__ = (
+                Index("ix_users_date_email_verified", "date_email_verified"),
+            )
 
         table = IndexedUser.__table__
         indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
-        assert "username" in indexed_columns
+        assert "date_email_verified" in indexed_columns
