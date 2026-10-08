@@ -1,3 +1,4 @@
+---
 name: RFC Label Gate
 
 # Gates merging of RFC PRs on the required labels. GitHub branch protection
@@ -21,6 +22,7 @@ permissions:
 jobs:
   rfc-label-gate:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: ${{ github.repository }}
@@ -32,7 +34,8 @@ jobs:
           set -euo pipefail
 
           # Does this PR touch any numbered RFC document?
-          touches_rfc="$(gh pr diff "$PR" --repo "$REPO" --name-only \
+          files="$(gh pr diff "$PR" --repo "$REPO" --name-only)"
+          touches_rfc="$(printf '%s\n' "$files" \
             | grep -Ec '^docs/rfcs/[0-9]{4}-.*\.md$' || true)"
           if [ "$touches_rfc" -eq 0 ]; then
             echo "No RFC documents changed — gate not applicable."

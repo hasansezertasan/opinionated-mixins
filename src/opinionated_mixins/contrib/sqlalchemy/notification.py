@@ -5,6 +5,8 @@ from opinionated_mixins.enums import NotificationLevel
 from sqlalchemy import JSON, Column, DateTime, Enum, String, Text
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["Notification"]
+
 
 @declarative_mixin
 class Notification:
@@ -32,16 +34,8 @@ class Notification:
         default=NotificationLevel.INFO,
         doc="Severity/criticality level of notification",
     )
-    title = Column(
-        String(255),
-        nullable=False,
-        doc="Short human-readable title",
-    )
-    description = Column(
-        Text,
-        nullable=True,
-        doc="Longer human-readable body",
-    )
+    title = Column(String(255), nullable=False, doc="Short human-readable title")
+    description = Column(Text, nullable=True, doc="Longer human-readable body")
     data = Column(
         JSON,
         nullable=True,
@@ -64,9 +58,7 @@ class Notification:
         doc="Polymorphic ID of entity that triggered notification",
     )
     action_url = Column(
-        String(2048),
-        nullable=True,
-        doc="Click-through URL for the notification",
+        String(2048), nullable=True, doc="Click-through URL for the notification"
     )
     group_key = Column(
         String(255),

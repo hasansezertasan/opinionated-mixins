@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: "Taşan"
+    given-names: "Hasan Sezer"
+    email: "hasansezertasan@gmail.com"
+title: "Opinionated Mixins"
+abstract: "Opinionated, consensus-driven model mixins — consistent across Python storage frameworks (ORMs & ODMs)."
+repository-code: "https://github.com/hasansezertasan/opinionated-mixins"
+license: MIT

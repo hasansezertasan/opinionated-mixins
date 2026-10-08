@@ -3,6 +3,8 @@ import datetime
 from sqlalchemy import Column, DateTime
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["CreatedAt"]
+
 
 @declarative_mixin
 class CreatedAt:

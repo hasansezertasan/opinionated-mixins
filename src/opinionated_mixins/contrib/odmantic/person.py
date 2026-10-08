@@ -2,6 +2,8 @@ import datetime
 
 from odmantic import Field
 
+__all__ = ["Person"]
+
 
 class Person:
     """Person mixin for ODMantic models."""

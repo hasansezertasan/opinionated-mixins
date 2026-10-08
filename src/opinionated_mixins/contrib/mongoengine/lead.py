@@ -4,6 +4,8 @@ from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
 
 from mongoengine import BooleanField, DateField, DecimalField, IntField, StringField
 
+__all__ = ["Lead"]
+
 
 class Lead:
     """Lead mixin for MongoEngine documents."""
@@ -16,19 +18,10 @@ class Lead:
     company_name = StringField(required=False, max_length=255)
     website = StringField(required=False, max_length=255)
     linkedin_url = StringField(required=False, max_length=500)
-    status = StringField(
-        required=False,
-        choices=[s.value for s in LeadStatus],
-    )
-    source = StringField(
-        required=False,
-        choices=[s.value for s in LeadSource],
-    )
+    status = StringField(required=False, choices=[s.value for s in LeadStatus])
+    source = StringField(required=False, choices=[s.value for s in LeadSource])
     industry = StringField(required=False, max_length=255)
-    rating = StringField(
-        required=False,
-        choices=[r.value for r in LeadRating],
-    )
+    rating = StringField(required=False, choices=[r.value for r in LeadRating])
     opportunity_amount = DecimalField(required=False, precision=2)
     currency = StringField(required=False, max_length=3)
     probability = IntField(required=False, default=0)

@@ -1,5 +1,17 @@
 import enum
 
+__all__ = [
+    "AnnouncementCategory",
+    "FeedbackCategory",
+    "FeedbackStatus",
+    "LeadRating",
+    "LeadSource",
+    "LeadStatus",
+    "NotificationLevel",
+    "TemplateFormat",
+    "TemplateType",
+]
+
 
 class _AutoStrEnum(str, enum.Enum):
     """Base enum that auto-generates string values from member names.
@@ -11,11 +23,9 @@ class _AutoStrEnum(str, enum.Enum):
 
     @staticmethod
     def _generate_next_value_(
-        name: str,
-        _start: int,
-        _count: int,
-        _last_values: list[str],
+        name: str, start: int, count: int, last_values: list[str]
     ) -> str:
+        del start, count, last_values
         return name
 
 

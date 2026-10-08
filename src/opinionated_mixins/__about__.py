@@ -1,1 +1,1 @@
-__version__ = "0.0.1"
+from opinionated_mixins._version import __version__ as __version__

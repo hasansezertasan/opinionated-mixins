@@ -1,20 +1,27 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-
 [project]
 name = "opinionated-mixins"
-dynamic = ["version"]
 description = "Opinionated, consensus-driven model mixins — consistent across Python storage frameworks (ORMs & ODMs)."
-readme = "README.md"
-requires-python = ">=3.10"
 license = "MIT"
-keywords = []
-authors = [{ name = "Hasan Sezer Taşan", email = "hasansezertasan@gmail.com" }]
+readme = "README.md"
+authors = [
+  { name = "Hasan Sezer Taşan", email = "hasansezertasan@gmail.com" },
+]
+maintainers = [
+  { name = "Hasan Sezer Taşan", email = "hasansezertasan@gmail.com" },
+]
+dynamic = ["version"]
+keywords = [
+  "sqlalchemy",
+  "sqlmodel",
+  "mongoengine",
+  "odmantic",
+  "mixins",
+]
 classifiers = [
   "Development Status :: 4 - Beta",
-  "Programming Language :: Python",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -22,24 +29,67 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python :: Implementation :: PyPy",
+  "Programming Language :: Python",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Typing :: Typed",
 ]
-dependencies = []
-
+requires-python = ">=3.10"
+dependencies = [
+]
 
 [project.urls]
-Documentation = "https://github.com/hasansezertasan/opinionated-mixins#readme"
-Issues = "https://github.com/hasansezertasan/opinionated-mixins/issues"
-Source = "https://github.com/hasansezertasan/opinionated-mixins"
-
-
-[tool.hatch.version]
-path = "src/opinionated_mixins/__about__.py"
+changelog = "https://github.com/hasansezertasan/opinionated-mixins/blob/main/CHANGELOG.md"
+documentation = "https://hasansezertasan.github.io/opinionated-mixins"
+homepage = "https://github.com/hasansezertasan/opinionated-mixins"
+issues = "https://github.com/hasansezertasan/opinionated-mixins/issues"
+releasenotes = "https://github.com/hasansezertasan/opinionated-mixins/releases"
+source = "https://github.com/hasansezertasan/opinionated-mixins.git"
 
 
 [dependency-groups]
 dev = [
-  "coverage[toml]>=7.16.2",
+  "tox==4.58.0",
+  "tox-uv==1.36.0",
+  "debugpy==1.8.21",
+  { include-group = "style" },
+  { include-group = "test" },
+]
+style = [
+  "basedpyright==1.39.9",
+  "detect-secrets==1.5.0",
+  "editorconfig-checker==3.8.0",
+  "import-linter==2.13",
+  "mypy==2.3.0",
+  "pylint==4.0.6",
+  "pyrefly==1.2.0",
+  "ruff==0.16.1",
+  "slotscheck==0.20.1",
+  "sphinx-lint==1.0.2",
+  "taplo==0.9.3",
+  "ty==0.0.66",
+  "typos==1.49.0",
+  "zuban==0.9.1",
+]
+# semgrep is deliberately its own group rather than part of `style`: `dev`
+# includes `style` wholesale, so a plain `uv sync` — and every Windows/macOS
+# cell in ci.yml, which runs `uv run --locked tox run` — would download and
+# unpack ~215 MB (the wheel bundles a native semgrep-core) for a tool that only
+# ever executes in the Linux-only `style` job. The tox `style` env lists this
+# group explicitly. Still a single version source, same as every other pin.
+sast = [
+  "semgrep==1.179.0",
+]
+test = [
+  "coverage-enable-subprocess==1.0",
+  "coverage[toml]==7.15.3",
+  "pytest-mock==3.15.1",
+  "pytest-rerunfailures==16.4",
+  "pytest-xdist[psutil]==3.8.0",
   "pytest==9.1.1",
+  "pytest-sugar",
+  "dirty-equals",
+  "inline-snapshot",
+  "pytest-deadfixtures==3.1.0",
   "sqlalchemy==2.0.54",
   "mongoengine==0.29.3",
   "odmantic==1.1.0",
@@ -48,117 +98,722 @@ dev = [
   "testcontainers[mongodb]>=4.15.0",
   "pytest-asyncio>=1.4.0",
 ]
-types = [
-  "mypy>=2.3.1",
-  "ruff==0.15.22",
+docs = [
+  "sphinx==8.1.3",
+  "shibuya==2026.7.12",
+  "sphinx-autobuild==2024.10.3", # 2025.x drops Python 3.10 (requires-python >= 3.11)
+  "sphinx-copybutton==0.5.2",
+  "sphinx-design==0.6.1", # 0.7.0 drops Python 3.10 (requires-python >= 3.11)
+  "sphinx-togglebutton==0.4.5",
+  "sphinx-paramlinks==0.6.0",
+  "auto-pytabs[sphinx]==0.5.0",
+  "myst-parser==4.0.1",
+  # Per-page "last updated" footer sourced from git commit dates (ADR-027);
+  # offline, no network. Works from full history (docs CI checks out depth 0).
+  "sphinx-last-updated-by-git==0.3.8",
+  # PEP 440 version parsing/sorting used by tools/build_docs.py to order
+  # published versions and pick the `latest` alias (ADR-027). Also a Sphinx
+  # transitive dependency; pinned here for the explicit direct use.
+  "packaging>=24.0",
+  # The API reference imports each adapter so Sphinx must have their frameworks.
+  "sqlalchemy==2.0.54",
+  "mongoengine==0.29.3",
+  "odmantic==1.1.0",
+]
+tool = [
+  "commitizen==4.17.0",
+  # "marimo==0.15.2",
+  # "inflection==0.5.1",
+  # "copier==9.11.0",
+]
+prek = [
+  "prek==0.4.12",
+]
+
+
+[build-system]
+
+requires = ["hatchling", "hatch-vcs"]
+
+build-backend = "hatchling.build"
+
+
+[tool.uv]
+add-bounds = "exact"
+cache-keys = [
+  { file = "pyproject.toml" },
+  { git = { commit = true, tags = true } },
+]
+package = true
+trusted-publishing = "always"
+
+
+[tool.hatch.version]
+source = "vcs"
+# Last-resort sentinel: only used when a build sees neither a .git directory nor
+# an expanded .git_archival.txt (e.g. an archive of a commit with no reachable
+# tag). "0.0.0" reads clearly as "version could not be determined" rather than
+# masquerading as a real early release. See .git_archival.txt + .gitattributes
+# `export-subst` for the archive path that recovers the real tag-derived version.
+fallback-version = "0.0.0"
+
+
+[tool.hatch.build]
+hooks.vcs.version-file = "src/opinionated_mixins/_version.py"
+
+
+[tool.hatch.version.raw-options]
+version_scheme = "only-version"
+local_scheme = "no-local-version"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+
+[tool.hatch.build.targets.sdist]
+# The package uses a src layout, so the source tree lives under /src (not
+# /opinionated_mixins); including /src ships the actual modules -- and, for
+# C-extension projects, the .pyx/.pxd sources needed to compile from the sdist.
+include = [
+  "/README.md",
+  "LICENSE",
+  "/src",
+  "/tests",
+  "/docs/examples",
+]
+
+
+[tool.commitizen]
+# Commit-authoring and message linting only. release-please owns version
+# bumping, git tagging, and CHANGELOG.md (see .github/release-please-config.json),
+# so the bump/tag/changelog settings are intentionally omitted here to avoid two
+# tools competing over the same tags and changelog file.
+name = "cz_conventional_commits"
+
+[tool.pytest.ini_options]
+# addopts = "-rXs --strict-config --strict-markers"
+addopts = "-v --tb=short --doctest-glob=README.md"
+asyncio_mode = "auto"
+# One marker per component, auto-applied by tests/conftest.py from each test's
+# top-level tests/<dir>/. Enables `pytest -m web` locally and per-component CI
+# jobs (issue #160, ADR-028); `integration` (ADR-008) is one axis of the scheme.
+markers = [
+  "core: core/shared component tests",
+]
+filterwarnings = [
+  "error",
+  "ignore:No uuidRepresentation is specified:DeprecationWarning",
+]
+# The project README is the deliberately small Markdown doctest surface. Other
+# Markdown files can use illustrative snippets without becoming pytest inputs.
+testpaths = ["tests", "README.md"]
+doctest_optionflags = "ELLIPSIS IGNORE_EXCEPTION_DETAIL NORMALIZE_WHITESPACE"
+xfail_strict = true
+
+
+[tool.coverage.run]
+branch = true
+# Match `_version.py` wherever it resolves: `src/...` in editable dev installs and
+# `.../site-packages/...` when tox/CI installs the built wheel or sdist. A
+# `src/**`-only pattern silently misses the installed copy and reports it at 0%.
+# The RFC version compatibility shim is a one-line import and the generated
+# module is intentionally excluded. ODMantic integration tests are expected
+# xfails while upstream issue #39 prevents composite-model construction; retain
+# their execution but exclude those impossible paths from coverage.
+omit = ["*/_version.py", "*/__about__.py", "tests/odmantic/*_integration.py"]
+parallel = true
+# Store data-file paths relative to the project root so `.coverage` files produced
+# on different runners/OSes merge in the `coverage-combine` CI job without
+# absolute-path mismatches. Complements the `[tool.coverage.paths]` remap below
+# (which unifies the src/ vs site-packages layouts). See ADR-026.
+relative_files = true
+source_pkgs = ["opinionated_mixins", "tests"]
+
+
+[tool.coverage.paths]
+# Unify coverage data across environments. tox installs the built wheel/sdist into
+# each env's site-packages, so the same source file is measured under a different
+# `.tox/<env>/.../site-packages/opinionated_mixins` path per interpreter. Without
+# remapping those back to the canonical `src/` tree, `coverage combine` keeps a
+# separate copy per env and a version-gated line covered in one interpreter but not
+# another is wrongly counted as missed — silently failing the `fail_under` gate.
+# `tests` needs no remapping: it is never installed, so every environment measures
+# it at the same repo-local path.
+opinionated_mixins = ["src/opinionated_mixins", "*/site-packages/opinionated_mixins"]
+
+
+[tool.coverage.report]
+# Untestable code is excluded per site with `# pragma: no cover`, not with blanket
+# patterns here: a regex matching a `def` line excludes the *whole function body*,
+# so a pattern like `def main\(` would silently un-measure any future `main()`
+# with real logic (and did mask the tested GUI/TUI entrypoints). Pragmas carry the
+# exclusion decision next to the code it affects. See ADR-008.
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+fail_under = 99
+# Patterns match both the `src/` (editable) and installed (`site-packages`)
+# layouts (see [tool.coverage.run] omit).
+omit = ["*/_version.py"]
+show_missing = true
+skip_covered = true
+
+
+[tool.vulture]
+# Framework-invoked handlers: Typer commands, FastAPI routes, FastStream
+# lifecycle hooks, and the MCP tool dispatcher.
+ignore_decorators = [
+  "@app.command",
+  "@app.get",
+  "@app.after_startup",
+  "@app.after_shutdown",
+  "@server.call_tool",
+]
+# Public API surfaces vulture cannot see being used: ``main`` entry points are
+# referenced only via pyproject scripts, ``model_config`` is consumed by
+# pydantic-settings, ``logger`` is imported only by optional components, the MCP
+# ``arguments`` parameter is mandated by the call_tool signature, the Textual
+# names (CSS/compose/on_mount/title/BINDINGS) are invoked by the TUI framework,
+# and ``pytestmark``/``pytest_*`` (conftest hooks) are consumed by pytest at
+# collection time.
+ignore_names = [
+  "CONFIG_FILE_PATH",
+  "logger",
+  "main",
+  "model_config",
+  "pytest_*",
+  "collect_ignore_glob",
+  "meta",
+  "website",
+  "linkedin_url",
+  "industry",
+  "last_contacted",
+  "next_follow_up",
+  "_generate_next_value_",
+  "UPDATE",
+  "EVENT",
+  "RECYCLED",
+  "CLOSED",
+  "EXISTING_CUSTOMER",
+  "PUBLIC_RELATIONS",
+  "CAMPAIGN",
+  "BUG",
+  "DISMISSED",
+  "CRITICAL",
+  "_mongomock_connection",
+  "pytestmark",
+]
+min_confidence = 60
+paths = ["src", "tests"]
+
+
+[tool.slotscheck]
+strict-imports = false
+
+
+[tool.importlinter]
+root_package = "opinionated_mixins"
+
+
+[[tool.importlinter.contracts]]
+name = "Layered architecture with independent components"
+type = "layers"
+# Layers are listed high -> low: a layer may import lower layers but never a
+# higher one. The four framework integrations are independent sibling layers;
+# they share no implementation imports and expose separate adapter APIs.
+#
+# `exhaustive` makes the contract fail when a subpackage of
+# `opinionated_mixins` is not named in `layers` — so a new top-level
+# subpackage is a deliberate architecture decision (add it to a layer here)
+# rather than something that silently accretes at the package root. The
+# `exhaustive_ignores` entries are the generated version module and the optional
+# `python -m` dispatcher.
+containers = ["opinionated_mixins"]
+exhaustive = true
+exhaustive_ignores = [
+  "__main__",
+  "__about__",
+  "contrib",
+  "enums",
+  "_version",
+]
+layers = [
+  "contrib.sqlmodel",
+  "contrib.sqlalchemy",
+  "contrib.mongoengine | contrib.odmantic",
 ]
 
 
 [tool.ruff]
-# Run `ruff linter` command to see all available linters and their descriptions
-target-version = "py310"
-show-fixes = true
 fix = true
+output-format = "full"
+preview = true
+show-fixes = true
+src = ["src", "tests", "examples", "docs/examples"]
+target-version = "py310"
+unsafe-fixes = true
+extend-exclude = ["docs/rfcs/**"]
+
+
+[tool.ruff.analyze]
+detect-string-imports = true
+preview = true
+
+
+[tool.ruff.format]
+docstring-code-format = true
+line-ending = "lf"
+preview = true
+skip-magic-trailing-comma = true
 
 
 [tool.ruff.lint]
 fixable = ["ALL"]
-ignore-init-module-imports = true
+# Two opinionated ruff 0.16 preview rules are disabled: RUF105 would rewrite the
+# portable `# noqa` comments into ruff's own `# ruff: ignore` syntax (its docs note
+# `# noqa` is needed for cross-tool compatibility), and RUF201 would rewrite every
+# rule *code* in this config's selectors into long rule *names*. Both are stylistic.
+ignore = ["COM812", "CPY", "FIX", "RUF105", "RUF201", "TD"]
+logger-objects = ["logging_setup.logger"]
+preview = true
 select = ["ALL"]
-ignore = [
-  "D100",   # Missing docstring in public module
-  "D104",   # Missing docstring in public package
-]
 
-[tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = [
-  "ANN001",  # Missing type annotation for function argument (fixtures)
-  "ANN202",  # Missing return type for private function (fixtures)
-  "D101",    # Missing docstring in public class
-  "D102",    # Missing docstring in public method
-  "D103",    # Missing docstring in public function
-  "DTZ001",  # datetime without tzinfo (test fixtures)
-  "DTZ011",  # datetime.date.today() used (test fixtures)
-  "PLC0415", # Import not at top-level (intentional in test methods)
-  "PLR0913", # Too many arguments (parametrized test helpers)
-  "PLR2004", # Magic value used in comparison (expected in tests)
-  "PT018",   # Compound assertion (intentional for clear error messages)
-  "RUF012",  # Mutable class attribute without ClassVar (test model meta)
-  "S101",    # Use of assert (expected in tests)
-  "SLF001",  # Private member accessed (unit-testing internal helpers)
-  "S105",    # Possible hardcoded password (test fixtures)
-  "S106",    # Possible hardcoded password in argument (test fixtures)
-]
-"scripts/**/*.py" = [
-  "D102",    # Missing docstring in public method (CLI plumbing)
-  "D103",    # Missing docstring in public function (CLI plumbing)
-  "D107",    # Missing docstring in __init__ (CLI plumbing)
-  "INP001",  # Implicit namespace package (scripts aren't a package)
-  "T201",    # print() usage (script output)
-]
-"examples/**/*.py" = [
-  "D101",    # Missing docstring in public class (model definitions)
-  "D106",    # Missing docstring in public nested class (Meta)
-  "INP001",  # Implicit namespace package (examples aren't packages)
-  "PLC0415", # Import not at top-level (conditional imports like mongomock)
-  "RUF012",  # Mutable class attribute without ClassVar (model columns)
-  "S105",    # Possible hardcoded password (demo data)
-  "S106",    # Possible hardcoded password in argument (demo data)
-  "T201",    # print() usage (example scripts)
-]
-"src/opinionated_mixins/contrib/sqlmodel/*.py" = [
-  "PLC0414", # Import alias does not rename (intentional re-exports)
-]
+[tool.ruff.lint.isort]
+combine-as-imports = true
+# skip-magic-trailing-comma = true
+split-on-trailing-comma = false
+
+[tool.ruff.lint.flake8-copyright]
+author = "Hasan Sezer Taşan <hasansezertasan@gmail.com>"
+
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+
+[tool.ruff.lint.mccabe]
+max-complexity = 5
+
+
+[tool.ruff.lint.pycodestyle]
+ignore-overlong-task-comments = true
 
 
 [tool.ruff.lint.pydocstyle]
-convention = "google"
+convention = "pep257"
 
 
-[tool.ruff.lint.isort]
-known-third-party = ["opinionated_mixins"]
+[tool.ruff.lint.per-file-ignores]
+# Recursive glob so nested test packages (tests/cli, tests/gui, ...) are covered.
+# Tests legitimately use asserts/magic values, reach into package internals, and
+# don't need return-value documentation on their fixtures and helpers.
+"tests/**/*.py" = [
+  "ANN001",
+  "ANN202",
+  "D",
+  "DTZ001",
+  "DTZ011",
+  "I001",
+  "PLC0415",
+  "PLC2701",
+  "PLR0913",
+  "PLR2004",
+  "PLR6301",
+  "PT018",
+  "RUF012",
+  "S101",
+  "S105",
+  "S106",
+  "SLF001",
+  "DOC201",
+]
+"examples/**/*.py" = [
+  "DOC201",
+  "D101",
+  "D106",
+  "I001",
+  "INP001",
+  "PLC0415",
+  "RUF012",
+  "S105",
+  "S106",
+  "T201",
+]
+"src/opinionated_mixins/contrib/**/*.py" = ["PLC0414"]
+"src/opinionated_mixins/enums.py" = ["D100"]
+"src/opinionated_mixins/**/*.py" = ["D100", "D104", "I001", "PLC0414", "TID252"]
+"src/opinionated_mixins/__init__.py" = ["D104"]
+"src/opinionated_mixins/contrib/**/__init__.py" = ["D104"]
+"tests/mongoengine/conftest.py" = ["DOC402"]
+"tests/odmantic/conftest.py" = ["RUF029"]
+"tests/test_rfc_script.py" = ["PLC1901"]
+"scripts/**/*.py" = ["C901", "D102", "D103", "D107", "DOC201", "FURB113", "PLC1901", "PLR6201", "RUF029", "T201"]
+# Documentation examples are importable modules tested by
+# ``tests/test_docs_examples.py``; they are not application packages.
+"docs/examples/**/*.py" = ["INP001"]
+# The Sphinx config is a standalone module, not part of an importable package.
+"docs/conf.py" = ["INP001"]
+# The docs warning-allowlist gate is a standalone script (not an importable
+# package) whose whole job is to print GitHub `::error::` annotations to stdout.
+"docs/check_warnings.py" = ["INP001", "T201"]
+# The versioned-docs build orchestrator is a standalone CLI script under tools/,
+# not part of an importable package (ADR-027).
+"tools/build_docs.py" = ["INP001"]
+
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true
+
+
+[tool.ruff.lint.ruff]
+parenthesize-tuple-in-subscript = true
 
 
 [tool.mypy]
-strict = true
+files = ["src", "docs/examples"]
 pretty = true
-follow_imports = "silent"
-ignore_missing_imports = true
-strict_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-disallow_any_generics = true
-check_untyped_defs = true
-no_implicit_reexport = true
-disallow_untyped_defs = true
+python_version = "3.10"
+strict = true
 
 [[tool.mypy.overrides]]
 module = "opinionated_mixins.contrib.sqlalchemy.*"
-# Declarative mixins use Column() without Mapped[] annotations
+# Declarative mixins use Column() without Mapped[] annotations.
 disable_error_code = ["var-annotated"]
 
-
-[tool.coverage.run]
-source_pkgs = ["opinionated_mixins", "tests"]
-branch = true
-parallel = true
-omit = ["src/opinionated_mixins/__about__.py"]
+[[tool.mypy.overrides]]
+module = "opinionated_mixins.contrib.mongoengine.*"
+disable_error_code = ["import-untyped"]
 
 
-[tool.coverage.paths]
-opinionated_mixins = [
-  "src/opinionated_mixins",
-  "*/opinionated-mixins/src/opinionated_mixins",
+[tool.basedpyright]
+exclude = [".venv"]
+include = ["src/opinionated_mixins", "docs/examples"]
+pythonVersion = "3.10"
+# Framework descriptor APIs intentionally use unannotated class attributes;
+# MongoEngine and ODMantic also expose dynamic fields and incomplete stubs.
+reportAny = false
+reportExplicitAny = false
+reportImplicitOverride = false
+reportMissingTypeStubs = false
+reportUnannotatedClassAttribute = false
+reportUnknownVariableType = false
+venv = ".venv"
+# venvPath is the directory *containing* the venv, not the venv itself; ".venv"
+# here would make basedpyright look for ".venv/.venv". Use "." so both the venv
+# and basedpyright's strict ruleset resolve the project's installed deps.
+venvPath = "."
+
+
+[tool.ty.src]
+include = ["src", "docs/examples"]
+respect-ignore-files = false
+
+
+[tool.ty.environment]
+python-version = "3.10"
+
+
+[tool.ty.terminal]
+error-on-warning = true
+
+
+[tool.pyrefly]
+python-version = "3.10"
+project-includes = ["src", "docs/examples"]
+
+[tool.pylint.main]
+# pylint runs as an always-on gate that deliberately overlaps ruff's PL* rules.
+# Its canonical invocation is `pylint src docs/examples`, so it never descends into tests; this
+# ignore-paths is a defensive scope guard for broader invocations (`pylint .`,
+# filename-passing hooks). Tests are linted by ruff, not pylint.
+ignore-paths = ["^tests/.*$"]
+# `.pyi` stubs (the c-extension type stub) are signature-only: their bodies are
+# `...` and every parameter is unused by construction, so pylint's unused-argument
+# check is a guaranteed false positive there. Stubs are type-checked by the
+# type-checker gate, not pylint.
+ignore-patterns = ['.*\.pyi$']
+
+[tool.pylint."messages control"]
+# Only formatter-owned checks, the docstring family, and too-few-public-methods
+# are disabled so pylint is usable out of the box; everything else stays on.
+disable = [
+  "line-too-long", # C0301 — ruff-format owns line length
+  "wrong-import-order", # C0411 — ruff/isort owns import grouping
+  "useless-import-alias", # C0414 — aliases declare intentional public re-exports
+  "unused-import", # W0611 — re-export imports are the public API
+  "missing-module-docstring", # C0114
+  "missing-class-docstring", # C0115
+  "missing-function-docstring", # C0116
+  "too-few-public-methods", # R0903 — trips dataclasses / config / Protocol classes
+  # C0415 — the cli->tui/gui/web dispatch, and each component's own heavy or
+  # platform-conditional import (tkinter, uvicorn, the worker's uvloop probe),
+  # are deliberately lazy so import-linter's layering contract holds and a
+  # framework is only imported when the code path that needs it actually runs.
+  # Textual is the exception: the TUI imports it at module scope so `InfoApp`
+  # can be defined there and driven by the headless pilot (ADR-035).
+  "import-outside-toplevel",
+  # W0706 — the generated TUI entry point explicitly re-raises
+  # KeyboardInterrupt/SystemExit ahead of a broad `except Exception` to make the
+  # "let these propagate" intent obvious to readers, even though BaseException
+  # subclasses wouldn't be caught by the Exception clause anyway.
+  "try-except-raise",
+  # R0801 — the component skeletons (gui/tui/mcp/worker) are deliberately
+  # parallel: each fetches package metadata and formats the same info block the
+  # same way. That structural symmetry is a feature of the scaffold, not
+  # copy-paste debt, and R0801 cannot be suppressed inline at the call site.
+  "duplicate-code",
 ]
-tests = ["tests", "*/opinionated-mixins/tests"]
 
+[tool.pylint.design]
+max-args = 10
+max-positional-arguments = 10
+max-branches = 20
 
-[tool.coverage.report]
-exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
-
-
-[tool.pytest.ini_options]
-markers = [
-    "mongo: requires real MongoDB via testcontainers (skipped by default)",
+[tool.typos.files]
+# copier records `_commit` as a `git describe` string (`v1.2.3-4-g<hash>`) when
+# the template is rendered from an untagged ref, and a fragment of the hex hash
+# can read as a misspelled word, failing the check on a hash nobody chose. The
+# file is machine-written with no prose to check. The prek hook passes
+# `--force-exclude`, so the exclusion holds there as well as in `tox -e style`.
+extend-exclude = [
+  ".copier-answers.yml",
 ]
-asyncio_mode = "auto"
+
+[tool.tox]
+# The ``worker`` env is intentionally omitted: it starts a broker-bound process
+# and would hang/fail under ``tox run`` in CI (where no broker is available).
+# The worker is covered by its pytest TestBroker suite; run it on demand with
+# ``tox -e worker`` when a broker is up (e.g. inside the devcontainer).
+env_list = [
+  "style",
+  # Inline ``>>>`` snippets are part of the tested-documentation contract,
+  # so run them in the default CI ``tox run`` invocation.
+  "docs-doctest",
+  "3.14",
+  "3.13",
+  "3.12",
+  "3.11",
+  "3.10",
+]
+requires = ["tox>=4"]
+
+
+[tool.tox.env_run_base]
+commands = [
+  [
+    "coverage",
+    "run",
+    "--module",
+    "pytest",
+    "-v",
+    "--tb=short",
+    "--basetemp={env_tmp_dir}",
+    { replace = "posargs", default = [
+    ], extend = true },
+  ],
+]
+constrain_package_deps = true
+dependency_groups = ["test"]
+description = "Run the tests under {base_python}"
+env_tmp_dir = "{toxworkdir}/tmp/{envname}"
+# Arms coverage-enable-subprocess so xdist/subprocess workers are measured too;
+# `coverage run` plus `parallel = true` writes per-env data files that the CI
+# `coverage combine` step merges.
+set_env = { COVERAGE_PROCESS_START = "{tox_root}/pyproject.toml" }
+
+package = "wheel"
+
+runner = "uv-venv-runner"
+use_frozen_constraints = true
+wheel_build_env = ".pkg"
+
+
+[tool.tox.env.style]
+base_python = ["3.10"]
+commands = [
+  [
+    "ruff",
+    "check",
+    "--no-fix",
+  ],
+  [
+    "ruff",
+    "format",
+    "--check",
+    "--diff",
+  ],
+  [
+    "mypy",
+    "--python-version",
+    "3.10",
+  ],
+  [
+    "mypy",
+    "--python-version",
+    "3.14",
+  ],
+  # Style runs once on Linux, so explicitly sweep platform-gated branches that
+  # mypy would otherwise prune as unreachable on the host platform.
+  [
+    "mypy",
+    "--platform",
+    "win32",
+  ],
+  [
+    "mypy",
+    "--platform",
+    "darwin",
+  ],
+  [
+    "basedpyright",
+  ],
+  [
+    "ty",
+    "check",
+  ],
+  [
+    "pyrefly",
+    "check",
+  ],
+  [
+    "zuban",
+    "check",
+    "src",
+    "docs/examples",
+  ],
+  [
+    "pylint",
+    "src",
+    "docs/examples",
+  ],
+  [
+    "python",
+    "-m",
+    "slotscheck",
+    "src",
+  ],
+  [
+    "lint-imports",
+  ],
+  # Rules-database SAST. Deliberately style-env-only (like ty/pyrefly/zuban) and
+  # not a prek hook: semgrep keeps no on-disk rule cache, so a pre-commit hook
+  # would make a registry request on every `git commit`. The ruleset is named
+  # explicitly rather than `--config auto` so rule selection does not depend on
+  # language auto-detection; it is still fetched from the registry, which is why
+  # this cannot be vendored (see ADR-032). `--error` makes findings blocking;
+  # silence a false positive with a trailing `# nosemgrep: <rule-id>`.
+  [
+    "semgrep",
+    "scan",
+    "--config",
+    "p/python",
+    "--error",
+    "--metrics=off",
+    "src",
+  ],
+  [
+    "taplo",
+    "lint",
+    "*.toml",
+  ],
+  # A strict `--check` gate, not fix mode: a generated file that taplo would
+  # rewrite fails its own CI on first push and drifts on every `copier update`.
+  # `.taplo.toml` disables array auto expand/collapse so the shipped layout is
+  # the canonical one regardless of which components are enabled. The `*.toml`
+  # glob is non-recursive, so it scopes taplo to this project's own root TOML
+  # (pyproject/prek/mise/taplo) without walking vendored `.tox`/`.venv`/
+  # site-packages trees — no `.taplo.toml` exclude config needed.
+  [
+    "taplo",
+    "format",
+    "--check",
+    "--diff",
+    "*.toml",
+  ],
+  [
+    "typos",
+    "--diff",
+  ],
+  [
+    "ec",
+  ],
+  [
+    "sphinx-lint",
+    "docs",
+  ],
+  # Collects (does not run) the suite and flags fixtures that are never used --
+  # cheap, deterministic, and a natural fit next to the other whole-program
+  # analyzers above (lint-imports, slotscheck).
+  [
+    "pytest",
+    "--dead-fixtures",
+  ],
+]
+# `test` is included so the type checkers that scope tests (e.g. ty) can
+# resolve pytest and other test-only imports.
+dependency_groups = ["sast", "style", "test"]
+description = "Run Checkers, Linters and Formatters"
+runner = "uv-venv-runner"
+
+
+[tool.tox.env.prek]
+commands = [["prek", "run", "--all-files"]]
+dependency_groups = ["prek"]
+description = "Run prek hooks"
+runner = "uv-venv-runner"
+
+
+[tool.tox.env.docs-build]
+# Write the warning stream to a file (`-w`) instead of `-W` turning the first
+# warning into a hard error, then let docs/check_warnings.py own the pass/fail:
+# it diffs the emitted warnings against the docs/expected_warnings.txt allowlist,
+# failing on both unexpected new warnings and expected ones that vanished.
+commands = [
+  ["sphinx-build", "-w", "docs/_build/warnings.txt", "-b", "html", "docs", "docs/_build/html"],
+  ["python", "docs/check_warnings.py"],
+]
+dependency_groups = ["docs"]
+description = "Build Docs"
+runner = "uv-venv-runner"
+# Keep build log output unbuffered/ordered. Reproducible builds pin Sphinx's
+# "today"/copyright to SOURCE_DATE_EPOCH, which the CI docs steps
+# (docs-preview.yml, release.yml) export from the last commit date before
+# invoking sphinx-build directly. Local `tox` runs deliberately do NOT export
+# it: an empty value ("{env:SOURCE_DATE_EPOCH:}") is *present but blank*, which
+# breaks hatchling's get_reproducible_timestamp (`int("")`), so we leave it
+# unset locally and conf.py falls back to the current year.
+set_env = { PYTHONUNBUFFERED = "1" }
+
+
+[tool.tox.env.docs-server]
+# ``--ignore`` the machine-generated ``docs/_generated/`` tree: ``conf.py``
+# rewrites it on every Sphinx build, so watching it would make each rebuild
+# trigger the next in an endless live-reload loop.
+commands = [["sphinx-autobuild", "--ignore", "*/_generated/*", "docs", "docs/_build/html"]]
+dependency_groups = ["docs"]
+description = "Start the live-reloading docs server"
+runner = "uv-venv-runner"
+set_env = { PYTHONUNBUFFERED = "1" }
+
+
+[tool.tox.env.docs-doctest]
+# ``literalinclude`` keeps complete examples in tested Python modules; this
+# separate builder executes the occasional ``>>>`` snippet that belongs inline
+# with prose.
+commands = [["sphinx-build", "-b", "doctest", "docs", "docs/_build/doctest"]]
+dependency_groups = ["docs"]
+description = "Run documentation doctests"
+runner = "uv-venv-runner"
+set_env = { PYTHONUNBUFFERED = "1" }
+
+
+[tool.tox.env.docs-linkcheck]
+# On-demand link checker. Also run weekly (non-blocking) by docs-linkcheck.yml.
+# Hits the network, so it is deliberately not part of the `style` env or PR CI.
+commands = [["sphinx-build", "-b", "linkcheck", "docs", "docs/_build/linkcheck"]]
+dependency_groups = ["docs"]
+description = "Check documentation for broken links"
+runner = "uv-venv-runner"
+set_env = { PYTHONUNBUFFERED = "1" }

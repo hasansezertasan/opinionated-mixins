@@ -16,18 +16,10 @@ if TYPE_CHECKING:
     from collections.abc import Callable
 from mongoengine.base.fields import BaseField
 from odmantic.field import ODMFieldInfo
-from opinionated_mixins.contrib import (
-    mongoengine as me_contrib,
-)
-from opinionated_mixins.contrib import (
-    odmantic as od_contrib,
-)
-from opinionated_mixins.contrib import (
-    sqlalchemy as sa_contrib,
-)
-from opinionated_mixins.contrib import (
-    sqlmodel as sm_contrib,
-)
+from opinionated_mixins.contrib import mongoengine as me_contrib
+from opinionated_mixins.contrib import odmantic as od_contrib
+from opinionated_mixins.contrib import sqlalchemy as sa_contrib
+from opinionated_mixins.contrib import sqlmodel as sm_contrib
 from sqlalchemy import Column
 
 MIXIN_NAMES = [

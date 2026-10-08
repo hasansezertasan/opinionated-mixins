@@ -2,6 +2,8 @@ from opinionated_mixins.enums import TemplateFormat, TemplateType
 
 from odmantic import Field
 
+__all__ = ["Template"]
+
 
 class Template:
     """Template mixin for ODMantic models."""

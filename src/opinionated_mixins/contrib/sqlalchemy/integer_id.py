@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["IntegerID"]
+
 
 @declarative_mixin
 class IntegerID:

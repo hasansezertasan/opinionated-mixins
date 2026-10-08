@@ -3,6 +3,8 @@ from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
 from sqlalchemy import Boolean, Column, Date, Enum, Integer, Numeric, String, Text
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["Lead"]
+
 
 @declarative_mixin
 class Lead:

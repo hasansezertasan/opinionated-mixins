@@ -3,6 +3,8 @@ import datetime
 from sqlalchemy import JSON, Boolean, Column, DateTime, String, Text
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["Activity"]
+
 
 @declarative_mixin
 class Activity:
@@ -26,9 +28,7 @@ class Activity:
         doc="Action performed (e.g. 'created', 'commented', 'merged')",
     )
     description = Column(
-        Text,
-        nullable=True,
-        doc="Human-readable summary of the activity",
+        Text, nullable=True, doc="Human-readable summary of the activity"
     )
     data = Column(
         JSON,

@@ -1,0 +1,21 @@
+{
+  "config": {
+    "extends": ".github/linters/.markdownlint.yml",
+  },
+  "fix": false,
+  "globs": ["**/*.md", "**/*.markdown", "!CHANGELOG.md"],
+  "gitignore": true,
+  "ignores": [
+    "CLAUDE.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "TODO.md",
+    "docs/rfcs/**",
+    "docs/superpowers/**",
+    ".github/ISSUE_TEMPLATE/bug_report.md",
+    ".github/ISSUE_TEMPLATE/field_proposal.md",
+    ".github/ISSUE_TEMPLATE/feature_request.md",
+    ".github/ISSUE_TEMPLATE/framework_proposal.md",
+    ".github/ISSUE_TEMPLATE/model_proposal.md",
+  ],
+}

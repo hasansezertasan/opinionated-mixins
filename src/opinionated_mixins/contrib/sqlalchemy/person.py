@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Date, String, Text
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["Person"]
+
 
 @declarative_mixin
 class Person:

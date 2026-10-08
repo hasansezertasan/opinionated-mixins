@@ -5,6 +5,8 @@ from opinionated_mixins.enums import NotificationLevel
 
 from odmantic import Field
 
+__all__ = ["Notification"]
+
 
 class Notification:
     """Notification mixin for ODMantic models.
@@ -27,18 +29,12 @@ class Notification:
         default=NotificationLevel.INFO,
         description="Severity/criticality level of notification",
     )
-    title: str = Field(
-        ...,
-        max_length=255,
-        description="Short human-readable title",
-    )
+    title: str = Field(..., max_length=255, description="Short human-readable title")
     description: str | None = Field(
-        default=None,
-        description="Longer human-readable body",
+        default=None, description="Longer human-readable body"
     )
     data: dict[str, Any] | None = Field(
-        default=None,
-        description="Arbitrary JSON payload for extra context",
+        default=None, description="Arbitrary JSON payload for extra context"
     )
     actor_type: str = Field(
         ...,
@@ -65,8 +61,7 @@ class Notification:
         description="When notification appeared in user's feed; None = unseen",
     )
     read_at: datetime.datetime | None = Field(
-        default=None,
-        description="When user clicked/opened notification; None = unread",
+        default=None, description="When user clicked/opened notification; None = unread"
     )
     archived_at: datetime.datetime | None = Field(
         default=None,

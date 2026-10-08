@@ -5,6 +5,8 @@ from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
 
 from odmantic import Field
 
+__all__ = ["Lead"]
+
 
 class Lead:
     """Lead mixin for ODMantic models."""

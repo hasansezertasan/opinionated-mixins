@@ -1,3 +1,5 @@
 from opinionated_mixins.contrib.sqlalchemy.announcement import (
-    Announcement as Announcement,
+    Announcement as _Announcement,
 )
+
+Announcement = _Announcement

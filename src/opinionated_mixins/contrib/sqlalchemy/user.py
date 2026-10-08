@@ -1,6 +1,8 @@
 from sqlalchemy import Column, DateTime, String
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["User"]
+
 
 @declarative_mixin
 class User:

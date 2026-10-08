@@ -2,6 +2,8 @@ from opinionated_mixins.enums import FeedbackCategory, FeedbackStatus
 
 from odmantic import Field
 
+__all__ = ["Feedback"]
+
 
 class Feedback:
     """Feedback mixin for ODMantic models."""

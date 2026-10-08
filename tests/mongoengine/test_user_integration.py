@@ -21,7 +21,7 @@ class TestUserIntegration:
         loaded = MyUser.objects.first()
         assert loaded is not None
         assert loaded.username == "alice"
-        assert loaded.hashed_password == "hashed123"
+        assert loaded.hashed_password == "hashed123"  # pragma: allowlist secret
         assert loaded.email is None
         assert loaded.date_email_verified is None
 
@@ -29,7 +29,7 @@ class TestUserIntegration:
         now = datetime.datetime.now(datetime.timezone.utc)
         obj = MyUser(
             username="bob",
-            hashed_password="hashed456",
+            hashed_password="hashed456",  # pragma: allowlist secret
             email="bob@example.com",
             date_email_verified=now,
         )
@@ -41,11 +41,11 @@ class TestUserIntegration:
     def test_roundtrip_preserves_all_fields(self) -> None:
         obj = MyUser(
             username="charlie",
-            hashed_password="hashed789",
+            hashed_password="hashed789",  # pragma: allowlist secret
             email="charlie@example.com",
         )
         obj.save()
         loaded = MyUser.objects.first()
         assert loaded.username == "charlie"
-        assert loaded.hashed_password == "hashed789"
+        assert loaded.hashed_password == "hashed789"  # pragma: allowlist secret
         assert loaded.email == "charlie@example.com"

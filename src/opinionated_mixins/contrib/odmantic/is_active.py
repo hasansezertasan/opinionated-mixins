@@ -1,5 +1,7 @@
 from odmantic import Field
 
+__all__ = ["IsActive"]
+
 
 class IsActive:
     """IsActive mixin for ODMantic models."""

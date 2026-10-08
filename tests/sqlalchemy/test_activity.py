@@ -19,11 +19,7 @@ class TestSQLAlchemyActivity:
 
     def test_create_with_required_fields(self) -> None:
         with Session(self.engine) as session:
-            obj = MyActivity(
-                verb="commented",
-                actor_type="User",
-                actor_id="42",
-            )
+            obj = MyActivity(verb="commented", actor_type="User", actor_id="42")
             session.add(obj)
             session.commit()
             session.refresh(obj)
@@ -62,11 +58,7 @@ class TestSQLAlchemyActivity:
 
     def test_created_at_set_on_insert(self) -> None:
         with Session(self.engine) as session:
-            obj = MyActivity(
-                verb="merged",
-                actor_type="User",
-                actor_id="1",
-            )
+            obj = MyActivity(verb="merged", actor_type="User", actor_id="1")
             session.add(obj)
             session.commit()
             session.refresh(obj)
@@ -75,11 +67,7 @@ class TestSQLAlchemyActivity:
 
     def test_optional_fields_default_null(self) -> None:
         with Session(self.engine) as session:
-            obj = MyActivity(
-                verb="deployed",
-                actor_type="System",
-                actor_id="system",
-            )
+            obj = MyActivity(verb="deployed", actor_type="System", actor_id="system")
             session.add(obj)
             session.commit()
             session.refresh(obj)
@@ -92,11 +80,7 @@ class TestSQLAlchemyActivity:
 
     def test_public_defaults_true(self) -> None:
         with Session(self.engine) as session:
-            obj = MyActivity(
-                verb="created",
-                actor_type="User",
-                actor_id="1",
-            )
+            obj = MyActivity(verb="created", actor_type="User", actor_id="1")
             session.add(obj)
             session.commit()
             session.refresh(obj)

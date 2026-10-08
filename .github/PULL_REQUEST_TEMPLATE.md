@@ -1,33 +1,37 @@
+<!-- omit in toc -->
 # Pull Request
 
 ## Description
 
-Please provide a brief description of the changes made in this pull request.
+<!--- Describe your changes in detail -->
 
-## Related Issue
+## Motivation and Context
 
-- Fixes # (issue)
+<!--- Why is this change required? What problem does it solve? -->
+<!--- If it fixes an open issue, please link to the issue here. -->
 
-## Type of Change
+## Usage examples
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update
-- [ ] Other (please describe)
+<!--- Provide examples of intended usage -->
 
-## Checklist
+## How Has This Been Tested?
 
-- [ ] I have read the [CONTRIBUTING.md](CONTRIBUTING.md) file.
-- [ ] My code follows the style guidelines of this project.
-- [ ] I have performed a self-review of my own code.
-- [ ] I have commented my code, particularly in hard-to-understand areas.
-- [ ] I have made corresponding changes to the documentation.
+<!--- Please describe in detail how you tested your changes. -->
+
+## Checklist before requesting a review
+
+<!--- Check every box to confirm the item is complete or not applicable. -->
+
+- [ ] I have read the contributor guidelines and self-reviewed my changes.
+- [ ] I have updated documentation where needed.
+- [ ] I have added or updated tests where appropriate, and run the relevant checks.
 - [ ] My changes generate no new warnings.
-- [ ] I have added tests that prove my fix is effective or that my feature works.
-- [ ] New and existing unit tests pass locally with my changes.
-- [ ] Any dependent changes have been merged and published in downstream modules.
+- [ ] Any dependent changes have been merged and published where applicable.
 
-## Additional Notes
+## Which issue(s) this PR fixes
 
-Add any additional notes about the pull request here.
+<!--- Required: link the issue this PR closes using a GitHub closing keyword, -->
+<!--- e.g. `Closes #1`. The "Verify linked issue" check enforces this; pass the -->
+<!--- `no-issue` label if there truly is none. -->
+
+Closes #

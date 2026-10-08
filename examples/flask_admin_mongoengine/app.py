@@ -120,9 +120,7 @@ class AnnouncementAdmin(ModelView):
     column_list = ["title", "category", "is_active", "created_at"]
     column_searchable_list = ["title", "content"]
     column_filters = ["category", "is_active", "created_at"]
-    form_choices = {
-        "category": [(c.value, c.name) for c in AnnouncementCategory],
-    }
+    form_choices = {"category": [(c.value, c.name) for c in AnnouncementCategory]}
 
 
 class FeedbackAdmin(ModelView):
@@ -243,7 +241,7 @@ def seed() -> None:
     ).save()
     UserDoc(
         username="admin",
-        hashed_password="pbkdf2:sha256:placeholder",
+        hashed_password="pbkdf2:sha256:placeholder",  # pragma: allowlist secret
         email="admin@example.com",
     ).save()
 
@@ -267,10 +265,7 @@ def create_app() -> Flask:
             mongo_client_class=mongomock.MongoClient,
         )
     else:
-        mongoengine.connect(
-            settings.mongodb_name,
-            host=settings.mongo_uri,
-        )
+        mongoengine.connect(settings.mongodb_name, host=settings.mongo_uri)
 
     seed()
 

@@ -2,6 +2,8 @@ from typing import Any, ClassVar
 
 from mongoengine import DateTimeField, StringField
 
+__all__ = ["User"]
+
 
 class User:
     """User mixin for MongoEngine documents."""

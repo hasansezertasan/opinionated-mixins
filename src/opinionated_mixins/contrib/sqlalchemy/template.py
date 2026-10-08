@@ -3,6 +3,8 @@ from opinionated_mixins.enums import TemplateFormat, TemplateType
 from sqlalchemy import Column, Enum, String, Text
 from sqlalchemy.orm import declarative_mixin
 
+__all__ = ["Template"]
+
 
 @declarative_mixin
 class Template:
