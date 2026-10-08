@@ -50,9 +50,14 @@ async def test_embedded_mixin_roundtrip(mock_engine) -> None:
 
 def test_embedded_mixin_rejects_primary_field() -> None:
     with pytest.raises(TypeError, match="cannot define a primary field"):
-
-        class InvalidEmbedded(IsActive, EmbeddedModel):
-            identifier: int = Field(primary_field=True)
+        type(
+            "InvalidEmbedded",
+            (IsActive, EmbeddedModel),
+            {
+                "__annotations__": {"identifier": int},
+                "identifier": Field(primary_field=True),
+            },
+        )
 
 
 async def test_embedded_lead_roundtrip(mock_engine) -> None:
