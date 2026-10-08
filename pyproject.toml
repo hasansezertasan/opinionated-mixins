@@ -479,6 +479,7 @@ strict = true
 
 [[tool.mypy.overrides]]
 module = "opinionated_mixins.contrib.sqlalchemy.*"
+# Declarative mixins use Column() without Mapped[] annotations.
 disable_error_code = ["var-annotated"]
 
 [[tool.mypy.overrides]]

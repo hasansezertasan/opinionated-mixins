@@ -119,4 +119,4 @@ The release-please workflow owns the changelog.
 
 - Target Python 3.10 or newer.
 - Use Ruff for formatting and linting, and strict type checking.
-- Use Google-style docstrings.
+- Use PEP 257-style docstrings, as enforced by Ruff.
