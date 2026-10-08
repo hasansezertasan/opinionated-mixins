@@ -28,7 +28,7 @@ Same idea, applied to data models. Use the standard way. Change it when you need
 
 ## How It Works
 
-Every field name, enum value, and default is chosen by researching what popular platforms and frameworks do (GitHub, Zendesk, JIRA, Django packages, etc.), then picking the most common convention. Proposals require [at least 3 real-world references](.github/ISSUE_TEMPLATE/model_proposal.md).
+Every field name, enum value, and default is chosen by researching what popular platforms and frameworks do (GitHub, Zendesk, JIRA, Django packages, etc.), then weighing them with the [consensus criteria](docs/rfcs/README.md#consensus-criteria). Proposals require at least 3 independent real-world references.
 
 The same mixin is implemented across all supported frameworks with **identical field names and behavior**, adapted to each framework's idioms.
 

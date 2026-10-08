@@ -8,7 +8,8 @@ This project provides reusable mixin classes for common model patterns across
 Python storage frameworks (ORMs and ODMs). It ships consensus-based defaults:
 field names, enum values, and behaviors are chosen by researching conventions
 used by popular platforms and frameworks. Proposals require at least three
-real-world references.
+independent real-world references, weighed by the consensus criteria in
+`docs/rfcs/README.md`.
 
 ## Build & Development
 
@@ -67,8 +68,9 @@ maintaining the same public behavior across adapters.
 
 1. Read existing RFCs for similar work and write an RFC first
    (`docs/rfcs/TEMPLATE.md`). Implementation begins after acceptance.
-2. Research at least three real-world references for field-naming or enum-value
-   decisions and document the rationale in the RFC.
+2. Research at least three independent real-world references for field-naming
+   or enum-value decisions, resolve conflicts with the consensus criteria in
+   `docs/rfcs/README.md`, and document the rationale in the RFC.
 3. Add shared enums to `src/opinionated_mixins/enums.py`.
 4. Implement in applicable framework adapters with consistent field names.
 5. Give each mixin its own file per framework and re-export it from that
