@@ -1,6 +1,6 @@
 from opinionated_mixins.contrib.sqlalchemy import Feedback
 from opinionated_mixins.enums import FeedbackCategory, FeedbackStatus
-from sqlalchemy import Column, Integer, create_engine
+from sqlalchemy import Column, Index, Integer, create_engine
 from sqlalchemy.orm import Session, declarative_base
 
 Base = declarative_base()
@@ -41,10 +41,23 @@ class TestSQLAlchemyFeedback:
             assert obj.category == FeedbackCategory.FEATURE
             assert obj.status == FeedbackStatus.REVIEWED
 
-    def test_subject_indexed(self) -> None:
+    def test_no_default_indexes(self) -> None:
         table = MyFeedback.__table__
         indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
-        assert "subject" in indexed_columns
+        assert indexed_columns == set()
+
+    def test_consumer_can_declare_indexes(self) -> None:
+        class IndexedFeedback(Feedback, Base):  # type: ignore[misc]
+            __tablename__ = "indexed_feedbacks"
+            id = Column(Integer, primary_key=True)
+            __table_args__ = (
+                Index("ix_feedbacks_subject", "subject"),
+                Index("ix_feedbacks_status", "status"),
+            )
+
+        table = IndexedFeedback.__table__
+        indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
+        assert indexed_columns == {"subject", "status"}
 
     def test_fields_exist(self) -> None:
         columns = {c.name for c in MyFeedback.__table__.columns}

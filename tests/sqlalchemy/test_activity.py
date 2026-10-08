@@ -1,7 +1,7 @@
 import datetime
 
 from opinionated_mixins.contrib.sqlalchemy import Activity
-from sqlalchemy import Column, Integer, create_engine
+from sqlalchemy import Column, Index, Integer, create_engine
 from sqlalchemy.orm import Session, declarative_base
 
 Base = declarative_base()
@@ -86,18 +86,23 @@ class TestSQLAlchemyActivity:
             session.refresh(obj)
             assert obj.public is True
 
-    def test_indexed_columns(self) -> None:
+    def test_no_default_indexes(self) -> None:
         table = MyActivity.__table__
         indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
-        assert "verb" in indexed_columns
-        assert "actor_type" in indexed_columns
-        assert "actor_id" in indexed_columns
-        assert "target_type" in indexed_columns
-        assert "target_id" in indexed_columns
-        assert "action_object_type" in indexed_columns
-        assert "action_object_id" in indexed_columns
-        assert "public" in indexed_columns
-        assert "created_at" in indexed_columns
+        assert indexed_columns == set()
+
+    def test_consumer_can_declare_indexes(self) -> None:
+        class IndexedActivity(Activity, Base):  # type: ignore[misc]
+            __tablename__ = "indexed_activities"
+            id = Column(Integer, primary_key=True)
+            __table_args__ = (
+                Index("ix_activities_actor", "actor_type", "actor_id"),
+                Index("ix_activities_created_at", "created_at"),
+            )
+
+        table = IndexedActivity.__table__
+        indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
+        assert indexed_columns == {"actor_type", "actor_id", "created_at"}
 
     def test_fields_exist(self) -> None:
         columns = {c.name for c in MyActivity.__table__.columns}

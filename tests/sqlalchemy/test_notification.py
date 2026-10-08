@@ -2,7 +2,7 @@ import datetime
 
 from opinionated_mixins.contrib.sqlalchemy import Notification
 from opinionated_mixins.enums import NotificationLevel
-from sqlalchemy import Column, Integer, create_engine
+from sqlalchemy import Column, Index, Integer, create_engine
 from sqlalchemy.orm import Session, declarative_base
 
 Base = declarative_base()
@@ -92,16 +92,23 @@ class TestSQLAlchemyNotification:
             assert obj.read_at is None
             assert obj.archived_at is None
 
-    def test_indexed_columns(self) -> None:
+    def test_no_default_indexes(self) -> None:
         table = MyNotification.__table__
         indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
-        assert "notification_type" in indexed_columns
-        assert "level" in indexed_columns
-        assert "group_key" in indexed_columns
-        assert "seen_at" in indexed_columns
-        assert "read_at" in indexed_columns
-        assert "archived_at" in indexed_columns
-        assert "created_at" in indexed_columns
+        assert indexed_columns == set()
+
+    def test_consumer_can_declare_indexes(self) -> None:
+        class IndexedNotification(Notification, Base):  # type: ignore[misc]
+            __tablename__ = "indexed_notifications"
+            id = Column(Integer, primary_key=True)
+            __table_args__ = (
+                Index("ix_notifications_read_at", "read_at"),
+                Index("ix_notifications_created_at", "created_at"),
+            )
+
+        table = IndexedNotification.__table__
+        indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
+        assert indexed_columns == {"read_at", "created_at"}
 
     def test_fields_exist(self) -> None:
         columns = {c.name for c in MyNotification.__table__.columns}

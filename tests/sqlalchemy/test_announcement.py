@@ -1,6 +1,6 @@
 from opinionated_mixins.contrib.sqlalchemy import Announcement
 from opinionated_mixins.enums import AnnouncementCategory
-from sqlalchemy import Column, Integer, create_engine
+from sqlalchemy import Column, Index, Integer, create_engine
 from sqlalchemy.orm import Session, declarative_base
 
 Base = declarative_base()
@@ -38,10 +38,20 @@ class TestSQLAlchemyAnnouncement:
             session.refresh(obj)
             assert obj.category == AnnouncementCategory.MAINTENANCE
 
-    def test_title_indexed(self) -> None:
+    def test_no_default_indexes(self) -> None:
         table = MyAnnouncement.__table__
         indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
-        assert "title" in indexed_columns
+        assert indexed_columns == set()
+
+    def test_consumer_can_declare_indexes(self) -> None:
+        class IndexedAnnouncement(Announcement, Base):  # type: ignore[misc]
+            __tablename__ = "indexed_announcements"
+            id = Column(Integer, primary_key=True)
+            __table_args__ = (Index("ix_announcements_title", "title"),)
+
+        table = IndexedAnnouncement.__table__
+        indexed_columns = {col.name for idx in table.indexes for col in idx.columns}
+        assert indexed_columns == {"title"}
 
     def test_fields_exist(self) -> None:
         columns = {c.name for c in MyAnnouncement.__table__.columns}

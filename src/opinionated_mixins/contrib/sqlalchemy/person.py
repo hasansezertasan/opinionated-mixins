@@ -6,7 +6,28 @@ __all__ = ["Person"]
 
 @declarative_mixin
 class Person:
-    """Person mixin for SQLAlchemy models."""
+    """Person mixin for SQLAlchemy models.
+
+    Indexing recommendations:
+    - ``last_name``, ``first_name``: compound index recommended for name lookups
+      and sorting.
+    - ``email``: index recommended if looking up people by email address.
+
+    Example:
+        .. code-block:: python
+
+            from sqlalchemy import Index
+
+
+            class MyPerson(Person, Base):
+                __tablename__ = "people"
+                id = Column(Integer, primary_key=True)
+
+                __table_args__ = (
+                    Index("ix_people_name", "last_name", "first_name"),
+                    Index("ix_people_email", "email"),
+                )
+    """
 
     __abstract__ = True
 
