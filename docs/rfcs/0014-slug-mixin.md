@@ -2,12 +2,12 @@
 rfc: "0014"
 title: Slug
 type: mixin
-status: proposed
+status: accepted
 created: 2026-10-09
 updated: 2026-10-09
 author: hasansezertasan
 github_issue: 115
-github_pr: null
+github_pr: 135
 supersedes: null
 superseded_by: null
 ---

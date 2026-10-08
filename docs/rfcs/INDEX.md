@@ -21,7 +21,7 @@ Last updated: 2026-10-09
 | [0011](0011-template-mixin.md) | Template | mixin | accepted | 2026-04-19 | hasansezertasan |
 | [0012](0012-lead-mixin.md) | Lead | mixin | accepted | 2026-04-19 | hasansezertasan |
 | [0013](0013-user-mixin.md) | User | mixin | accepted | 2026-04-19 | hasansezertasan |
-| [0014](0014-slug-mixin.md) | Slug | mixin | proposed | 2026-10-09 | hasansezertasan |
+| [0014](0014-slug-mixin.md) | Slug | mixin | accepted | 2026-10-09 | hasansezertasan |
 
 ## Rejected / Deferred / Withdrawn
 
