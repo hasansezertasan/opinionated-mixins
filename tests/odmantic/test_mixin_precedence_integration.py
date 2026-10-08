@@ -9,6 +9,7 @@ from pydantic import ValidationError
 from opinionated_mixins.contrib.odmantic._base import (
     ODManticMixinMetaclass,
     _class_annotations,
+    _mro_for_bases,
     _namespace_annotations,
 )
 
@@ -92,6 +93,16 @@ class TestODManticMixinPrecedence:
 
         obj = MyModel()
         assert obj.status == "right"
+
+    def test_inconsistent_mixin_mro_is_rejected(self) -> None:
+        class LeftFirstMixin(LeftMixin, RightMixin):
+            pass
+
+        class RightFirstMixin(RightMixin, LeftMixin):
+            pass
+
+        with pytest.raises(TypeError, match="consistent method resolution order"):
+            _mro_for_bases((LeftFirstMixin, RightFirstMixin, Model))
 
     @pytest.mark.skipif(
         sys.version_info < (3, 14), reason="native lazy annotations require Python 3.14"
