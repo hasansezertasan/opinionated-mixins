@@ -45,8 +45,8 @@ settings = Settings()
 
 
 class Person(Model):
-    # ODMantic does not collect fields from plain mixin parents (issue #39).
-    # Declare the Person fields directly; BSON dates use datetime here.
+    # The ODMantic Person mixin composes with Model. This example declares fields
+    # directly to use datetime for BSON date storage.
     first_name: str = Field(..., min_length=1, max_length=255)
     last_name: str = Field(..., min_length=1, max_length=255)
     middle_name: str | None = Field(default=None, max_length=255)

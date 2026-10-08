@@ -1,14 +1,22 @@
 import datetime
 from decimal import Decimal
+from typing import Any, cast
 
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
 
 from odmantic import Field
 
+from ._base import (
+    ODManticMixinMetaclass,
+    bson_key_for_field,
+    date_to_datetime_for_bson,
+    decimal_to_decimal128_for_bson,
+)
+
 __all__ = ["Lead"]
 
 
-class Lead:
+class Lead(metaclass=ODManticMixinMetaclass):
     """Lead mixin for ODMantic models."""
 
     title: str | None = Field(default=None, max_length=255)
@@ -29,3 +37,22 @@ class Lead:
     next_follow_up: datetime.date | None = Field(default=None)
     description: str | None = Field(default=None)
     is_active: bool = Field(default=True)
+
+    def model_dump_doc(  # pylint: disable=no-member
+        self, include: object = None
+    ) -> dict[str, Any]:
+        """Generate a BSON document while keeping Pydantic dumps date-native.
+
+        Returns:
+            The BSON-ready document representation.
+        """
+        base = cast("Any", super())
+        document = cast("dict[str, Any]", base.model_dump_doc(include=include))
+        for field_name in ("close_date", "last_contacted", "next_follow_up"):
+            key_name = bson_key_for_field(type(self), field_name)
+            if key_name in document:
+                document[key_name] = date_to_datetime_for_bson(document[key_name])
+        key_name = bson_key_for_field(type(self), "opportunity_amount")
+        if key_name in document:
+            document[key_name] = decimal_to_decimal128_for_bson(document[key_name])
+        return document

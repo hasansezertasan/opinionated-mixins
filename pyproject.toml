@@ -217,9 +217,8 @@ branch = true
 # `.../site-packages/...` when tox/CI installs the built wheel or sdist. A
 # `src/**`-only pattern silently misses the installed copy and reports it at 0%.
 # The RFC version compatibility shim is a one-line import and the generated
-# module is intentionally excluded. ODMantic integration tests are expected
-# xfails while upstream issue #39 prevents composite-model construction; retain
-# their execution but exclude those impossible paths from coverage.
+# module is intentionally excluded. ODMantic integration tests exercise
+# framework and mongomock roundtrips, but coverage focuses on package code.
 omit = ["*/_version.py", "*/__about__.py", "tests/odmantic/*_integration.py"]
 parallel = true
 # Store data-file paths relative to the project root so `.coverage` files produced
@@ -304,6 +303,7 @@ ignore_names = [
   "CRITICAL",
   "_mongomock_connection",
   "pytestmark",
+  "related",
 ]
 min_confidence = 60
 paths = ["src", "tests"]
@@ -485,6 +485,10 @@ disable_error_code = ["var-annotated"]
 [[tool.mypy.overrides]]
 module = "opinionated_mixins.contrib.mongoengine.*"
 disable_error_code = ["import-untyped"]
+
+[[tool.mypy.overrides]]
+module = "pymongo.*"
+follow_imports = "skip"
 
 
 [tool.basedpyright]

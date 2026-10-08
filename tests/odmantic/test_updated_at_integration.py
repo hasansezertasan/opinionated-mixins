@@ -1,23 +1,8 @@
-"""Integration tests for ODMantic UpdatedAt mixin.
-
-The model is built inside each test via the ``build_mixin_model`` fixture — not
-at module level — because composing an ODMantic ``Model`` with a mixin parent
-raises at class-creation time under pydantic >= 2.13 (see the fixture's
-docstring and issue #39). Building at import time would break collection.
-"""
+"""Integration tests for ODMantic UpdatedAt mixin."""
 
 import datetime
 
-import pytest
 from opinionated_mixins.contrib.odmantic import UpdatedAt
-from pydantic import ValidationError
-
-pytestmark = pytest.mark.xfail(
-    raises=(TypeError, ValidationError, NotImplementedError),
-    reason="ODMantic metaclass does not process annotations from mixin parents. "
-    "See: https://github.com/hasansezertasan/opinionated-mixins/issues/39",
-    strict=True,
-)
 
 
 class TestUpdatedAtIntegration:
@@ -38,8 +23,7 @@ class TestUpdatedAtIntegration:
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(model_cls)
         now = datetime.datetime.now(datetime.timezone.utc)
-        utc = datetime.timezone.utc
-        delta = (now - loaded.updated_at.replace(tzinfo=utc)).total_seconds()
+        delta = (now - loaded.updated_at).total_seconds()
         assert delta < 5
 
     async def test_updated_at_survives_roundtrip(
@@ -50,7 +34,7 @@ class TestUpdatedAtIntegration:
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(model_cls)
         # mongomock may truncate microseconds; compare up to millisecond precision
-        diff = loaded.updated_at - obj.updated_at.replace(tzinfo=None)
+        diff = loaded.updated_at - obj.updated_at
         assert abs(diff.total_seconds()) < 0.01
 
     async def test_updated_at_can_be_manually_refreshed(
@@ -67,3 +51,4 @@ class TestUpdatedAtIntegration:
         loaded = await mock_engine.find_one(model_cls)
         assert loaded.name == "changed"
         assert loaded.updated_at >= first_updated
+        assert loaded.updated_at.tzinfo == datetime.timezone.utc

@@ -2,23 +2,21 @@
 
 import datetime
 
-import pytest
-from odmantic import Model
+from odmantic import Field, Model
 from opinionated_mixins.contrib.odmantic import Person
-from pydantic import ValidationError
-
-pytestmark = pytest.mark.xfail(
-    raises=(ValidationError, NotImplementedError),
-    reason="ODMantic metaclass does not process annotations from mixin parents. "
-    "See: https://github.com/hasansezertasan/opinionated-mixins/issues/39",
-    strict=True,
-)
 
 
 class MyPerson(Person, Model):
     """Test model composing Person with Model."""
 
     model_config = {"collection": "test_persons"}
+
+
+class RenamedPerson(Person, Model):
+    """Test model overriding Person BSON field keys."""
+
+    model_config = {"collection": "test_renamed_persons"}
+    date_of_birth: datetime.date | None = Field(default=None, key_name="dob")
 
 
 class TestPersonIntegration:
@@ -63,6 +61,30 @@ class TestPersonIntegration:
         assert loaded.date_of_birth == dob
         assert loaded.bio == "A test person"
 
+    def test_bson_document_serializes_birth_date_without_changing_pydantic_dump(
+        self,
+    ) -> None:
+        """Date values use BSON-safe values only in document dumps."""
+        dob = datetime.date(1990, 1, 15)
+        obj = MyPerson(first_name="Bob", last_name="Jones", date_of_birth=dob)
+
+        pydantic_dump = obj.model_dump()
+        document_dump = obj.model_dump_doc()
+
+        assert pydantic_dump["date_of_birth"] == dob
+        assert document_dump["date_of_birth"] == datetime.datetime.combine(
+            dob, datetime.time()
+        )
+
+    def test_bson_document_serializes_renamed_birth_date(self) -> None:
+        """BSON conversion honors concrete ODMantic key_name overrides."""
+        dob = datetime.date(1990, 1, 15)
+        obj = RenamedPerson(first_name="Bob", last_name="Jones", date_of_birth=dob)
+
+        document_dump = obj.model_dump_doc()
+
+        assert document_dump["dob"] == datetime.datetime.combine(dob, datetime.time())
+
     async def test_optional_fields_default_none(self, mock_engine) -> None:
         obj = MyPerson(first_name="C", last_name="D")
         await mock_engine.save(obj)
@@ -73,3 +95,16 @@ class TestPersonIntegration:
         assert loaded.country is None
         assert loaded.date_of_birth is None
         assert loaded.bio is None
+
+    async def test_query_birth_date_with_bson_operand(self, mock_engine) -> None:
+        dob = datetime.date(1990, 1, 15)
+        obj = RenamedPerson(first_name="Bob", last_name="Jones", date_of_birth=dob)
+        await mock_engine.save(obj)
+
+        operand = datetime.datetime.combine(dob, datetime.time())
+        loaded = await mock_engine.find_one(
+            RenamedPerson, RenamedPerson.date_of_birth == operand
+        )
+
+        assert loaded is not None
+        assert loaded.date_of_birth == dob

@@ -4,11 +4,14 @@ from typing import Any
 from opinionated_mixins.enums import NotificationLevel
 
 from odmantic import Field
+from pydantic import field_validator
+
+from ._base import ODManticMixinMetaclass, utc_datetime
 
 __all__ = ["Notification"]
 
 
-class Notification:
+class Notification(metaclass=ODManticMixinMetaclass):
     """Notification mixin for ODMantic models.
 
     Tracks per-recipient notification state: type, severity, read/seen status,
@@ -71,3 +74,7 @@ class Notification:
         default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),
         description="When notification was created",
     )
+
+    _restore_datetimes_utc = field_validator(
+        "seen_at", "read_at", "archived_at", "created_at", mode="before"
+    )(utc_datetime)
