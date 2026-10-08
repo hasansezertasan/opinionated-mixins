@@ -17,7 +17,7 @@ python = "{{ get_env(name='PYTHON_VERSION', default=read_file(path=config_root ~
 # mise installs it with this project's selected Python (cobo requires >=3.14).
 # Renovate tracks the pinned version; invoked as `mise exec -- cobo` by the
 # gitignore-check task and gitignore-drift.yml workflow.
-"pypi:cobo" = "0.4.0"
+"pypi:cobo" = "0.6.0"
 
 [tasks.install]
 description = "Install dependencies"
