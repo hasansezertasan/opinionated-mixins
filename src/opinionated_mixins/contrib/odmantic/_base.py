@@ -69,13 +69,14 @@ def _is_odmantic_model_base(base: type) -> bool:
 def _copy_mixin_fields(bases: tuple[type, ...], namespace: dict[str, Any]) -> None:
     """Copy annotated fields from opinionated mixins into a model namespace."""
     annotations = _namespace_annotations(namespace)
+    direct_field_names = set(annotations)
     for base in reversed(bases):
         if _is_odmantic_model_base(base):
             continue
         for mixin in reversed(base.__mro__):
             if mixin is object or _is_odmantic_model_base(mixin):
                 continue
-            _copy_fields_from_mixin(mixin, annotations, namespace)
+            _copy_fields_from_mixin(mixin, direct_field_names, annotations, namespace)
     namespace["__annotations__"] = annotations
 
 
@@ -95,10 +96,17 @@ def _namespace_annotations(namespace: dict[str, Any]) -> dict[str, Any]:
 
 
 def _copy_fields_from_mixin(
-    mixin: type, annotations: dict[str, Any], namespace: dict[str, Any]
+    mixin: type,
+    direct_field_names: set[str],
+    annotations: dict[str, Any],
+    namespace: dict[str, Any],
 ) -> None:
     """Copy one mixin's annotations and defaults unless the model overrides them."""
     for field_name, annotation in getattr(mixin, "__annotations__", {}).items():
         annotations.setdefault(field_name, annotation)
-        if field_name not in namespace and hasattr(mixin, field_name):
+        if (
+            field_name not in direct_field_names
+            and field_name not in namespace
+            and hasattr(mixin, field_name)
+        ):
             namespace[field_name] = getattr(mixin, field_name)
