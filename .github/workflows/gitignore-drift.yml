@@ -25,7 +25,8 @@ jobs:
         with:
           persist-credentials: false
       - name: Install mise tools
-        # cobo is pinned in mise.toml (pipx backend, Renovate-tracked) and run
+        # cobo is pinned in .config/mise.toml (pipx backend, Renovate-tracked)
+        # and run
         # via `mise exec`, mirroring how ghalint/all-contributors are invoked.
         uses: jdx/mise-action@2d8d4cafcbd33be2ea37d2b6f5ad595363d1f1ca  # v5.1.1
       - name: Refresh cobo sources

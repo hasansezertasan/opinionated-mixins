@@ -186,7 +186,7 @@ Select a configuration from the Run and Debug panel in VS Code.
 
 The `prek` hooks include [`detect-secrets`](https://github.com/Yelp/detect-secrets),
 a local, pre-commit-stage secret scanner. It checks changed files against the
-committed `.secrets.baseline`, so it only flags **new** potential secrets — not
+committed `.config/.secrets.baseline`, so it only flags **new** potential secrets — not
 the already-triaged false positives recorded in the baseline. This complements
 (and does not replace) the history-spanning [gitleaks](https://github.com/gitleaks/gitleaks)
 scan in `check-security.yml`, which runs on every PR/push and weekly: gitleaks
@@ -203,23 +203,23 @@ If the hook flags something:
   then audit:
 
   ```bash
-  uv run --locked --group style detect-secrets scan --baseline .secrets.baseline
-  uv run --locked --group style detect-secrets audit .secrets.baseline
+  uv run --locked --group style detect-secrets scan --baseline .config/.secrets.baseline
+  uv run --locked --group style detect-secrets audit .config/.secrets.baseline
   ```
 
-  The scan records the new finding into `.secrets.baseline` (unaudited); the
+  The scan records the new finding into `.config/.secrets.baseline` (unaudited); the
   audit then walks you through each unlabeled entry interactively so you can
-  mark it as a true or false positive. Commit the updated `.secrets.baseline`
+  mark it as a true or false positive. Commit the updated `.config/.secrets.baseline`
   alongside your change.
 
 - **The tree legitimately changed shape** (new files, moved code) and the
   baseline needs new entries scanned in — regenerate it:
 
   ```bash
-  uv run --locked --group style detect-secrets scan --baseline .secrets.baseline
+  uv run --locked --group style detect-secrets scan --baseline .config/.secrets.baseline
   ```
 
-  Then re-run `detect-secrets audit .secrets.baseline` to triage any newly
+  Then re-run `detect-secrets audit .config/.secrets.baseline` to triage any newly
   discovered entries before committing.
 
 ### Improving The Documentation
