@@ -582,8 +582,15 @@ max-branches = 20
 # can read as a misspelled word, failing the check on a hash nobody chose. The
 # file is machine-written with no prose to check. The prek hook passes
 # `--force-exclude`, so the exclusion holds there as well as in `tox -e style`.
+# CHANGELOG.md is release-please-generated: every entry embeds a short commit
+# hash, and a fragment of any hash can read as a misspelled word (e.g. `ded`
+# in `ded19db` flagged as `dead`), failing the check on bytes nobody chose and
+# auto-"fixing" the link text out of sync with its commit URL. Same
+# machine-written rationale as above, so it is excluded rather than allowlisted
+# word by word.
 extend-exclude = [
   ".copier-answers.yml",
+  "CHANGELOG.md",
 ]
 
 [tool.tox]
