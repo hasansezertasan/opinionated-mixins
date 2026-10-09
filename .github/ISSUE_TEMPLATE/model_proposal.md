@@ -22,7 +22,7 @@ Write the fields that your proposed model must have in the table below.
 | ---------- | ----------- | ----------- | ------ | -------- | ----- | ------------- |
 
 **References**
-This project chooses field names and enum values based on industry consensus. List at least 3 real-world references showing how other projects, platforms, or frameworks name these fields.
+This project chooses field names and enum values based on industry consensus. List at least 3 independent real-world references (see the [consensus criteria](https://github.com/hasansezertasan/opinionated-mixins/blob/main/docs/rfcs/README.md#consensus-criteria)) showing how other projects, platforms, or frameworks name these fields (or justify if the domain genuinely has fewer).
 
 | Source | Field Names Used | Link |
 | ------ | ---------------- | ---- |
