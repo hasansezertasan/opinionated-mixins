@@ -46,8 +46,9 @@ directory may be added later.
 ## Consensus criteria
 
 Every naming, enum-value, default, and behavior decision in an RFC is made
-against these criteria. They codify how RFC-0001 through RFC-0014 already
-resolved their choices.
+against these criteria. They formalize the consensus principles informed by
+RFC-0001 through RFC-0014. (RFCs accepted before these criteria were codified
+are grandfathered; see [When a convention is settled](#when-a-convention-is-settled).)
 
 ### References
 
@@ -63,8 +64,8 @@ resolved their choices.
 - Mix kinds where the domain allows. Useful kinds are frameworks and ORMs
   (Django, Rails, Laravel), widely used packages, public APIs (GitHub,
   Zendesk), and standards (IETF RFCs, ISO, W3C, schema.org).
-- If a domain genuinely has fewer than three independent sources, say so in the
-  Research section instead of padding the table.
+- If a domain genuinely has fewer than three independent sources, state and
+  justify this in the Research section instead of padding the table.
 
 ### Resolving conflicts
 
@@ -72,23 +73,33 @@ When references disagree, apply these rules in order. The first rule that
 decides wins.
 
 1. **Hard constraints.**
-   - A choice must work identically in every framework adapter. Rejected on
-     these grounds so far:
-     - database-side defaults (RFC-0001, RFC-0005);
-     - `GenericForeignKey` (RFC-0007).
+   - Maintain consistent public behavior across adapters, adapted to each
+     framework's idioms. Where framework limitations prevent identical
+     behavior, document the asymmetry under Consequences (as RFC-0002 did for
+     SQLAlchemy-only `onupdate`). Storage-specific mixins (such as SQL-only
+     `IntegerID` in RFC-0004) are restricted to their applicable adapters.
+   - Database-side defaults (such as server-side `func.now()` or
+     `gen_random_uuid()`) are rejected for backend portability (RFC-0001,
+     RFC-0005).
+   - Reject framework-coupled mechanisms that cannot compose cleanly across
+     adapters, such as `GenericForeignKey` (RFC-0007).
    - Where a published standard fixes a limit or format, follow it. Examples
-     are the RFC 5321 email length and ISO 3166 country codes (RFC-0009).
-   - Standards decide limits and formats, not names. schema.org's
-     `givenName` loses to `first_name` (RFC-0009).
+     are the RFC 5321 email length and ISO 3166-1 country codes (RFC-0009).
+     (Note that published standards dictate formats and limits; when naming
+     conflicts arise between a standard and prevailing application code,
+     application conventions can prevail under consensus, as `first_name` won
+     over schema.org's `givenName` in RFC-0009.)
 2. **Consistency with accepted RFCs.** If an accepted mixin already names the
-   concept, reuse that name, even when the references prefer another. Examples:
-   - `created_at` over `timestamp` (RFC-0007);
-   - `content` over `body` (RFC-0008, RFC-0010, RFC-0011).
-3. **Majority of independent references.** Count the Research table and name
-   the outliers. For example, five of seven sources use `slug`, so Shopify's
-   `handle` is the outlier (RFC-0014).
-4. **Clarity.** Apply this when the rules above do not decide, or when the
-   majority name is ambiguous:
+   concept, reuse that name, even when external references prefer another. For
+   example, `content` was established in RFC-0008 and reused in RFC-0010 and
+   RFC-0011 over `body`; `created_at` was established in RFC-0001 and reused in
+   RFC-0007 over Django's `timestamp`.
+3. **Majority of independent references.** Count the Research table. A strict
+   majority (>50% of independent references) decides. Name the outliers. For
+   example, five of seven sources use `slug`, while Shopify's `handle` and
+   WordPress's internal `post_name` are outliers (RFC-0014).
+4. **Clarity.** Apply this when references are tied, when no majority emerges,
+   or when the majority name is ambiguous:
    - positive booleans (`is_active`, not `is_disabled`);
    - names that state their contract (`hashed_password`);
    - nullable timestamps over booleans when *when* matters;
@@ -99,7 +110,8 @@ For each contested choice, state in the RFC which rule decided it.
 
 ### Enum values
 
-An enum is the union of the values that appear in at least two independent
+An enum is surveyed across at least three independent references. The enum
+contains the union of values that appear in at least two independent
 references, with one member per meaning. Map synonyms to that member and say
 so, as Bootstrap's `danger` maps to `error` (RFC-0008). A value found in only
 one source needs an explicit justification, as `CRITICAL` from syslog has in
@@ -107,20 +119,22 @@ RFC-0006.
 
 ### No consensus
 
-Sometimes the references disagree on a behavior and none of the rules above
-decides it. Do not pick a side in that case. Either leave the behavior to the
-consumer or defer it, and record the outcome under Alternatives Considered.
+Sometimes references disagree on a behavior or convention and none of the rules
+above decides it. Do not pick a side arbitrarily. Either leave the behavior to
+the consumer or defer it, and record the outcome under Alternatives Considered.
 RFC-0014, for example, leaves both slug generation and uniqueness scope to
 the consumer.
 
 ### When a convention is settled
 
 An accepted RFC settles its decisions, and later RFCs follow them under
-rule 2. New references alone do not reopen a settled name or value. Changing
-one requires a `breaking-change` RFC that supersedes the original.
+rule 2. New references alone do not reopen a settled name or value.
+Backwards-compatible additions (such as adding an optional field or new enum
+member) follow standard feature RFCs. Modifying or renaming an accepted field or
+enum member requires a `breaking-change` RFC that supersedes the original.
 
-RFCs accepted before these criteria were written are not rewritten. They are
-revisited only through a superseding RFC.
+RFCs accepted before these criteria were written are not rewritten retroactively.
+They are revisited only through a superseding RFC.
 
 ## How to propose
 

@@ -273,7 +273,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). New mixins, fields, framework support, a
 
 New mixin ideas? Open a [Model Proposal](https://github.com/hasansezertasan/opinionated-mixins/issues/new?template=model_proposal.md). New fields on existing mixins? Open a [Field Proposal](https://github.com/hasansezertasan/opinionated-mixins/issues/new?template=field_proposal.md).
 
-Both require real-world references — this project runs on consensus, not opinion.
+Both require independent real-world references (see the [consensus criteria](docs/rfcs/README.md#consensus-criteria)) — this project runs on consensus, not opinion.
 
 ## License
 
