@@ -724,14 +724,18 @@ commands = [
     "--config",
     ".config/.taplo.toml",
     "*.toml",
+    ".config/mise.toml",
+    ".config/.taplo.toml",
   ],
   # A strict `--check` gate, not fix mode: a generated file that taplo would
   # rewrite fails its own CI on first push and drifts on every `copier update`.
   # `.config/.taplo.toml` disables array auto expand/collapse so the shipped
   # layout is the canonical one regardless of which components are enabled. The
-  # `*.toml` glob is non-recursive, so it scopes taplo to this project's own
-  # root TOML (pyproject/prek/mise/taplo) without walking vendored `.tox`/
-  # `.venv`/site-packages trees — no config exclude rules needed. `--config` is
+  # `*.toml` glob is non-recursive, so it covers the root TOML
+  # (pyproject/prek) without walking vendored `.tox`/`.venv`/
+  # site-packages trees — no config exclude rules needed; the relocated
+  # `.config/mise.toml` and `.config/.taplo.toml` are listed explicitly
+  # because the glob does not reach into `.config/`. `--config` is
   # passed explicitly because taplo cannot read a repo-local `.config/` and
   # does not fold `[tool.taplo]` out of pyproject.toml.
   [
@@ -742,6 +746,8 @@ commands = [
     "--config",
     ".config/.taplo.toml",
     "*.toml",
+    ".config/mise.toml",
+    ".config/.taplo.toml",
   ],
   [
     "typos",
