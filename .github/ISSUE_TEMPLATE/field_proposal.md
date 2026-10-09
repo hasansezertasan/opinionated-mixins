@@ -22,7 +22,7 @@ A clear and concise description of what you want to happen.
 | ---------- | ----------- | ----------- | ------ | -------- | ----- | ------------- |
 
 **References**
-This project chooses field names based on industry consensus. List at least 3 independent real-world references (see the [consensus criteria](https://github.com/hasansezertasan/opinionated-mixins/blob/main/docs/rfcs/README.md#consensus-criteria)) showing how other projects name this field.
+This project chooses field names based on industry consensus. List at least 3 independent real-world references (see the [consensus criteria](https://github.com/hasansezertasan/opinionated-mixins/blob/main/docs/rfcs/README.md#consensus-criteria)) showing how other projects name this field (or justify if the domain genuinely has fewer).
 
 | Source | Field Name Used | Link |
 | ------ | --------------- | ---- |

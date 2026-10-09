@@ -29,7 +29,8 @@ superseded_by: null # RFC number that replaces this one, or null
 ## Research
 
 > Industry-consensus check. Minimum **3** independent real-world references
-> for any field naming or enum-value decision. This is the project's "research
+> for any field naming or enum-value decision (or state and justify in
+> Research if the domain genuinely has fewer). This is the project's "research
 > first, implement second" rule made durable. Resolve disagreements with the
 > [consensus criteria](README.md#consensus-criteria), and state which rule
 > decided each contested choice.
