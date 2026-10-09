@@ -91,3 +91,43 @@ This **consistent API across frameworks** is the differentiator.
 - Which mixins to implement first? (Timestamps, SoftDelete, UUID PK are common starting points)
 - Should there be a shared protocol/interface that all contrib implementations must satisfy?
 - How to handle framework-specific features that don't translate across all ORMs?
+
+## 2026-10-09: Declutter Repo Root
+
+### Motivation
+
+The repo root had 34 entries, most of them shared tool configs, which buried the files a
+visitor actually looks for. Goal: root holds only things a tool hard-requires there or a
+human looks for first.
+
+### What moved and why each landed where it did
+
+- `mise.toml` -> `.config/mise.toml`: mise auto-discovers `.config/mise.toml` and still
+  treats the repo as project root. No rewiring needed.
+- `.taplo.toml` -> `.config/.taplo.toml`: taplo does not search `.config/`; the tox
+  `style` env now passes `--config` explicitly (it also cannot fold the settings into
+  pyproject's `[tool.taplo]`).
+- `.editorconfig-checker.json` -> `.config/.editorconfig-checker.json`: `ec` does not
+  search `.config/`; both callers now pass `-config` explicitly (the prek hook *and* the
+  bare `ec` command in the tox `style` env — the second call site is easy to miss).
+- `.markdownlint-cli2.jsonc` -> `.config/.markdownlint-cli2.jsonc`: markdownlint-cli2
+  does not search `.config/`; the prek hook now passes `--config`. The `extends` path
+  inside the config resolved relative to the config file's own directory and needed a
+  `../` prefix.
+- `.secrets.baseline` -> `.config/.secrets.baseline`: detect-secrets does not auto-discover
+  its baseline; the prek hook and the documented scan/audit commands now pass `--baseline`.
+- `JOURNAL.md` -> `docs/JOURNAL.md`: narrative notes, no tooling reads it.
+
+Kept at root: `pyproject.toml`, `uv.lock`, `.python-version`, `prek.toml`, `.editorconfig`,
+`cobo.lock`, `.copier-answers.yml`, `.gitignore`, `.gitattributes`, `.git_archival.txt`,
+`.dockerignore`, `.env.example`, `CITATION.cff`, `LICENSE`, `README.md`, `AGENTS.md`,
+`CONTRIBUTING.md` — packaging files, hook runners, VCS attributes and visitor-facing docs
+are all anchored to the root by their tools or conventions, and the moving cost exceeds the
+benefit.
+
+### Outcome
+
+Root entry count: 34 -> 28. Every moved config was proven resolved, not merely passing:
+a wrong config path hard-errors for taplo/ec/detect-secrets, and the markdownlint rules
+(MD003/MD004, defined only in the extends chain) fire on a probe file — none of these
+silent-fallback paths can hide a missing config.

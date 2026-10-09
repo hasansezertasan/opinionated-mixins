@@ -1,6 +1,6 @@
 {
   "config": {
-    "extends": ".github/linters/.markdownlint.yml",
+    "extends": "../.github/linters/.markdownlint.yml",
   },
   "fix": false,
   "globs": ["**/*.md", "**/*.markdown", "!CHANGELOG.md"],

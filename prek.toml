@@ -110,16 +110,18 @@ hooks = [
   # editorconfig-checker is run via the uv `style` group (not an upstream prek
   # repo) so its version has a single source of truth: its PyPI wrapper lags the
   # Go release tags, so a separate `rev` pin would drift permanently out of sync
-  # with the `style` group. It reads `.editorconfig-checker.json` and scans the
-  # whole tree (respecting .gitignore), so filenames are not passed.
-  { id = "editorconfig-checker", name = "EditorConfig Checker", entry = "uv run --locked --group style ec", language = "system", pass_filenames = false },
+  # with the `style` group. Its config (`.config/.editorconfig-checker.json`) is passed
+  # with the explicit `-config` flag because `ec` does not search a repo-local
+  # `.config/` directory. It scans the whole tree (respecting .gitignore), so
+  # filenames are not passed.
+  { id = "editorconfig-checker", name = "EditorConfig Checker", entry = "uv run --locked --group style ec -config .config/.editorconfig-checker.json", language = "system", pass_filenames = false },
   # sphinx-lint is run via the uv `style` group (not an upstream prek repo) so its
   # version has a single source of truth shared with the tox `style` env — the
   # same drift-free rationale as editorconfig-checker above. It statically lints
   # the reStructuredText docs sources (it does not import the project or Sphinx).
   { id = "sphinx-lint", name = "Sphinx Lint", entry = "uv run --locked --group style sphinx-lint docs", language = "system", files = '\.rst$', pass_filenames = false },
   # detect-secrets is a local pre-commit gate against a committed baseline
-  # (.secrets.baseline), catching a secret at `git commit` time before it ever
+  # (.config/.secrets.baseline), catching a secret at `git commit` time before it ever
   # enters history. It complements (does not replace) the history-spanning
   # gitleaks scan in check-security.yml, which runs on PR/push/weekly cron —
   # local prevention (commit stage) layered with CI detection (history stage).
@@ -127,7 +129,7 @@ hooks = [
   # `prek run --all-files` runs this hook there too. Single version source: the
   # `style` group pin (its PyPI wrapper has no separate upstream pre-commit repo
   # revision worth tracking here).
-  { id = "detect-secrets", name = "detect-secrets (pre-commit secret scan)", entry = "uv run --locked --group style detect-secrets-hook --baseline .secrets.baseline", language = "system", pass_filenames = true },
+  { id = "detect-secrets", name = "detect-secrets (pre-commit secret scan)", entry = "uv run --locked --group style detect-secrets-hook --baseline .config/.secrets.baseline", language = "system", pass_filenames = true },
 ]
 
 [[repos]]
@@ -196,7 +198,7 @@ hooks = [{ id = "yamllint", exclude = "^\\.copier-answers\\.yml$", args = ["-c",
 [[repos]]
 repo = "https://github.com/DavidAnson/markdownlint-cli2"
 rev = "v0.23.3"
-hooks = [{ id = "markdownlint-cli2" }]
+hooks = [{ id = "markdownlint-cli2", args = ["--config", ".config/.markdownlint-cli2.jsonc"] }]
 
 # shellcheck lints standalone shell scripts a project adds later (workflow
 # `run:` blocks are already shellchecked by actionlint). Delivered via the
@@ -234,7 +236,7 @@ hooks = [
   # ghalint (GitHub Actions workflow security-policy linter) has neither a PyPI
   # wrapper nor a pre-commit hook, so it cannot join the uv `style` group or be a
   # standard prek repo hook. It is installed via mise (aqua backend, see
-  # mise.toml) and invoked here through `mise exec` — this resolves the
+  # .config/mise.toml) and invoked here through `mise exec` — this resolves the
   # mise-managed binary deterministically after `mise install`, without needing
   # an activated mise shell environment (shims on PATH). It only requires `mise`
   # itself on PATH, which local contributors have and the CI `hooks` job supplies
