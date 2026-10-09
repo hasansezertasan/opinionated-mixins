@@ -29,7 +29,7 @@ from starlette.applications import Starlette
 from starlette_admin.contrib.odmantic import Admin, ModelView
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+    from collections.abc import AsyncGenerator
 
 
 class Settings(BaseSettings):
@@ -66,7 +66,7 @@ engine = AIOEngine(
 
 
 @asynccontextmanager
-async def lifespan(_app: Starlette) -> AsyncIterator[None]:
+async def lifespan(_app: Starlette) -> AsyncGenerator[None, None]:
     """Close the MongoDB client when the application stops."""
     try:
         yield

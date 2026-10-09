@@ -28,7 +28,7 @@ from starlette.applications import Starlette
 from starlette_admin.contrib.mongoengine import Admin, ModelView
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+    from collections.abc import AsyncGenerator
 
 
 class Settings(BaseSettings):
@@ -49,7 +49,7 @@ class Person(Document, MEPerson):
 
 
 @asynccontextmanager
-async def lifespan(_app: Starlette) -> AsyncIterator[None]:
+async def lifespan(_app: Starlette) -> AsyncGenerator[None, None]:
     """Connect to MongoDB while the application is running."""
     connect(host=settings.mongo_uri, db=settings.mongodb_name)
     try:

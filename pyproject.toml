@@ -447,6 +447,7 @@ convention = "pep257"
 "src/opinionated_mixins/__init__.py" = ["D104"]
 "src/opinionated_mixins/contrib/**/__init__.py" = ["D104"]
 "tests/mongoengine/conftest.py" = ["DOC402"]
+"tests/**/conftest.py" = ["pytest-fixture-autouse"]
 "tests/odmantic/conftest.py" = ["RUF029"]
 "tests/test_rfc_script.py" = ["PLC1901"]
 "scripts/**/*.py" = ["C901", "D102", "D103", "D107", "DOC201", "FURB113", "PLC1901", "PLR6201", "RUF029", "T201"]
