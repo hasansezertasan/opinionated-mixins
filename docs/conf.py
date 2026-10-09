@@ -56,6 +56,9 @@ exclude_patterns = [
     "_generated",
     "rfcs/**",
     "superpowers/**",
+    # The analysis journal is internal prose, not site content; without this it
+    # becomes an orphan "document isn't included in any toctree" warning.
+    "JOURNAL.md",
 ]
 
 # autosectionlabel can emit duplicate-label warnings across documents; the
