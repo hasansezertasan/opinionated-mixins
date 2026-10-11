@@ -3,7 +3,10 @@
 SQLAlchemy mixins declare each field twice (RFC-0015): a ``Mapped[...]``
 annotation that only type checkers see, and the runtime ``Column(...)``. These
 tests parse the annotations from source and check that they agree with the
-columns on name, nullability, and Python type.
+columns on name, nullability, and Python type. A final test asserts that no
+annotation leaks to runtime: a runtime-visible ``Mapped[...]`` would make
+SQLModel hand the field to Pydantic and raise
+``PydanticSchemaGenerationError`` (issue #165).
 """
 
 from __future__ import annotations
@@ -90,3 +93,14 @@ def test_annotations_match_column_python_type(mixin: type) -> None:
         inner, _ = _split_optional(annotation)
         python_type = get_origin(inner) or inner
         assert python_type is columns[name].type.python_type, name
+
+
+@pytest.mark.parametrize("mixin", MIXINS, ids=lambda m: m.__name__)
+def test_no_runtime_annotations(mixin: type) -> None:
+    """Annotations must stay under ``TYPE_CHECKING`` (issue #165).
+
+    A ``Mapped[...]`` visible at runtime would be handed to Pydantic when the
+    mixin is composed with ``SQLModel, table=True``, raising
+    ``PydanticSchemaGenerationError``.
+    """
+    assert getattr(mixin, "__annotations__", {}) == {}

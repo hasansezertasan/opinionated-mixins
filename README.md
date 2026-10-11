@@ -100,7 +100,7 @@ opinionated-mixins provides reusable fields for Python storage frameworks. Consu
 ### Framework implementations
 
 - SQLAlchemy supplies declarative mixins with columns, annotated as `Mapped[...]` for type checkers ([RFC-0015](docs/rfcs/0015-typed-sqlalchemy-mixins.md)).
-- SQLModel re-exports the SQLAlchemy implementations.
+- SQLModel re-exports the SQLAlchemy implementations. The `Mapped[...]` types describe SQLAlchemy usage; on `SQLModel, table=True` models the mixin columns are schema only, not Pydantic fields (a pre-existing limitation recorded in RFC-0015).
 - MongoEngine supplies document field mixins.
 - ODMantic supplies annotated field definitions through a small compatibility metaclass so plain mixin fields become ODMantic model fields when composed with `odmantic.Model`.
 
