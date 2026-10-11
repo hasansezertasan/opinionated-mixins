@@ -1,9 +1,15 @@
 import datetime
+from typing import TYPE_CHECKING
 
 from opinionated_mixins.enums import NotificationLevel
 
 from sqlalchemy import JSON, Column, DateTime, Enum, String, Text
 from sqlalchemy.orm import declarative_mixin
+
+if TYPE_CHECKING:
+    from typing import Any
+
+    from sqlalchemy.orm import Mapped
 
 __all__ = ["Notification"]
 
@@ -46,64 +52,79 @@ class Notification:
 
     __abstract__ = True
 
-    notification_type = Column(
-        String(255),
-        nullable=False,
-        doc="Dot-notation type identifier (e.g. 'comment.reply', 'order.shipped')",
-    )
-    level = Column(
-        Enum(NotificationLevel),
-        nullable=False,
-        default=NotificationLevel.INFO,
-        doc="Severity/criticality level of notification",
-    )
-    title = Column(String(255), nullable=False, doc="Short human-readable title")
-    description = Column(Text, nullable=True, doc="Longer human-readable body")
-    data = Column(
-        JSON,
-        nullable=True,
-        doc=(
-            "Arbitrary JSON payload for extra context. "
-            "In-place dict mutations are not tracked by SQLAlchemy; "
-            "reassign the entire object to trigger change detection."
-        ),
-    )
-    actor_type = Column(
-        String(255),
-        nullable=False,
-        doc="Polymorphic type of entity that triggered notification",
-    )
-    actor_id = Column(
-        String(255),
-        nullable=False,
-        doc="Polymorphic ID of entity that triggered notification",
-    )
-    action_url = Column(
-        String(2048), nullable=True, doc="Click-through URL for the notification"
-    )
-    group_key = Column(
-        String(255),
-        nullable=True,
-        doc="Grouping key for batching similar notifications",
-    )
-    seen_at = Column(
-        DateTime(timezone=True),
-        nullable=True,
-        doc="When notification appeared in user's feed; None = unseen",
-    )
-    read_at = Column(
-        DateTime(timezone=True),
-        nullable=True,
-        doc="When user clicked/opened notification; None = unread",
-    )
-    archived_at = Column(
-        DateTime(timezone=True),
-        nullable=True,
-        doc="When user archived/dismissed notification; None = not archived",
-    )
-    created_at = Column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=lambda: datetime.datetime.now(datetime.timezone.utc),
-        doc="When notification was created",
-    )
+    if TYPE_CHECKING:
+        notification_type: Mapped[str]
+        level: Mapped[NotificationLevel]
+        title: Mapped[str]
+        description: Mapped[str | None]
+        data: Mapped[dict[str, Any] | None]
+        actor_type: Mapped[str]
+        actor_id: Mapped[str]
+        action_url: Mapped[str | None]
+        group_key: Mapped[str | None]
+        seen_at: Mapped[datetime.datetime | None]
+        read_at: Mapped[datetime.datetime | None]
+        archived_at: Mapped[datetime.datetime | None]
+        created_at: Mapped[datetime.datetime]
+    else:
+        notification_type = Column(
+            String(255),
+            nullable=False,
+            doc="Dot-notation type identifier (e.g. 'comment.reply', 'order.shipped')",
+        )
+        level = Column(
+            Enum(NotificationLevel),
+            nullable=False,
+            default=NotificationLevel.INFO,
+            doc="Severity/criticality level of notification",
+        )
+        title = Column(String(255), nullable=False, doc="Short human-readable title")
+        description = Column(Text, nullable=True, doc="Longer human-readable body")
+        data = Column(
+            JSON,
+            nullable=True,
+            doc=(
+                "Arbitrary JSON payload for extra context. "
+                "In-place dict mutations are not tracked by SQLAlchemy; "
+                "reassign the entire object to trigger change detection."
+            ),
+        )
+        actor_type = Column(
+            String(255),
+            nullable=False,
+            doc="Polymorphic type of entity that triggered notification",
+        )
+        actor_id = Column(
+            String(255),
+            nullable=False,
+            doc="Polymorphic ID of entity that triggered notification",
+        )
+        action_url = Column(
+            String(2048), nullable=True, doc="Click-through URL for the notification"
+        )
+        group_key = Column(
+            String(255),
+            nullable=True,
+            doc="Grouping key for batching similar notifications",
+        )
+        seen_at = Column(
+            DateTime(timezone=True),
+            nullable=True,
+            doc="When notification appeared in user's feed; None = unseen",
+        )
+        read_at = Column(
+            DateTime(timezone=True),
+            nullable=True,
+            doc="When user clicked/opened notification; None = unread",
+        )
+        archived_at = Column(
+            DateTime(timezone=True),
+            nullable=True,
+            doc="When user archived/dismissed notification; None = not archived",
+        )
+        created_at = Column(
+            DateTime(timezone=True),
+            nullable=False,
+            default=lambda: datetime.datetime.now(datetime.timezone.utc),
+            doc="When notification was created",
+        )

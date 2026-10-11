@@ -1,5 +1,10 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, Integer
 from sqlalchemy.orm import declarative_mixin
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Mapped
 
 __all__ = ["IntegerID"]
 
@@ -10,4 +15,7 @@ class IntegerID:
 
     __abstract__ = True
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    if TYPE_CHECKING:
+        id: Mapped[int]
+    else:
+        id = Column(Integer, primary_key=True, autoincrement=True)

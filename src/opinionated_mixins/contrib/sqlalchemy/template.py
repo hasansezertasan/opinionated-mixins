@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from opinionated_mixins.enums import TemplateFormat, TemplateType
 
 from sqlalchemy import Column, Enum, String, Text
 from sqlalchemy.orm import declarative_mixin
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Mapped
 
 __all__ = ["Template"]
 
@@ -30,7 +35,15 @@ class Template:
 
     __abstract__ = True
 
-    name = Column(String(255), nullable=False)
-    content = Column(Text, nullable=False)
-    format = Column(Enum(TemplateFormat), nullable=False, default=TemplateFormat.PLAIN)
-    type = Column(Enum(TemplateType), nullable=False, default=TemplateType.OTHER)
+    if TYPE_CHECKING:
+        name: Mapped[str]
+        content: Mapped[str]
+        format: Mapped[TemplateFormat]
+        type: Mapped[TemplateType]
+    else:
+        name = Column(String(255), nullable=False)
+        content = Column(Text, nullable=False)
+        format = Column(
+            Enum(TemplateFormat), nullable=False, default=TemplateFormat.PLAIN
+        )
+        type = Column(Enum(TemplateType), nullable=False, default=TemplateType.OTHER)

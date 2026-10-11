@@ -479,11 +479,6 @@ python_version = "3.10"
 strict = true
 
 [[tool.mypy.overrides]]
-module = "opinionated_mixins.contrib.sqlalchemy.*"
-# Declarative mixins use Column() without Mapped[] annotations.
-disable_error_code = ["var-annotated"]
-
-[[tool.mypy.overrides]]
 module = "opinionated_mixins.contrib.mongoengine.*"
 disable_error_code = ["import-untyped"]
 
@@ -509,6 +504,13 @@ venv = ".venv"
 # here would make basedpyright look for ".venv/.venv". Use "." so both the venv
 # and basedpyright's strict ruleset resolve the project's installed deps.
 venvPath = "."
+
+# SQLAlchemy mixins declare `Mapped[...]` annotations under TYPE_CHECKING and
+# assign the runtime Column() in the `else` branch (RFC-0015), so the checker
+# never sees an initializer for those annotations.
+[[tool.basedpyright.executionEnvironments]]
+reportUninitializedInstanceVariable = false
+root = "src/opinionated_mixins/contrib/sqlalchemy"
 
 
 [tool.ty.src]

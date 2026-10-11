@@ -1,7 +1,11 @@
 import uuid
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, Uuid
 from sqlalchemy.orm import declarative_mixin
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Mapped
 
 __all__ = ["UUIDID"]
 
@@ -12,4 +16,7 @@ class UUIDID:
 
     __abstract__ = True
 
-    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    if TYPE_CHECKING:
+        id: Mapped[uuid.UUID]
+    else:
+        id = Column(Uuid, primary_key=True, default=uuid.uuid4)

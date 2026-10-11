@@ -1,5 +1,10 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Boolean, Column
 from sqlalchemy.orm import declarative_mixin
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Mapped
 
 __all__ = ["IsActive"]
 
@@ -27,4 +32,7 @@ class IsActive:
 
     __abstract__ = True
 
-    is_active = Column(Boolean, nullable=False, default=True)
+    if TYPE_CHECKING:
+        is_active: Mapped[bool]
+    else:
+        is_active = Column(Boolean, nullable=False, default=True)

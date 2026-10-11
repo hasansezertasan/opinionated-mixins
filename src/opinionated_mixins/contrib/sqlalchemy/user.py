@@ -1,5 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Column, DateTime, String
 from sqlalchemy.orm import declarative_mixin
+
+if TYPE_CHECKING:
+    import datetime
+
+    from sqlalchemy.orm import Mapped
 
 __all__ = ["User"]
 
@@ -32,7 +39,13 @@ class User:
 
     __abstract__ = True
 
-    username = Column(String(255), nullable=False, unique=True)
-    hashed_password = Column(String(1024), nullable=False)
-    email = Column(String(254), nullable=True, unique=True)
-    date_email_verified = Column(DateTime, nullable=True)
+    if TYPE_CHECKING:
+        username: Mapped[str]
+        hashed_password: Mapped[str]
+        email: Mapped[str | None]
+        date_email_verified: Mapped[datetime.datetime | None]
+    else:
+        username = Column(String(255), nullable=False, unique=True)
+        hashed_password = Column(String(1024), nullable=False)
+        email = Column(String(254), nullable=True, unique=True)
+        date_email_verified = Column(DateTime, nullable=True)

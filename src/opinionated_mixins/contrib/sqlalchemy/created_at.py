@@ -1,7 +1,11 @@
 import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, DateTime
 from sqlalchemy.orm import declarative_mixin
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Mapped
 
 __all__ = ["CreatedAt"]
 
@@ -28,8 +32,12 @@ class CreatedAt:
     """
 
     __abstract__ = True
-    created_at = Column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=lambda: datetime.datetime.now(datetime.timezone.utc),
-    )
+
+    if TYPE_CHECKING:
+        created_at: Mapped[datetime.datetime]
+    else:
+        created_at = Column(
+            DateTime(timezone=True),
+            nullable=False,
+            default=lambda: datetime.datetime.now(datetime.timezone.utc),
+        )

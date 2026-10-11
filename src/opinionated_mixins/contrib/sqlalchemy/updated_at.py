@@ -1,7 +1,11 @@
 import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, DateTime
 from sqlalchemy.orm import declarative_mixin
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Mapped
 
 __all__ = ["UpdatedAt"]
 
@@ -29,9 +33,12 @@ class UpdatedAt:
 
     __abstract__ = True
 
-    updated_at = Column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=lambda: datetime.datetime.now(datetime.timezone.utc),
-        onupdate=lambda: datetime.datetime.now(datetime.timezone.utc),
-    )
+    if TYPE_CHECKING:
+        updated_at: Mapped[datetime.datetime]
+    else:
+        updated_at = Column(
+            DateTime(timezone=True),
+            nullable=False,
+            default=lambda: datetime.datetime.now(datetime.timezone.utc),
+            onupdate=lambda: datetime.datetime.now(datetime.timezone.utc),
+        )

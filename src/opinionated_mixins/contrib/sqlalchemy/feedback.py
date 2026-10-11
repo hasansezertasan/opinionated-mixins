@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from opinionated_mixins.enums import FeedbackCategory, FeedbackStatus
 
 from sqlalchemy import Column, Enum, String, Text
 from sqlalchemy.orm import declarative_mixin
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Mapped
 
 __all__ = ["Feedback"]
 
@@ -33,11 +38,17 @@ class Feedback:
 
     __abstract__ = True
 
-    subject = Column(String(255), nullable=False)
-    content = Column(Text, nullable=False)
-    category = Column(
-        Enum(FeedbackCategory), nullable=False, default=FeedbackCategory.OTHER
-    )
-    status = Column(
-        Enum(FeedbackStatus), nullable=False, default=FeedbackStatus.PENDING
-    )
+    if TYPE_CHECKING:
+        subject: Mapped[str]
+        content: Mapped[str]
+        category: Mapped[FeedbackCategory]
+        status: Mapped[FeedbackStatus]
+    else:
+        subject = Column(String(255), nullable=False)
+        content = Column(Text, nullable=False)
+        category = Column(
+            Enum(FeedbackCategory), nullable=False, default=FeedbackCategory.OTHER
+        )
+        status = Column(
+            Enum(FeedbackStatus), nullable=False, default=FeedbackStatus.PENDING
+        )

@@ -1,7 +1,13 @@
 import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import JSON, Boolean, Column, DateTime, String, Text
 from sqlalchemy.orm import declarative_mixin
+
+if TYPE_CHECKING:
+    from typing import Any
+
+    from sqlalchemy.orm import Mapped
 
 __all__ = ["Activity"]
 
@@ -48,62 +54,75 @@ class Activity:
 
     __abstract__ = True
 
-    verb = Column(
-        String(255),
-        nullable=False,
-        doc="Action performed (e.g. 'created', 'commented', 'merged')",
-    )
-    description = Column(
-        Text, nullable=True, doc="Human-readable summary of the activity"
-    )
-    data = Column(
-        JSON,
-        nullable=True,
-        doc=(
-            "Arbitrary JSON payload for extra context. "
-            "In-place dict mutations are not tracked by SQLAlchemy; "
-            "reassign the entire object to trigger change detection."
-        ),
-    )
-    actor_type = Column(
-        String(255),
-        nullable=False,
-        doc="Polymorphic type of entity that performed the action",
-    )
-    actor_id = Column(
-        String(255),
-        nullable=False,
-        doc="Polymorphic ID of entity that performed the action",
-    )
-    target_type = Column(
-        String(255),
-        nullable=True,
-        doc="Polymorphic type of entity the action was performed on",
-    )
-    target_id = Column(
-        String(255),
-        nullable=True,
-        doc="Polymorphic ID of entity the action was performed on",
-    )
-    action_object_type = Column(
-        String(255),
-        nullable=True,
-        doc="Polymorphic type of entity created/used by the action",
-    )
-    action_object_id = Column(
-        String(255),
-        nullable=True,
-        doc="Polymorphic ID of entity created/used by the action",
-    )
-    public = Column(
-        Boolean,
-        nullable=False,
-        default=True,
-        doc="Whether activity is visible to non-participants",
-    )
-    created_at = Column(
-        DateTime(timezone=True),
-        nullable=False,
-        default=lambda: datetime.datetime.now(datetime.timezone.utc),
-        doc="When activity occurred",
-    )
+    if TYPE_CHECKING:
+        verb: Mapped[str]
+        description: Mapped[str | None]
+        data: Mapped[dict[str, Any] | None]
+        actor_type: Mapped[str]
+        actor_id: Mapped[str]
+        target_type: Mapped[str | None]
+        target_id: Mapped[str | None]
+        action_object_type: Mapped[str | None]
+        action_object_id: Mapped[str | None]
+        public: Mapped[bool]
+        created_at: Mapped[datetime.datetime]
+    else:
+        verb = Column(
+            String(255),
+            nullable=False,
+            doc="Action performed (e.g. 'created', 'commented', 'merged')",
+        )
+        description = Column(
+            Text, nullable=True, doc="Human-readable summary of the activity"
+        )
+        data = Column(
+            JSON,
+            nullable=True,
+            doc=(
+                "Arbitrary JSON payload for extra context. "
+                "In-place dict mutations are not tracked by SQLAlchemy; "
+                "reassign the entire object to trigger change detection."
+            ),
+        )
+        actor_type = Column(
+            String(255),
+            nullable=False,
+            doc="Polymorphic type of entity that performed the action",
+        )
+        actor_id = Column(
+            String(255),
+            nullable=False,
+            doc="Polymorphic ID of entity that performed the action",
+        )
+        target_type = Column(
+            String(255),
+            nullable=True,
+            doc="Polymorphic type of entity the action was performed on",
+        )
+        target_id = Column(
+            String(255),
+            nullable=True,
+            doc="Polymorphic ID of entity the action was performed on",
+        )
+        action_object_type = Column(
+            String(255),
+            nullable=True,
+            doc="Polymorphic type of entity created/used by the action",
+        )
+        action_object_id = Column(
+            String(255),
+            nullable=True,
+            doc="Polymorphic ID of entity created/used by the action",
+        )
+        public = Column(
+            Boolean,
+            nullable=False,
+            default=True,
+            doc="Whether activity is visible to non-participants",
+        )
+        created_at = Column(
+            DateTime(timezone=True),
+            nullable=False,
+            default=lambda: datetime.datetime.now(datetime.timezone.utc),
+            doc="When activity occurred",
+        )

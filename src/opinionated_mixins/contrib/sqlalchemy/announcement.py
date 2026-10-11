@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING
+
 from opinionated_mixins.enums import AnnouncementCategory
 
 from sqlalchemy import Column, Enum, String, Text
 from sqlalchemy.orm import declarative_mixin
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Mapped
 
 __all__ = ["Announcement"]
 
@@ -29,8 +34,15 @@ class Announcement:
 
     __abstract__ = True
 
-    title = Column(String(255), nullable=False)
-    content = Column(Text, nullable=False)
-    category = Column(
-        Enum(AnnouncementCategory), nullable=False, default=AnnouncementCategory.GENERAL
-    )
+    if TYPE_CHECKING:
+        title: Mapped[str]
+        content: Mapped[str]
+        category: Mapped[AnnouncementCategory]
+    else:
+        title = Column(String(255), nullable=False)
+        content = Column(Text, nullable=False)
+        category = Column(
+            Enum(AnnouncementCategory),
+            nullable=False,
+            default=AnnouncementCategory.GENERAL,
+        )
