@@ -21,7 +21,7 @@ New mixin classes, new fields on existing mixins, new framework support, breakin
 
 - Every RFC PR carries `rfc` plus exactly one of `status:accepted`, `status:rejected`, `status:deferred`, `status:withdrawn`. `status:superseded` is derived when a new RFC declares `supersedes:`.
 - Lifecycle: `draft -> proposed -> accepted | rejected | deferred | withdrawn`; `accepted -> superseded` via a newer RFC. Merging rejected/deferred/withdrawn RFCs is the maintainer's call.
-- On merge, `rfc.yml` stamps `status`, `github_pr`, `updated` and regenerates `INDEX.md`. Never hand-edit `INDEX.md`; preview with `python scripts/rfc.py index`. Create labels with `scripts/create-rfc-labels.sh`.
+- On merge, `rfc.yml` stamps `status`, `github_pr`, `updated` and regenerates `INDEX.md`. Never hand-edit `INDEX.md`; preview with `python scripts/rfc.py index`. Create labels with `scripts/create-rfc-labels.sh`. Caveat: the workflow cannot push to protected `main` without a bypass token, so run the sync by hand inside the RFC PR before merging (`set-status`, then `sync-supersedes`, then `index`), as documented in the `rfc.yml` header — otherwise the merged RFC keeps its draft status and `INDEX.md` goes stale.
 
 ## Section requirements by type
 
@@ -45,6 +45,6 @@ New mixin classes, new fields on existing mixins, new framework support, breakin
 - Mixins are plain classes composed with a framework base; never inherit a framework base in the mixin.
 - One file per mixin per adapter, re-exported from that adapter's `__init__.py`. Shared enums live in `src/opinionated_mixins/enums.py`.
 - SQLModel re-exports SQLAlchemy implementations (import-linter enforces: `sqlmodel` may only re-export `sqlalchemy`; MongoEngine and ODMantic stay independent). A native SQLModel adapter needs an architecture update.
-- SQLAlchemy columns use `Column(...)` (not runtime `Mapped[...]` annotations; TYPE_CHECKING-only annotations are the accepted typing pattern per RFC-0015/PR #166). SQLModel composition treats re-exported mixins as schema-only (issue #167 tracks the native-adapter follow-up).
+- SQLAlchemy columns use `Column(...)`. A `Mapped[...]`-in-`TYPE_CHECKING` typing pattern was proposed (issue #165, PR #166) but that PR closed unmerged and no RFC-0015 exists in the repo — treat it as pending work, not settled guidance, and never cite RFC-0015 as an accepted spec. SQLModel composition treats re-exported mixins as schema-only (issue #167 tracks the native-adapter follow-up).
 - Tests mirror `src` under `tests/<framework>/`; cross-framework consistency lives in `tests/test_cross_framework_consistency.py` (`MIXIN_NAMES`).
 - After implementation merges, fill the RFC's **Implementation Notes** with deviations.

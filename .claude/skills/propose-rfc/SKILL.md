@@ -20,7 +20,7 @@ Follow these steps in order. Stop early only when the question is answered witho
 
 ### 2. Pick Path A or Path B
 
-- **Path A (direct RFC PR):** author already did the research. Pick next number from `INDEX.md`, branch `rfc/<slug>`, copy `docs/rfcs/TEMPLATE.md` to `XXXX-<slug>.md`, set `type:`, open PR with `rfc` + one `status:*` label.
+- **Path A (direct RFC PR):** author already did the research. Pick next number from `INDEX.md`, copy `docs/rfcs/TEMPLATE.md` to `XXXX-<slug>.md`, set `type:`, open PR with `rfc` + one `status:*` label. Branch naming caveat: the RFC README suggests `rfc/<slug>`, but CI's branch-name check only accepts conventional prefixes — use a conforming branch such as `feature/rfc-<slug>` until the two conventions are reconciled.
 - **Path B (issue first):** idea without research. Open an issue with a proposal template (`model` / `field` / `framework` under `.github/ISSUE_TEMPLATE/`), discuss, then write the RFC PR distilling discussion into **Discussion Summary** so the RFC reads offline.
 - Never implement before the RFC is accepted. Implementation lands in separate PRs referencing the RFC number.
 - See [rfc-workflow.md](references/rfc-workflow.md) for labels, lifecycle, section table, and layering rules.
