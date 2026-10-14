@@ -22,7 +22,7 @@ Last updated: 2026-10-14
 | [0012](0012-lead-mixin.md) | Lead | mixin | accepted | 2026-04-19 | hasansezertasan |
 | [0013](0013-user-mixin.md) | User | mixin | accepted | 2026-04-19 | hasansezertasan |
 | [0014](0014-slug-mixin.md) | Slug | mixin | accepted | 2026-10-09 | hasansezertasan |
-| [0016](0016-native-sqlmodel-mixins.md) | Native SQLModel Mixins | breaking-change | proposed | 2026-10-14 | hasansezertasan |
+| [0016](0016-native-sqlmodel-mixins.md) | Native SQLModel Mixins | breaking-change | accepted | 2026-10-14 | hasansezertasan |
 
 ## Rejected / Deferred / Withdrawn
 
