@@ -1,0 +1,50 @@
+# RFC Workflow (from `docs/rfcs/README.md`)
+
+## Artifact split
+
+| Artifact | Answers | Lives |
+| -------- | ------- | ----- |
+| Issue | "Someone wants X" (optional intake) | GitHub |
+| RFC | "Should we build X, and why this way?" | `docs/rfcs/` (offline-readable) |
+| PR | "Here is the code for X" | git history |
+
+## Paths
+
+- **Path A (direct RFC PR):** pick next number from `INDEX.md`; branch `rfc/<slug>`; copy `TEMPLATE.md` to `XXXX-<slug>.md`; set `type:`; fill required sections; open PR with `rfc` + one `status:*` label.
+- **Path B (issue first):** open issue with a proposal template (`model_proposal.md` / `field_proposal.md` / `framework_proposal.md`); discuss; write RFC PR referencing the issue; distill discussion into **Discussion Summary**.
+
+## RFC required for
+
+New mixin classes, new fields on existing mixins, new framework support, breaking changes. Not required for bug fixes, tests, docs, tooling/CI.
+
+## Labels and lifecycle
+
+- Every RFC PR carries `rfc` plus exactly one of `status:accepted`, `status:rejected`, `status:deferred`, `status:withdrawn`. `status:superseded` is derived when a new RFC declares `supersedes:`.
+- Lifecycle: `draft -> proposed -> accepted | rejected | deferred | withdrawn`; `accepted -> superseded` via a newer RFC. Merging rejected/deferred/withdrawn RFCs is the maintainer's call.
+- On merge, `rfc.yml` stamps `status`, `github_pr`, `updated` and regenerates `INDEX.md`. Never hand-edit `INDEX.md`; preview with `python scripts/rfc.py index`. Create labels with `scripts/create-rfc-labels.sh`.
+
+## Section requirements by type
+
+| Section | mixin | field | framework | breaking-change |
+| ------- | ----- | ----- | --------- | --------------- |
+| Summary | required | required | required | required |
+| Motivation | required | required | required | required |
+| Research: Field Naming | required | required | — | conditional |
+| Research: Enum Values | conditional | conditional | — | conditional |
+| Research: Framework Adoption | — | — | required | — |
+| Design: Fields | required | required | — | required |
+| Design: Reference Implementation | required | required | required | required |
+| Design: Framework Mixin Idioms | — | — | required | — |
+| Alternatives Considered | required | required | required | required |
+| Discussion Summary | conditional | conditional | conditional | conditional |
+| Consequences | required | required | required | required |
+| Implementation Notes | post-merge | post-merge | post-merge | post-merge |
+
+## Implementation layering
+
+- Mixins are plain classes composed with a framework base; never inherit a framework base in the mixin.
+- One file per mixin per adapter, re-exported from that adapter's `__init__.py`. Shared enums live in `src/opinionated_mixins/enums.py`.
+- SQLModel re-exports SQLAlchemy implementations (import-linter enforces: `sqlmodel` may only re-export `sqlalchemy`; MongoEngine and ODMantic stay independent). A native SQLModel adapter needs an architecture update.
+- SQLAlchemy columns use `Column(...)` (not runtime `Mapped[...]` annotations; TYPE_CHECKING-only annotations are the accepted typing pattern per RFC-0015/PR #166). SQLModel composition treats re-exported mixins as schema-only (issue #167 tracks the native-adapter follow-up).
+- Tests mirror `src` under `tests/<framework>/`; cross-framework consistency lives in `tests/test_cross_framework_consistency.py` (`MIXIN_NAMES`).
+- After implementation merges, fill the RFC's **Implementation Notes** with deviations.
