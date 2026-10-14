@@ -20,6 +20,7 @@ from opinionated_mixins.contrib import mongoengine as me_contrib
 from opinionated_mixins.contrib import odmantic as od_contrib
 from opinionated_mixins.contrib import sqlalchemy as sa_contrib
 from opinionated_mixins.contrib import sqlmodel as sm_contrib
+from pydantic.fields import FieldInfo
 from sqlalchemy import Column
 
 MIXIN_NAMES = [
@@ -56,7 +57,7 @@ def _isinstance_extractor(field_type: type) -> Callable[[type], set[str]]:
 
 FRAMEWORKS: dict[str, tuple[object, Callable[[type], set[str]]]] = {
     "sqlalchemy": (sa_contrib, _isinstance_extractor(Column)),
-    "sqlmodel": (sm_contrib, _isinstance_extractor(Column)),
+    "sqlmodel": (sm_contrib, _isinstance_extractor(FieldInfo)),
     "mongoengine": (me_contrib, _isinstance_extractor(BaseField)),
     "odmantic": (od_contrib, _isinstance_extractor(ODMFieldInfo)),
 }

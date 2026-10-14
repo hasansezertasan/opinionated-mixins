@@ -37,7 +37,7 @@ src/opinionated_mixins/
 ├── enums.py             # Shared enums
 └── contrib/             # Framework-specific implementations
     ├── sqlalchemy/
-    ├── sqlmodel/        # Re-exports SQLAlchemy implementations
+    ├── sqlmodel/        # Native SQLModel Field definitions
     ├── mongoengine/
     └── odmantic/
 ```
@@ -45,8 +45,8 @@ src/opinionated_mixins/
 Do not create new top-level subpackages under `src/opinionated_mixins/`.
 New mixins belong in their framework adapter; shared enums belong in `enums.py`.
 The package layering is enforced by import-linter (`[tool.importlinter]` in
-`pyproject.toml`): `sqlmodel` may re-export `sqlalchemy` mixins, while
-MongoEngine and ODMantic remain independent. Add a new framework adapter only
+`pyproject.toml`): all four framework adapters are independent siblings and
+must not import each other. Add a new framework adapter only
 with an architecture update to that contract.
 
 ### Mixin Design
@@ -56,9 +56,9 @@ inherit from a framework base in the mixin itself; mixins must remain composable
 and are not independently instantiated.
 
 Each framework adapter implements the same mixins with consistent field names
-and behavior, expressed using that framework's idioms. SQLModel re-exports the
-SQLAlchemy implementations rather than duplicating them. Shared enums live in
-`src/opinionated_mixins/enums.py`.
+and behavior, expressed using that framework's idioms. SQLModel declares native
+`sqlmodel.Field` attributes (never `Column`), so they are real Pydantic fields.
+Shared enums live in `src/opinionated_mixins/enums.py`.
 
 Keep the base package free of runtime dependencies; frameworks are development
 or optional dependencies. Use framework-native field declarations while
@@ -75,7 +75,8 @@ maintaining the same public behavior across adapters.
 4. Implement in applicable framework adapters with consistent field names.
 5. Give each mixin its own file per framework and re-export it from that
    framework's `__init__.py`.
-6. For SQLModel, re-export the SQLAlchemy implementation.
+6. For SQLModel, declare native `Field(...)` attributes; do not re-export the
+   SQLAlchemy implementation.
 7. Mirror the contrib structure in tests under `tests/<framework>/`.
 
 The issue templates for model, field, and framework proposals are optional

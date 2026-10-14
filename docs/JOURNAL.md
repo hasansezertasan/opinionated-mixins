@@ -9,7 +9,7 @@
 ### Supported Frameworks (storage-layer only, via contrib modules)
 
 - SQLAlchemy (SQL ORM)
-- SQLModel (Pydantic + SQLAlchemy, re-exports SQLAlchemy)
+- SQLModel (Pydantic + SQLAlchemy, native Field mixins)
 - MongoEngine (MongoDB ODM)
 - ODMantic (MongoDB async ODM)
 

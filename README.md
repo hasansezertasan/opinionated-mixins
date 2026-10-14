@@ -68,7 +68,7 @@ class MyAnnouncement(Document, Announcement):
 | Framework       | Type                          | Use Case                      |
 | --------------- | ----------------------------- | ----------------------------- |
 | **SQLAlchemy**  | SQL ORM                       | Declarative model mixins      |
-| **SQLModel**    | SQL ORM (Pydantic + SA)       | Re-exports SQLAlchemy mixins  |
+| **SQLModel**    | SQL ORM (Pydantic + SA)       | Native `Field` mixins         |
 | **MongoEngine** | MongoDB ODM                   | Document field mixins         |
 | **ODMantic**    | MongoDB async ODM             | Model field mixins            |
 
@@ -100,7 +100,7 @@ opinionated-mixins provides reusable fields for Python storage frameworks. Consu
 ### Framework implementations
 
 - SQLAlchemy supplies declarative mixins with columns.
-- SQLModel re-exports the SQLAlchemy implementations.
+- SQLModel supplies native `Field` definitions, so mixin fields are real Pydantic fields on `table=True` models.
 - MongoEngine supplies document field mixins.
 - ODMantic supplies annotated field definitions through a small compatibility metaclass so plain mixin fields become ODMantic model fields when composed with `odmantic.Model`.
 
@@ -188,7 +188,7 @@ Each accepted mixin should provide consistent field names and behavior across ap
 - **SQLAlchemy**: supported; declarative columns, types, and constraints.
 - **MongoEngine**: supported; document fields and validation.
 - **ODMantic**: supported annotated field definitions with plain mixin composition.
-- **SQLModel**: supported through re-exports of SQLAlchemy implementations.
+- **SQLModel**: supported; native `Field` definitions (Pydantic fields and SQL columns).
 - **TortoiseORM**: proposed expansion; native ORM field definitions and persistence tests.
 - **Beanie**: proposed expansion; document fields compatible with Pydantic validation, with the consumer choosing the document base.
 - **Pydantic**: proposed input-layer expansion; annotated fields and validation, with the consumer choosing the model base.
