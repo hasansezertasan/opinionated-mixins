@@ -34,8 +34,7 @@ fields:
 - model validation, `model_dump()`, and generated schemas omit them.
 
 In practice the re-exported mixins contribute schema only, which defeats the
-point of using SQLModel. Issue #167 asks for native mixins; RFC-0015 (typed
-SQLAlchemy fields, alternative 1) pointed in the same direction.
+point of using SQLModel. Issue #167 asks for native mixins.
 
 ## Research
 
@@ -47,8 +46,29 @@ behavior of the tools involved:
 | ------ | ------- | ---- |
 | Pydantic v2 | Field collection walks the whole MRO, so annotated attributes on a plain (non-`BaseModel`) mixin become fields of the model | <https://docs.pydantic.dev/latest/concepts/models/> |
 | SQLModel | `Field(sa_type=..., sa_column_kwargs=..., unique=..., primary_key=...)` builds a fresh `Column` per table, so one mixin can back many tables | <https://sqlmodel.tiangolo.com/> |
-| Prototype in this repo (SQLModel 0.0.48, Pydantic 2.14) | A plain class with `Field` attributes, composed with `SQLModel, table=True`, yields real fields and per-table columns | `tests/sqlmodel/` |
+| Prototype (SQLModel 0.0.48, Pydantic 2.14; see below) | A plain class with `Field` attributes, composed with `SQLModel, table=True`, yields real fields and a separate column per table | this RFC |
 | Reusable SQLModel mixins (community write-up) | Counter-example: it inherits the mixin from `SQLModel` (`class TimestampMixin(SQLModel)`), which this RFC rejects (alternative 2) | <https://davidmuraya.com/blog/reusable-sqlmodel-mixins/> |
+
+Minimal prototype used to check the mechanism:
+
+```python
+class User:
+    username: str = Field(max_length=255, unique=True)
+    email: str | None = Field(default=None, max_length=254, unique=True)
+
+
+class A(User, SQLModel, table=True):
+    __tablename__ = "a"
+
+
+class B(User, SQLModel, table=True):
+    __tablename__ = "b"
+
+
+assert A(username="x").username == "x"  # constructor keeps the value
+assert A.__table__.c.username.unique and A.__table__.c.username.type.length == 255
+assert A.__table__.c.username is not B.__table__.c.username  # one column per table
+```
 
 `Field(sa_column=Column(...))` is deliberately avoided: a `Column` instance can
 attach to only one `Table`, so sharing it on a mixin breaks the second model.
@@ -66,7 +86,7 @@ Unchanged from the SQLAlchemy adapter for every mixin (`CreatedAt`,
 | ---------- | -------- |
 | `String(n)` | `str` + `Field(max_length=n)` |
 | `Text` | `str` + `Field(sa_type=Text)` |
-| `nullable=True` | `T \| None` with `default=None` |
+| `nullable=True` | `T \| None` with `default=None`, unless the column has a non-`None` default (`Lead.probability` is `int \| None` with `default=0`) |
 | `nullable=False` | non-optional `T` |
 | `primary_key=True, autoincrement=True` (`IntegerID`) | `int \| None` with `default=None`, so the database generates it and it stays optional in Pydantic |
 | `unique=True`, `primary_key=True` | same keywords on `Field` |
@@ -134,4 +154,3 @@ Filled in after merge.
 ## References
 
 - <https://github.com/hasansezertasan/opinionated-mixins/issues/167>
-- RFC-0015 (typed SQLAlchemy mixin fields), issue #2
