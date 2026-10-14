@@ -1,3 +1,12 @@
-from opinionated_mixins.contrib.sqlalchemy.uuid_id import UUIDID as _UUIDID
+import uuid
 
-UUIDID = _UUIDID
+from sqlmodel import Field
+
+
+__all__ = ["UUIDID"]
+
+
+class UUIDID:
+    """UUIDID mixin for SQLModel models."""
+
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)

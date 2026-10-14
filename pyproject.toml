@@ -91,6 +91,7 @@ test = [
   "inline-snapshot",
   "pytest-deadfixtures==3.1.0",
   "sqlalchemy==2.0.54",
+  "sqlmodel==0.0.48",
   "mongoengine==0.29.3",
   "odmantic==1.1.0",
   "mongomock>=4.3.0",
@@ -117,6 +118,7 @@ docs = [
   "packaging>=24.0",
   # The API reference imports each adapter so Sphinx must have their frameworks.
   "sqlalchemy==2.0.54",
+  "sqlmodel==0.0.48",
   "mongoengine==0.29.3",
   "odmantic==1.1.0",
 ]
@@ -321,7 +323,8 @@ root_package = "opinionated_mixins"
 name = "Layered architecture with independent components"
 type = "layers"
 # Layers are listed high -> low: a layer may import lower layers but never a
-# higher one. The four framework integrations are independent sibling layers;
+# higher one. The four framework integrations are independent sibling layers
+# (SQLModel ships native Pydantic fields, not re-exported SQLAlchemy columns);
 # they share no implementation imports and expose separate adapter APIs.
 #
 # `exhaustive` makes the contract fail when a subpackage of
@@ -340,9 +343,7 @@ exhaustive_ignores = [
   "_version",
 ]
 layers = [
-  "contrib.sqlmodel",
-  "contrib.sqlalchemy",
-  "contrib.mongoengine | contrib.odmantic",
+  "contrib.sqlmodel | contrib.sqlalchemy | contrib.mongoengine | contrib.odmantic",
 ]
 
 
