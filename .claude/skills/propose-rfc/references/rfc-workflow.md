@@ -10,7 +10,7 @@
 
 ## Paths
 
-- **Path A (direct RFC PR):** pick next number from `INDEX.md`; branch `rfc/<slug>`; copy `TEMPLATE.md` to `XXXX-<slug>.md`; set `type:`; fill required sections; open PR with `rfc` + one `status:*` label.
+- **Path A (direct RFC PR):** pick next number from `INDEX.md`; copy `TEMPLATE.md` to `XXXX-<slug>.md`; set `type:`; fill required sections; open PR with `rfc` + one `status:*` label. Use a branch name that passes CI's branch-name check (conventional prefixes only, e.g. `feature/rfc-<slug>`): the RFC README's `rfc/<slug>` suggestion is rejected by `check-branch-name.yml`.
 - **Path B (issue first):** open issue with a proposal template (`model_proposal.md` / `field_proposal.md` / `framework_proposal.md`); discuss; write RFC PR referencing the issue; distill discussion into **Discussion Summary**.
 
 ## RFC required for
