@@ -83,7 +83,10 @@ attach to only one `Table`, so sharing it on a mixin breaks the second model.
 
 Unchanged from the SQLAlchemy adapter for every mixin (`CreatedAt`,
 `UpdatedAt`, `IsActive`, `IntegerID`, `UUIDID`, `User`, `Person`, `Announcement`,
-`Feedback`, `Template`, `Lead`, `Activity`, `Notification`). The mapping from
+`Feedback`, `Template`, `Lead`, `Activity`, `Notification`). Accepted mixins that are not yet implemented, such as `Slug` (RFC-0014), are
+implemented natively from the start when they land, so no SQLAlchemy re-export
+is ever added to the SQLModel adapter (`Slug` becomes
+`slug: str = Field(max_length=255)`). The mapping from
 `Column` arguments to SQLModel is:
 
 | SQLAlchemy | SQLModel |
