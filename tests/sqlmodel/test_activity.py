@@ -67,3 +67,11 @@ class TestSQLModelActivity:
             )
             session.commit()
             assert session.exec(select(MyActivity)).one().data == payload
+
+    @pytest.mark.parametrize("column", ["verb", "public", "created_at"])
+    def test_column_doc_preserved(self, column: str) -> None:
+        from opinionated_mixins.contrib.sqlalchemy import Activity as SAActivity
+
+        expected = getattr(SAActivity, column).doc
+        assert MyActivity.__table__.c[column].doc == expected
+        assert MyActivity.model_fields[column].description == expected

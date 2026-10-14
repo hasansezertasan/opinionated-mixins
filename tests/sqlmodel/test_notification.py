@@ -96,3 +96,11 @@ class TestSQLModelNotification:
             )
             session.commit()
             assert session.exec(select(MyNotification)).one().data == payload
+
+    @pytest.mark.parametrize("column", ["notification_type", "seen_at", "created_at"])
+    def test_column_doc_preserved(self, column: str) -> None:
+        from opinionated_mixins.contrib.sqlalchemy import Notification as SANotification
+
+        expected = getattr(SANotification, column).doc
+        assert MyNotification.__table__.c[column].doc == expected
+        assert MyNotification.model_fields[column].description == expected

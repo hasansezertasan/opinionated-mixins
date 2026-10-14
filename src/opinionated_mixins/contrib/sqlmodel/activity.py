@@ -2,7 +2,7 @@ import datetime
 from typing import Any
 
 from sqlalchemy import JSON, DateTime, Text
-from sqlmodel import Field
+from ._base import documented_field
 
 
 __all__ = ["Activity"]
@@ -28,24 +28,52 @@ class Activity:
     - ``public``: include in composite indexes if filtering by visibility.
     """
 
-    verb: str = Field(max_length=255, description="Action performed (e.g. 'created')")
-    description: str | None = Field(default=None, sa_type=Text)
-    data: dict[str, Any] | None = Field(
-        default=None,
-        sa_type=JSON,
-        description=(
-            "Arbitrary JSON payload. In-place dict mutations are not tracked; "
+    verb: str = documented_field(
+        "Action performed (e.g. 'created', 'commented', 'merged')", max_length=255
+    )
+    description: str | None = documented_field(
+        "Human-readable summary of the activity", default=None, sa_type=Text
+    )
+    data: dict[str, Any] | None = documented_field(
+        (
+            "Arbitrary JSON payload for extra context. "
+            "In-place dict mutations are not tracked by SQLAlchemy; "
             "reassign the entire object to trigger change detection."
         ),
+        default=None,
+        sa_type=JSON,
     )
-    actor_type: str = Field(max_length=255)
-    actor_id: str = Field(max_length=255)
-    target_type: str | None = Field(default=None, max_length=255)
-    target_id: str | None = Field(default=None, max_length=255)
-    action_object_type: str | None = Field(default=None, max_length=255)
-    action_object_id: str | None = Field(default=None, max_length=255)
-    public: bool = Field(default=True)
-    created_at: datetime.datetime = Field(
+    actor_type: str = documented_field(
+        "Polymorphic type of entity that performed the action", max_length=255
+    )
+    actor_id: str = documented_field(
+        "Polymorphic ID of entity that performed the action", max_length=255
+    )
+    target_type: str | None = documented_field(
+        "Polymorphic type of entity the action was performed on",
+        default=None,
+        max_length=255,
+    )
+    target_id: str | None = documented_field(
+        "Polymorphic ID of entity the action was performed on",
+        default=None,
+        max_length=255,
+    )
+    action_object_type: str | None = documented_field(
+        "Polymorphic type of entity created/used by the action",
+        default=None,
+        max_length=255,
+    )
+    action_object_id: str | None = documented_field(
+        "Polymorphic ID of entity created/used by the action",
+        default=None,
+        max_length=255,
+    )
+    public: bool = documented_field(
+        "Whether activity is visible to non-participants", default=True
+    )
+    created_at: datetime.datetime = documented_field(
+        "When activity occurred",
         default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),
         sa_type=DateTime(timezone=True),
     )
