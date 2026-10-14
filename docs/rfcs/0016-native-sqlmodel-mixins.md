@@ -52,16 +52,20 @@ behavior of the tools involved:
 Minimal prototype used to check the mechanism:
 
 ```python
+class IntegerID:
+    id: int | None = Field(default=None, primary_key=True)
+
+
 class User:
     username: str = Field(max_length=255, unique=True)
     email: str | None = Field(default=None, max_length=254, unique=True)
 
 
-class A(User, SQLModel, table=True):
+class A(IntegerID, User, SQLModel, table=True):
     __tablename__ = "a"
 
 
-class B(User, SQLModel, table=True):
+class B(IntegerID, User, SQLModel, table=True):
     __tablename__ = "b"
 
 
