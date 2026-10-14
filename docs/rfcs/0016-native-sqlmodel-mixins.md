@@ -47,7 +47,8 @@ behavior of the tools involved:
 | ------ | ------- | ---- |
 | Pydantic v2 | Field collection walks the whole MRO, so annotated attributes on a plain (non-`BaseModel`) mixin become fields of the model | <https://docs.pydantic.dev/latest/concepts/models/> |
 | SQLModel | `Field(sa_type=..., sa_column_kwargs=..., unique=..., primary_key=...)` builds a fresh `Column` per table, so one mixin can back many tables | <https://sqlmodel.tiangolo.com/> |
-| Reusable SQLModel mixins (community write-up) | Plain classes with `Field` definitions are the recommended mixin pattern | <https://davidmuraya.com/blog/reusable-sqlmodel-mixins/> |
+| Prototype in this repo (SQLModel 0.0.48, Pydantic 2.14) | A plain class with `Field` attributes, composed with `SQLModel, table=True`, yields real fields and per-table columns | `tests/sqlmodel/` |
+| Reusable SQLModel mixins (community write-up) | Counter-example: it inherits the mixin from `SQLModel` (`class TimestampMixin(SQLModel)`), which this RFC rejects (alternative 2) | <https://davidmuraya.com/blog/reusable-sqlmodel-mixins/> |
 
 `Field(sa_column=Column(...))` is deliberately avoided: a `Column` instance can
 attach to only one `Table`, so sharing it on a mixin breaks the second model.
@@ -67,6 +68,7 @@ Unchanged from the SQLAlchemy adapter for every mixin (`CreatedAt`,
 | `Text` | `str` + `Field(sa_type=Text)` |
 | `nullable=True` | `T \| None` with `default=None` |
 | `nullable=False` | non-optional `T` |
+| `primary_key=True, autoincrement=True` (`IntegerID`) | `int \| None` with `default=None`, so the database generates it and it stays optional in Pydantic |
 | `unique=True`, `primary_key=True` | same keywords on `Field` |
 | `DateTime(timezone=True)` | `Field(sa_type=DateTime(timezone=True))` |
 | `default=lambda: ...` | `Field(default_factory=...)` |
@@ -74,7 +76,7 @@ Unchanged from the SQLAlchemy adapter for every mixin (`CreatedAt`,
 | `Enum(E)` | `E` annotation (SQLModel maps enums) |
 | `Numeric(12, 2)` | `Decimal` + `max_digits=12, decimal_places=2` |
 | `JSON` | `dict[str, Any]` + `Field(sa_type=JSON)` |
-| `doc=...` | `Field(description=...)` |
+| `doc=...` | `Field(description=..., sa_column_kwargs={"doc": ...})`, so both Pydantic schemas and `Column.doc` keep the text |
 
 ### Reference Implementation
 
