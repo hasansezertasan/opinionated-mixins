@@ -1,3 +1,4 @@
+---
 interface:
   display_name: "Propose RFC"
   short_description: "Recommend a new mixin, field, or framework via the RFC process"
