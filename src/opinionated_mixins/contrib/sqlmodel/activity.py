@@ -2,7 +2,7 @@ import datetime
 from typing import Any
 
 from sqlalchemy import JSON, DateTime, Text
-from ._base import documented_field
+from opinionated_mixins.contrib.sqlmodel._base import documented_field
 
 
 __all__ = ["Activity"]

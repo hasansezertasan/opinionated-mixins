@@ -2,7 +2,7 @@
 rfc: "0016"
 title: Native SQLModel Mixins
 type: breaking-change
-status: accepted
+status: proposed
 created: 2026-10-14
 updated: 2026-10-14
 author: hasansezertasan
