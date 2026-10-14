@@ -1,3 +1,6 @@
+import decimal
+
+from opinionated_mixins.enums import LeadStatus
 from opinionated_mixins.contrib.sqlmodel import Lead, IntegerID
 from sqlmodel import Session, SQLModel, create_engine, select
 
@@ -44,3 +47,16 @@ class TestSQLModelLead:
 
     def test_no_default_indexes(self) -> None:
         assert not MyLead.__table__.indexes
+
+    def test_numeric_and_enum_round_trip(self) -> None:
+        with Session(self.engine) as session:
+            session.add(
+                MyLead(
+                    opportunity_amount=decimal.Decimal("1234.50"),
+                    status=LeadStatus.ASSIGNED,
+                )
+            )
+            session.commit()
+            loaded = session.exec(select(MyLead)).one()
+            assert loaded.opportunity_amount == decimal.Decimal("1234.50")
+            assert loaded.status is LeadStatus.ASSIGNED

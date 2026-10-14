@@ -56,3 +56,14 @@ class TestSQLModelActivity:
 
     def test_no_default_indexes(self) -> None:
         assert not MyActivity.__table__.indexes
+
+    def test_json_round_trip(self) -> None:
+        payload = {"key": ["value", 1]}
+        with Session(self.engine) as session:
+            session.add(
+                MyActivity(
+                    verb="created", actor_type="user", actor_id="1", data=payload
+                )
+            )
+            session.commit()
+            assert session.exec(select(MyActivity)).one().data == payload

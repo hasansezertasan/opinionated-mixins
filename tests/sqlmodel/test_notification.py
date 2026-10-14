@@ -81,3 +81,18 @@ class TestSQLModelNotification:
 
     def test_no_default_indexes(self) -> None:
         assert not MyNotification.__table__.indexes
+
+    def test_json_round_trip(self) -> None:
+        payload = {"key": ["value", 1]}
+        with Session(self.engine) as session:
+            session.add(
+                MyNotification(
+                    notification_type="x",
+                    title="T",
+                    actor_type="user",
+                    actor_id="1",
+                    data=payload,
+                )
+            )
+            session.commit()
+            assert session.exec(select(MyNotification)).one().data == payload
