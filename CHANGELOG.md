@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.2.0](https://github.com/hasansezertasan/opinionated-mixins/compare/v0.1.0...v0.2.0) (2026-10-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* **sqlmodel:** provide native SQLModel mixins ([#174](https://github.com/hasansezertasan/opinionated-mixins/issues/174))
+
+### 🚀 Features
+
+* **sqlmodel:** provide native SQLModel mixins ([#174](https://github.com/hasansezertasan/opinionated-mixins/issues/174)) ([59763b9](https://github.com/hasansezertasan/opinionated-mixins/commit/59763b98b919bb8984f012ee8ea03ba19945e86c))
+
+
+### 📝 Documentation
+
+* **rfc:** propose native SQLModel mixins (RFC-0016) ([#176](https://github.com/hasansezertasan/opinionated-mixins/issues/176)) ([5876b56](https://github.com/hasansezertasan/opinionated-mixins/commit/5876b56fe8fa7a995cccfefc6966ce57833c5e0a))
+* **skills:** add propose-rfc skill ([#172](https://github.com/hasansezertasan/opinionated-mixins/issues/172)) ([cf92454](https://github.com/hasansezertasan/opinionated-mixins/commit/cf92454e2c2bf604cfaf3fa62b173e093b42c743))
+
 ## [0.1.0](https://github.com/hasansezertasan/opinionated-mixins/compare/v0.0.1...v0.1.0) (2026-10-09)
 
 
