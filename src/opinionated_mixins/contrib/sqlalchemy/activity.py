@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from sqlalchemy import JSON, Boolean, Column, DateTime, String, Text
 from sqlalchemy.orm import declarative_mixin
@@ -104,6 +104,6 @@ class Activity:
     created_at = Column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.datetime.now(datetime.timezone.utc),
+        default=lambda: dt.datetime.now(dt.timezone.utc),
         doc="When activity occurred",
     )

@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from odmantic import Field
 
@@ -13,4 +13,4 @@ class User(metaclass=ODManticMixinMetaclass):
     username: str = Field(..., min_length=1, max_length=255)
     hashed_password: str = Field(..., min_length=1)
     email: str | None = Field(default=None, max_length=254)
-    date_email_verified: datetime.datetime | None = Field(default=None)
+    date_email_verified: dt.datetime | None = Field(default=None)

@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from sqlalchemy import DateTime
 from sqlmodel import Field
@@ -15,10 +15,8 @@ class UpdatedAt:
       filtering records by update timestamp.
     """
 
-    updated_at: datetime.datetime = Field(
-        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),
+    updated_at: dt.datetime = Field(
+        default_factory=lambda: dt.datetime.now(dt.timezone.utc),
         sa_type=DateTime(timezone=True),
-        sa_column_kwargs={
-            "onupdate": lambda: datetime.datetime.now(datetime.timezone.utc)
-        },
+        sa_column_kwargs={"onupdate": lambda: dt.datetime.now(dt.timezone.utc)},
     )

@@ -1,6 +1,6 @@
 """Integration tests for MongoEngine Activity mixin."""
 
-import datetime
+import datetime as dt
 
 from mongoengine import Document
 from opinionated_mixins.contrib.mongoengine import Activity
@@ -75,4 +75,4 @@ class TestActivityIntegration:
         obj.save()
         loaded = MyActivity.objects.first()
         assert loaded.created_at is not None
-        assert isinstance(loaded.created_at, datetime.datetime)
+        assert isinstance(loaded.created_at, dt.datetime)

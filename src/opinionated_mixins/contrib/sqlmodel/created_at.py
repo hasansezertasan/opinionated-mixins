@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from sqlalchemy import DateTime
 from sqlmodel import Field
@@ -25,7 +25,7 @@ class CreatedAt:
                 id: int | None = Field(default=None, primary_key=True)
     """
 
-    created_at: datetime.datetime = Field(
-        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),
+    created_at: dt.datetime = Field(
+        default_factory=lambda: dt.datetime.now(dt.timezone.utc),
         sa_type=DateTime(timezone=True),
     )

@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from opinionated_mixins.contrib.sqlalchemy import User
 from sqlalchemy import Column, Index, Integer, create_engine
@@ -30,7 +30,7 @@ class TestSQLAlchemyUser:
 
     def test_create_with_all_fields(self) -> None:
         with Session(self.engine) as session:
-            now = datetime.datetime(2024, 1, 15, 12, 0, 0)
+            now = dt.datetime(2024, 1, 15, 12, 0, 0)
             obj = MyUser(
                 username="janedoe",
                 hashed_password="hashed123",  # pragma: allowlist secret

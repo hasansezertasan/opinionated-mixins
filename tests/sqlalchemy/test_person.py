@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from opinionated_mixins.contrib.sqlalchemy import Person
 from sqlalchemy import Column, Index, Integer, create_engine
@@ -47,7 +47,7 @@ class TestSQLAlchemyPerson:
                 postal_code="10001",
                 city="New York",
                 country="US",
-                date_of_birth=datetime.date(1990, 5, 15),
+                date_of_birth=dt.date(1990, 5, 15),
                 bio="Software engineer",
             )
             session.add(obj)
@@ -60,7 +60,7 @@ class TestSQLAlchemyPerson:
             assert obj.postal_code == "10001"
             assert obj.city == "New York"
             assert obj.country == "US"
-            assert obj.date_of_birth == datetime.date(1990, 5, 15)
+            assert obj.date_of_birth == dt.date(1990, 5, 15)
             assert obj.bio == "Software engineer"
 
     def test_fields_exist(self) -> None:

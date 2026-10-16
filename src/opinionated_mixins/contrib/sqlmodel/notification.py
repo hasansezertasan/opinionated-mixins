@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from typing import Any
 
 from opinionated_mixins.contrib.sqlmodel._base import documented_field
@@ -54,23 +54,23 @@ class Notification:
     group_key: str | None = documented_field(
         "Grouping key for batching similar notifications", default=None, max_length=255
     )
-    seen_at: datetime.datetime | None = documented_field(
+    seen_at: dt.datetime | None = documented_field(
         "When notification appeared in user's feed; None = unseen",
         default=None,
         sa_type=DateTime(timezone=True),
     )
-    read_at: datetime.datetime | None = documented_field(
+    read_at: dt.datetime | None = documented_field(
         "When user clicked/opened notification; None = unread",
         default=None,
         sa_type=DateTime(timezone=True),
     )
-    archived_at: datetime.datetime | None = documented_field(
+    archived_at: dt.datetime | None = documented_field(
         "When user archived/dismissed notification; None = not archived",
         default=None,
         sa_type=DateTime(timezone=True),
     )
-    created_at: datetime.datetime = documented_field(
+    created_at: dt.datetime = documented_field(
         "When notification was created",
-        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),
+        default_factory=lambda: dt.datetime.now(dt.timezone.utc),
         sa_type=DateTime(timezone=True),
     )

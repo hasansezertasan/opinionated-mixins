@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from typing import Any, ClassVar
 
 from mongoengine import BooleanField, DateTimeField, DictField, StringField
@@ -69,6 +69,6 @@ class Activity:
     created_at = DateTimeField(
         required=True,
         index=True,
-        default=lambda: datetime.datetime.now(datetime.timezone.utc),
+        default=lambda: dt.datetime.now(dt.timezone.utc),
         help_text="When activity occurred",
     )

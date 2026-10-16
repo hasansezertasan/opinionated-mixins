@@ -1,6 +1,6 @@
 """Integration tests for ODMantic CreatedAt mixin."""
 
-import datetime
+import datetime as dt
 
 from opinionated_mixins.contrib.odmantic import CreatedAt
 
@@ -15,14 +15,14 @@ class TestCreatedAtIntegration:
         loaded = await mock_engine.find_one(model_cls)
         assert loaded is not None
         assert loaded.created_at is not None
-        assert isinstance(loaded.created_at, datetime.datetime)
+        assert isinstance(loaded.created_at, dt.datetime)
 
     async def test_created_at_is_recent(self, mock_engine, build_mixin_model) -> None:
         model_cls = build_mixin_model(CreatedAt, "test_created_at")
         obj = model_cls(name="test")
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(model_cls)
-        now = datetime.datetime.now(datetime.timezone.utc)
+        now = dt.datetime.now(dt.timezone.utc)
         delta = (now - loaded.created_at).total_seconds()
         assert delta < 5
 
@@ -36,4 +36,4 @@ class TestCreatedAtIntegration:
         # mongomock may truncate microseconds; compare up to millisecond precision
         diff = loaded.created_at - obj.created_at
         assert abs(diff.total_seconds()) < 0.01
-        assert loaded.created_at.tzinfo == datetime.timezone.utc
+        assert loaded.created_at.tzinfo == dt.timezone.utc

@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from opinionated_mixins.contrib.sqlalchemy import Activity
 from sqlalchemy import Column, Index, Integer, create_engine
@@ -63,7 +63,7 @@ class TestSQLAlchemyActivity:
             session.commit()
             session.refresh(obj)
             assert obj.created_at is not None
-            assert isinstance(obj.created_at, datetime.datetime)
+            assert isinstance(obj.created_at, dt.datetime)
 
     def test_optional_fields_default_null(self) -> None:
         with Session(self.engine) as session:

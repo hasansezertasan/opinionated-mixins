@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 from decimal import Decimal
 from typing import Annotated
 
@@ -35,7 +35,7 @@ class LeadContainer(Model):
 
 async def test_embedded_mixin_roundtrip(mock_engine) -> None:
     person = EmbeddedPerson(
-        first_name="Alice", last_name="Smith", date_of_birth=datetime.date(1990, 1, 15)
+        first_name="Alice", last_name="Smith", date_of_birth=dt.date(1990, 1, 15)
     )
     household = Household(person=person)
 
@@ -62,7 +62,7 @@ def test_embedded_mixin_rejects_primary_field() -> None:
 
 async def test_embedded_lead_roundtrip(mock_engine) -> None:
     lead = EmbeddedLead(
-        opportunity_amount=Decimal("123.45"), close_date=datetime.date(2026, 10, 8)
+        opportunity_amount=Decimal("123.45"), close_date=dt.date(2026, 10, 8)
     )
     await mock_engine.save(LeadContainer(lead=lead))
 
@@ -79,7 +79,7 @@ async def test_model_first_mixins_roundtrip(mock_engine) -> None:
     class ModelFirstLead(Model, Lead):
         pass
 
-    dob = datetime.date(1990, 1, 15)
+    dob = dt.date(1990, 1, 15)
     person = ModelFirstPerson(first_name="Alice", last_name="Smith", date_of_birth=dob)
     lead = ModelFirstLead(opportunity_amount=Decimal("123.45"), close_date=dob)
 
@@ -95,17 +95,17 @@ async def test_model_first_mixins_roundtrip(mock_engine) -> None:
     assert loaded_lead.opportunity_amount == Decimal("123.45")
 
 
-def serialize_date(value: datetime.date) -> str:
+def serialize_date(value: dt.date) -> str:
     """Use a custom representation to verify native serializers take precedence."""
     return value.isoformat()
 
 
 def test_explicit_bson_serializer_is_preserved() -> None:
     class CustomPerson(Person, EmbeddedModel):
-        date_of_birth: Annotated[datetime.date, WithBsonSerializer(serialize_date)]
+        date_of_birth: Annotated[dt.date, WithBsonSerializer(serialize_date)]
 
     person = CustomPerson(
-        first_name="Alice", last_name="Smith", date_of_birth=datetime.date(1990, 1, 15)
+        first_name="Alice", last_name="Smith", date_of_birth=dt.date(1990, 1, 15)
     )
 
     assert person.model_dump_doc()["date_of_birth"] == "1990-01-15"

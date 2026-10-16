@@ -17,7 +17,7 @@
 
 from __future__ import annotations
 
-import datetime  # noqa: TC003 - ODMantic resolves annotations at runtime.
+import datetime as dt  # noqa: TC003 - ODMantic resolves annotations at runtime.
 from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING
 
@@ -56,7 +56,7 @@ class Person(Model):
     postal_code: str | None = Field(default=None, max_length=20)
     city: str | None = Field(default=None, max_length=255)
     country: str | None = Field(default=None, min_length=2, max_length=2)
-    date_of_birth: datetime.datetime | None = Field(default=None)
+    date_of_birth: dt.datetime | None = Field(default=None)
     bio: str | None = Field(default=None)
 
 

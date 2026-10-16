@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from sqlalchemy import Column, DateTime
 from sqlalchemy.orm import declarative_mixin
@@ -32,6 +32,6 @@ class UpdatedAt:
     updated_at = Column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.datetime.now(datetime.timezone.utc),
-        onupdate=lambda: datetime.datetime.now(datetime.timezone.utc),
+        default=lambda: dt.datetime.now(dt.timezone.utc),
+        onupdate=lambda: dt.datetime.now(dt.timezone.utc),
     )

@@ -1,7 +1,7 @@
 """Shared support for ODMantic mixins."""
 # pyright: reportSelfClsParameterName=false
 
-import datetime
+import datetime as dt
 from collections.abc import Callable
 from decimal import Decimal
 from typing import Annotated, Any, cast, get_args, get_origin
@@ -27,10 +27,10 @@ def date_to_datetime_for_bson(value: object) -> object:
     Returns:
         A midnight datetime for date-only values, otherwise the original value.
     """
-    if value is None or isinstance(value, datetime.datetime):
+    if value is None or isinstance(value, dt.datetime):
         return value
-    if isinstance(value, datetime.date):
-        return datetime.datetime.combine(value, datetime.time())
+    if isinstance(value, dt.date):
+        return dt.datetime.combine(value, dt.time())
     return value
 
 
@@ -61,11 +61,11 @@ def utc_datetime(value: object) -> object:
     Returns:
         A UTC-aware datetime for datetime values, otherwise the original value.
     """
-    if not isinstance(value, datetime.datetime):
+    if not isinstance(value, dt.datetime):
         return value
     if value.tzinfo is None:
-        return value.replace(tzinfo=datetime.timezone.utc)
-    return value.astimezone(datetime.timezone.utc)
+        return value.replace(tzinfo=dt.timezone.utc)
+    return value.astimezone(dt.timezone.utc)
 
 
 class ODManticMixinMetaclass(_EmbeddedModelMetaclass, _ModelMetaclass):  # type: ignore[misc, valid-type]
@@ -147,7 +147,7 @@ def _bson_serializer_for_annotation(
     Returns:
         A BSON converter, or None for fields that do not need conversion.
     """
-    if annotation is datetime.date:
+    if annotation is dt.date:
         return date_to_datetime_for_bson
     if annotation is Decimal:
         return decimal_to_decimal128_for_bson

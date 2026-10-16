@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from typing import Any
 
 from sqlalchemy import JSON, DateTime, Text
@@ -72,8 +72,8 @@ class Activity:
     public: bool = documented_field(
         "Whether activity is visible to non-participants", default=True
     )
-    created_at: datetime.datetime = documented_field(
+    created_at: dt.datetime = documented_field(
         "When activity occurred",
-        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),
+        default_factory=lambda: dt.datetime.now(dt.timezone.utc),
         sa_type=DateTime(timezone=True),
     )
