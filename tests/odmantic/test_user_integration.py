@@ -1,6 +1,6 @@
 """Integration tests for ODMantic User mixin."""
 
-import datetime
+import datetime as dt
 
 from odmantic import Model
 from opinionated_mixins.contrib.odmantic import User
@@ -26,7 +26,7 @@ class TestUserIntegration:
         assert loaded.date_email_verified is None
 
     async def test_create_with_all_fields(self, mock_engine) -> None:
-        now = datetime.datetime.now(datetime.timezone.utc)
+        now = dt.datetime.now(dt.timezone.utc)
         obj = MyUser(
             username="bob",
             hashed_password="hashed456",  # pragma: allowlist secret

@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from opinionated_mixins.contrib.sqlalchemy import UpdatedAt
 from sqlalchemy import Column, Index, Integer, String, create_engine
@@ -25,7 +25,7 @@ class TestSQLAlchemyUpdatedAt:
             session.commit()
             session.refresh(obj)
             assert obj.updated_at is not None
-            assert isinstance(obj.updated_at, datetime.datetime)
+            assert isinstance(obj.updated_at, dt.datetime)
 
     def test_updated_at_changes_on_update(self) -> None:
         with Session(self.engine) as session:

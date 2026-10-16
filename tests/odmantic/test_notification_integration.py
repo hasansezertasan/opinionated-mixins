@@ -1,6 +1,6 @@
 """Integration tests for ODMantic Notification mixin."""
 
-import datetime
+import datetime as dt
 
 from odmantic import Model
 from opinionated_mixins.contrib.odmantic import Notification
@@ -58,9 +58,9 @@ class TestNotificationIntegration:
         assert loaded.archived_at is None
 
     async def test_roundtrip_preserves_all_fields(self, mock_engine) -> None:
-        seen_at = datetime.datetime.now(datetime.timezone.utc)
-        read_at = seen_at + datetime.timedelta(seconds=1)
-        archived_at = seen_at + datetime.timedelta(seconds=2)
+        seen_at = dt.datetime.now(dt.timezone.utc)
+        read_at = seen_at + dt.timedelta(seconds=1)
+        archived_at = seen_at + dt.timedelta(seconds=2)
         obj = MyNotification(
             notification_type="order.shipped",
             level=NotificationLevel.SUCCESS,
@@ -83,7 +83,7 @@ class TestNotificationIntegration:
         assert loaded.actor_type == "User"
         assert loaded.actor_id == "42"
         assert loaded.group_key == "order.123"
-        assert loaded.seen_at.tzinfo == datetime.timezone.utc
-        assert loaded.read_at.tzinfo == datetime.timezone.utc
-        assert loaded.archived_at.tzinfo == datetime.timezone.utc
-        assert loaded.created_at.tzinfo == datetime.timezone.utc
+        assert loaded.seen_at.tzinfo == dt.timezone.utc
+        assert loaded.read_at.tzinfo == dt.timezone.utc
+        assert loaded.archived_at.tzinfo == dt.timezone.utc
+        assert loaded.created_at.tzinfo == dt.timezone.utc

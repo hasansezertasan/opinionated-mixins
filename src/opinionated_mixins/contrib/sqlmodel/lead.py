@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 import decimal
 
 from opinionated_mixins.enums import LeadRating, LeadSource, LeadStatus
@@ -33,8 +33,8 @@ class Lead:
     )
     currency: str | None = Field(default=None, max_length=3)
     probability: int | None = Field(default=0)
-    close_date: datetime.date | None = Field(default=None)
-    last_contacted: datetime.date | None = Field(default=None)
-    next_follow_up: datetime.date | None = Field(default=None)
+    close_date: dt.date | None = Field(default=None)
+    last_contacted: dt.date | None = Field(default=None)
+    next_follow_up: dt.date | None = Field(default=None)
     description: str | None = Field(default=None, sa_type=Text)
     is_active: bool = Field(default=True)

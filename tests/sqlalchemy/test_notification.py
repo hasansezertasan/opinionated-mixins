@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from opinionated_mixins.contrib.sqlalchemy import Notification
 from opinionated_mixins.enums import NotificationLevel
@@ -36,7 +36,7 @@ class TestSQLAlchemyNotification:
             assert obj.actor_id == "1"
 
     def test_create_with_all_fields(self) -> None:
-        now = datetime.datetime.now(datetime.timezone.utc)
+        now = dt.datetime.now(dt.timezone.utc)
         with Session(self.engine) as session:
             obj = MyNotification(
                 notification_type="order.shipped",

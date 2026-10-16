@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from typing import Any
 
 from opinionated_mixins.enums import NotificationLevel
@@ -59,19 +59,19 @@ class Notification(metaclass=ODManticMixinMetaclass):
         max_length=255,
         description="Grouping key for batching similar notifications",
     )
-    seen_at: datetime.datetime | None = Field(
+    seen_at: dt.datetime | None = Field(
         default=None,
         description="When notification appeared in user's feed; None = unseen",
     )
-    read_at: datetime.datetime | None = Field(
+    read_at: dt.datetime | None = Field(
         default=None, description="When user clicked/opened notification; None = unread"
     )
-    archived_at: datetime.datetime | None = Field(
+    archived_at: dt.datetime | None = Field(
         default=None,
         description="When user archived/dismissed notification; None = not archived",
     )
-    created_at: datetime.datetime = Field(
-        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),
+    created_at: dt.datetime = Field(
+        default_factory=lambda: dt.datetime.now(dt.timezone.utc),
         description="When notification was created",
     )
 

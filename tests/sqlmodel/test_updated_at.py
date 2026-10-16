@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 import pytest
 
@@ -21,12 +21,8 @@ class TestSQLModelUpdatedAt:
         assert {"updated_at"} <= names
 
     def test_constructor_keeps_values(self) -> None:
-        obj = MyUpdatedAt(
-            updated_at=datetime.datetime(2024, 1, 1, tzinfo=datetime.timezone.utc)
-        )
-        assert obj.updated_at == datetime.datetime(
-            2024, 1, 1, tzinfo=datetime.timezone.utc
-        )
+        obj = MyUpdatedAt(updated_at=dt.datetime(2024, 1, 1, tzinfo=dt.timezone.utc))
+        assert obj.updated_at == dt.datetime(2024, 1, 1, tzinfo=dt.timezone.utc)
 
     def test_defaults(self) -> None:
         obj = MyUpdatedAt()

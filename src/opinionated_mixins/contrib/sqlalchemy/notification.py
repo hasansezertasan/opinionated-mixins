@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from opinionated_mixins.enums import NotificationLevel
 
@@ -104,6 +104,6 @@ class Notification:
     created_at = Column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: datetime.datetime.now(datetime.timezone.utc),
+        default=lambda: dt.datetime.now(dt.timezone.utc),
         doc="When notification was created",
     )

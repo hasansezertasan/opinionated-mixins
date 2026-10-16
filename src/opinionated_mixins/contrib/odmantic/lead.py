@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from decimal import Decimal
 from typing import Any, cast
 
@@ -32,9 +32,9 @@ class Lead(metaclass=ODManticMixinMetaclass):
     opportunity_amount: Decimal | None = Field(default=None)
     currency: str | None = Field(default=None, max_length=3)
     probability: int = Field(default=0)
-    close_date: datetime.date | None = Field(default=None)
-    last_contacted: datetime.date | None = Field(default=None)
-    next_follow_up: datetime.date | None = Field(default=None)
+    close_date: dt.date | None = Field(default=None)
+    last_contacted: dt.date | None = Field(default=None)
+    next_follow_up: dt.date | None = Field(default=None)
     description: str | None = Field(default=None)
     is_active: bool = Field(default=True)
 

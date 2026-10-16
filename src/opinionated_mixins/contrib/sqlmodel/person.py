@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from sqlalchemy import Text
 from sqlmodel import Field
@@ -19,5 +19,5 @@ class Person:
     postal_code: str | None = Field(default=None, max_length=20)
     city: str | None = Field(default=None, max_length=255)
     country: str | None = Field(default=None, max_length=2)
-    date_of_birth: datetime.date | None = Field(default=None)
+    date_of_birth: dt.date | None = Field(default=None)
     bio: str | None = Field(default=None, sa_type=Text)

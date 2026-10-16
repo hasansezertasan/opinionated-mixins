@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from sqlalchemy import DateTime
 from sqlmodel import Field
@@ -21,6 +21,4 @@ class User:
     username: str = Field(max_length=255, unique=True)
     hashed_password: str = Field(max_length=1024)
     email: str | None = Field(default=None, max_length=254, unique=True)
-    date_email_verified: datetime.datetime | None = Field(
-        default=None, sa_type=DateTime
-    )
+    date_email_verified: dt.datetime | None = Field(default=None, sa_type=DateTime)

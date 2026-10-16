@@ -1,6 +1,6 @@
 """Integration tests for ODMantic Activity mixin."""
 
-import datetime
+import datetime as dt
 
 from odmantic import Model
 from opinionated_mixins.contrib.odmantic import Activity
@@ -67,5 +67,5 @@ class TestActivityIntegration:
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(MyActivity)
         assert loaded.created_at is not None
-        assert isinstance(loaded.created_at, datetime.datetime)
-        assert loaded.created_at.tzinfo == datetime.timezone.utc
+        assert isinstance(loaded.created_at, dt.datetime)
+        assert loaded.created_at.tzinfo == dt.timezone.utc

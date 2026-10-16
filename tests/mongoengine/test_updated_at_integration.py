@@ -1,6 +1,6 @@
 """Integration tests for MongoEngine UpdatedAt mixin."""
 
-import datetime
+import datetime as dt
 
 from mongoengine import Document, StringField
 from opinionated_mixins.contrib.mongoengine import UpdatedAt
@@ -22,14 +22,14 @@ class TestUpdatedAtIntegration:
         loaded = MyModel.objects.first()
         assert loaded is not None
         assert loaded.updated_at is not None
-        assert isinstance(loaded.updated_at, datetime.datetime)
+        assert isinstance(loaded.updated_at, dt.datetime)
 
     def test_updated_at_is_utc(self) -> None:
         obj = MyModel(name="test")
         obj.save()
         loaded = MyModel.objects.first()
-        now = datetime.datetime.now(datetime.timezone.utc)
-        delta = now - loaded.updated_at.replace(tzinfo=datetime.timezone.utc)
+        now = dt.datetime.now(dt.timezone.utc)
+        delta = now - loaded.updated_at.replace(tzinfo=dt.timezone.utc)
         assert delta.total_seconds() < 5
 
     def test_updated_at_survives_roundtrip(self) -> None:
@@ -49,7 +49,7 @@ class TestUpdatedAtIntegration:
         import time
 
         time.sleep(0.01)
-        obj.updated_at = datetime.datetime.now(datetime.timezone.utc)
+        obj.updated_at = dt.datetime.now(dt.timezone.utc)
         obj.name = "changed"
         obj.save()
         loaded = MyModel.objects.first()

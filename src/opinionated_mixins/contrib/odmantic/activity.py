@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from typing import Any
 
 from odmantic import Field
@@ -65,8 +65,8 @@ class Activity(metaclass=ODManticMixinMetaclass):
     public: bool = Field(
         default=True, description="Whether activity is visible to non-participants"
     )
-    created_at: datetime.datetime = Field(
-        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc),
+    created_at: dt.datetime = Field(
+        default_factory=lambda: dt.datetime.now(dt.timezone.utc),
         description="When activity occurred",
     )
 

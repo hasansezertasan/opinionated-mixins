@@ -1,6 +1,6 @@
 """Integration tests for MongoEngine Lead mixin."""
 
-import datetime
+import datetime as dt
 from decimal import Decimal
 
 from mongoengine import Document
@@ -30,7 +30,7 @@ class TestLeadIntegration:
         assert loaded.rating is None
 
     def test_create_with_all_fields(self) -> None:
-        today = datetime.date.today()
+        today = dt.date.today()
         obj = MyLead(
             title="Big Deal",
             salutation="Mr",

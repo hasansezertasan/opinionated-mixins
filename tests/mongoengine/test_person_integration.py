@@ -1,6 +1,6 @@
 """Integration tests for MongoEngine Person mixin."""
 
-import datetime
+import datetime as dt
 
 import pytest
 from mongoengine import Document
@@ -28,7 +28,7 @@ class TestPersonIntegration:
         assert loaded.email is None
 
     def test_create_with_all_fields(self) -> None:
-        dob = datetime.date(1990, 1, 15)
+        dob = dt.date(1990, 1, 15)
         obj = MyPerson(
             first_name="Bob",
             last_name="Jones",
@@ -82,7 +82,7 @@ def test_person_fields_persist_in_both_base_orders(*, mixin_first: bool) -> None
         "postal_code": "12345",
         "city": "Springfield",
         "country": "US",
-        "date_of_birth": datetime.date(1990, 1, 15),
+        "date_of_birth": dt.date(1990, 1, 15),
         "bio": "All inherited fields persist",
     }
     model(**values).save()

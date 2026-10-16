@@ -1,6 +1,6 @@
 """Integration tests for ODMantic Lead mixin."""
 
-import datetime
+import datetime as dt
 from decimal import Decimal
 
 from bson.decimal128 import Decimal128
@@ -20,11 +20,9 @@ class RenamedLead(Lead, Model):
 
     model_config = {"collection": "test_renamed_leads"}
     opportunity_amount: Decimal | None = Field(default=None, key_name="amount")
-    close_date: datetime.date | None = Field(default=None, key_name="closed_on")
-    last_contacted: datetime.date | None = Field(default=None, key_name="contacted_on")
-    next_follow_up: datetime.date | None = Field(
-        default=None, key_name="followed_up_on"
-    )
+    close_date: dt.date | None = Field(default=None, key_name="closed_on")
+    last_contacted: dt.date | None = Field(default=None, key_name="contacted_on")
+    next_follow_up: dt.date | None = Field(default=None, key_name="followed_up_on")
 
 
 class TestLeadIntegration:
@@ -43,7 +41,7 @@ class TestLeadIntegration:
         assert loaded.rating is None
 
     async def test_create_with_all_fields(self, mock_engine) -> None:
-        today = datetime.date.today()
+        today = dt.date.today()
         obj = MyLead(
             title="Big Deal",
             salutation="Mr",
@@ -85,7 +83,7 @@ class TestLeadIntegration:
         self,
     ) -> None:
         """Date and decimal values use BSON-safe values only in document dumps."""
-        today = datetime.date.today()
+        today = dt.date.today()
         obj = MyLead(
             opportunity_amount=Decimal("50000.00"),
             close_date=today,
@@ -101,19 +99,13 @@ class TestLeadIntegration:
         assert pydantic_dump["last_contacted"] == today
         assert pydantic_dump["next_follow_up"] == today
         assert document_dump["opportunity_amount"] == Decimal128("50000.00")
-        assert document_dump["close_date"] == datetime.datetime.combine(
-            today, datetime.time()
-        )
-        assert document_dump["last_contacted"] == datetime.datetime.combine(
-            today, datetime.time()
-        )
-        assert document_dump["next_follow_up"] == datetime.datetime.combine(
-            today, datetime.time()
-        )
+        assert document_dump["close_date"] == dt.datetime.combine(today, dt.time())
+        assert document_dump["last_contacted"] == dt.datetime.combine(today, dt.time())
+        assert document_dump["next_follow_up"] == dt.datetime.combine(today, dt.time())
 
     def test_bson_document_serializes_renamed_fields(self) -> None:
         """BSON conversion honors concrete ODMantic key_name overrides."""
-        today = datetime.date.today()
+        today = dt.date.today()
         obj = RenamedLead(
             opportunity_amount=Decimal("50000.00"),
             close_date=today,
@@ -124,15 +116,9 @@ class TestLeadIntegration:
         document_dump = obj.model_dump_doc()
 
         assert document_dump["amount"] == Decimal128("50000.00")
-        assert document_dump["closed_on"] == datetime.datetime.combine(
-            today, datetime.time()
-        )
-        assert document_dump["contacted_on"] == datetime.datetime.combine(
-            today, datetime.time()
-        )
-        assert document_dump["followed_up_on"] == datetime.datetime.combine(
-            today, datetime.time()
-        )
+        assert document_dump["closed_on"] == dt.datetime.combine(today, dt.time())
+        assert document_dump["contacted_on"] == dt.datetime.combine(today, dt.time())
+        assert document_dump["followed_up_on"] == dt.datetime.combine(today, dt.time())
 
     async def test_enum_fields_roundtrip(self, mock_engine) -> None:
         obj = MyLead(

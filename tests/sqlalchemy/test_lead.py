@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from decimal import Decimal
 
 from opinionated_mixins.contrib.sqlalchemy import Lead
@@ -68,9 +68,9 @@ class TestSQLAlchemyLead:
                 opportunity_amount=Decimal("50000.00"),
                 currency="USD",
                 probability=75,
-                close_date=datetime.date(2026, 6, 1),
-                last_contacted=datetime.date(2026, 4, 15),
-                next_follow_up=datetime.date(2026, 4, 22),
+                close_date=dt.date(2026, 6, 1),
+                last_contacted=dt.date(2026, 4, 15),
+                next_follow_up=dt.date(2026, 4, 22),
                 description="High-value lead",
                 is_active=True,
             )
@@ -83,7 +83,7 @@ class TestSQLAlchemyLead:
             assert obj.rating == LeadRating.HOT
             assert obj.opportunity_amount == Decimal("50000.00")
             assert obj.probability == 75
-            assert obj.close_date == datetime.date(2026, 6, 1)
+            assert obj.close_date == dt.date(2026, 6, 1)
 
     def test_fields_exist(self) -> None:
         columns = {c.name for c in MyLead.__table__.columns}

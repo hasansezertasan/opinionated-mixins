@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from odmantic import Field
 from pydantic import field_validator
@@ -11,8 +11,8 @@ __all__ = ["UpdatedAt"]
 class UpdatedAt(metaclass=ODManticMixinMetaclass):
     """UpdatedAt mixin for ODMantic models."""
 
-    updated_at: datetime.datetime = Field(
-        default_factory=lambda: datetime.datetime.now(datetime.timezone.utc)
+    updated_at: dt.datetime = Field(
+        default_factory=lambda: dt.datetime.now(dt.timezone.utc)
     )
 
     _restore_updated_at_utc = field_validator("updated_at", mode="before")(utc_datetime)

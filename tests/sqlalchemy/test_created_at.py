@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 from opinionated_mixins.contrib.sqlalchemy import CreatedAt
 from sqlalchemy import Column, Index, Integer, create_engine
@@ -24,7 +24,7 @@ class TestSQLAlchemyCreatedAt:
             session.commit()
             session.refresh(obj)
             assert obj.created_at is not None
-            assert isinstance(obj.created_at, datetime.datetime)
+            assert isinstance(obj.created_at, dt.datetime)
 
     def test_created_at_not_null(self) -> None:
         col = MyModel.__table__.c.created_at

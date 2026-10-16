@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from typing import Any, ClassVar
 
 from mongoengine import DateTimeField
@@ -12,5 +12,5 @@ class UpdatedAt:
     meta: ClassVar[dict[str, Any]] = {"allow_inheritance": True}
 
     updated_at = DateTimeField(
-        required=True, default=lambda: datetime.datetime.now(datetime.timezone.utc)
+        required=True, default=lambda: dt.datetime.now(dt.timezone.utc)
     )

@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 from typing import Any, cast
 
 from odmantic import Field
@@ -20,7 +20,7 @@ class Person(metaclass=ODManticMixinMetaclass):
     postal_code: str | None = Field(default=None, max_length=20)
     city: str | None = Field(default=None, max_length=255)
     country: str | None = Field(default=None, min_length=2, max_length=2)
-    date_of_birth: datetime.date | None = Field(default=None)
+    date_of_birth: dt.date | None = Field(default=None)
     bio: str | None = Field(default=None)
 
     def model_dump_doc(  # pylint: disable=no-member
