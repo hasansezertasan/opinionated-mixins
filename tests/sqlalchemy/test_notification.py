@@ -36,7 +36,7 @@ class TestSQLAlchemyNotification:
             assert obj.actor_id == "1"
 
     def test_create_with_all_fields(self) -> None:
-        now = dt.datetime.now(dt.timezone.utc)
+        now = dt.datetime.now(dt.UTC)
         with Session(self.engine) as session:
             obj = MyNotification(
                 notification_type="order.shipped",

@@ -71,6 +71,6 @@ class Notification:
     )
     created_at: dt.datetime = documented_field(
         "When notification was created",
-        default_factory=lambda: dt.datetime.now(dt.timezone.utc),
+        default_factory=lambda: dt.datetime.now(dt.UTC),
         sa_type=DateTime(timezone=True),
     )

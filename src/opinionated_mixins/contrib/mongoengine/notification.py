@@ -73,6 +73,6 @@ class Notification:
     created_at = DateTimeField(
         required=True,
         index=True,
-        default=lambda: dt.datetime.now(dt.timezone.utc),
+        default=lambda: dt.datetime.now(dt.UTC),
         help_text="When notification was created",
     )

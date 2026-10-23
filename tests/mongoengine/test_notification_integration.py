@@ -62,7 +62,7 @@ class TestNotificationIntegration:
         assert loaded.archived_at is None
 
     def test_roundtrip_preserves_all_fields(self) -> None:
-        now = dt.datetime(2024, 1, 15, 12, 0, 0, tzinfo=dt.timezone.utc)
+        now = dt.datetime(2024, 1, 15, 12, 0, 0, tzinfo=dt.UTC)
         obj = MyNotification(
             notification_type="order.shipped",
             level=NotificationLevel.SUCCESS.value,

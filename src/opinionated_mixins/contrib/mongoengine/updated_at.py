@@ -11,6 +11,4 @@ class UpdatedAt:
 
     meta: ClassVar[dict[str, Any]] = {"allow_inheritance": True}
 
-    updated_at = DateTimeField(
-        required=True, default=lambda: dt.datetime.now(dt.timezone.utc)
-    )
+    updated_at = DateTimeField(required=True, default=lambda: dt.datetime.now(dt.UTC))

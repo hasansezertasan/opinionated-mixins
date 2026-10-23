@@ -26,6 +26,5 @@ class CreatedAt:
     """
 
     created_at: dt.datetime = Field(
-        default_factory=lambda: dt.datetime.now(dt.timezone.utc),
-        sa_type=DateTime(timezone=True),
+        default_factory=lambda: dt.datetime.now(dt.UTC), sa_type=DateTime(timezone=True)
     )

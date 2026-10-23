@@ -13,7 +13,7 @@ __all__ = [
 ]
 
 
-class _AutoStrEnum(str, enum.Enum):
+class _AutoStrEnum(enum.StrEnum):
     """Base enum that auto-generates string values from member names.
 
     On Python <3.11 (no ``StrEnum``), ``auto()`` with ``str, Enum`` produces

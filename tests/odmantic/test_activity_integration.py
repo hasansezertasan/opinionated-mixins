@@ -68,4 +68,4 @@ class TestActivityIntegration:
         loaded = await mock_engine.find_one(MyActivity)
         assert loaded.created_at is not None
         assert isinstance(loaded.created_at, dt.datetime)
-        assert loaded.created_at.tzinfo == dt.timezone.utc
+        assert loaded.created_at.tzinfo == dt.UTC

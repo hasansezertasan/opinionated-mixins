@@ -104,6 +104,6 @@ class Activity:
     created_at = Column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: dt.datetime.now(dt.timezone.utc),
+        default=lambda: dt.datetime.now(dt.UTC),
         doc="When activity occurred",
     )

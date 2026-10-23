@@ -28,9 +28,9 @@ class TestCreatedAtIntegration:
         obj = MyModel(name="test")
         obj.save()
         loaded = MyModel.objects.first()
-        now = dt.datetime.now(dt.timezone.utc)
+        now = dt.datetime.now(dt.UTC)
         # created_at should be within last 5 seconds
-        delta = now - loaded.created_at.replace(tzinfo=dt.timezone.utc)
+        delta = now - loaded.created_at.replace(tzinfo=dt.UTC)
         assert delta.total_seconds() < 5
 
     def test_created_at_survives_roundtrip(self) -> None:

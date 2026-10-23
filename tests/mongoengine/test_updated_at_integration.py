@@ -28,8 +28,8 @@ class TestUpdatedAtIntegration:
         obj = MyModel(name="test")
         obj.save()
         loaded = MyModel.objects.first()
-        now = dt.datetime.now(dt.timezone.utc)
-        delta = now - loaded.updated_at.replace(tzinfo=dt.timezone.utc)
+        now = dt.datetime.now(dt.UTC)
+        delta = now - loaded.updated_at.replace(tzinfo=dt.UTC)
         assert delta.total_seconds() < 5
 
     def test_updated_at_survives_roundtrip(self) -> None:
@@ -49,7 +49,7 @@ class TestUpdatedAtIntegration:
         import time
 
         time.sleep(0.01)
-        obj.updated_at = dt.datetime.now(dt.timezone.utc)
+        obj.updated_at = dt.datetime.now(dt.UTC)
         obj.name = "changed"
         obj.save()
         loaded = MyModel.objects.first()

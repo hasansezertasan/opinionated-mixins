@@ -58,7 +58,7 @@ class TestNotificationIntegration:
         assert loaded.archived_at is None
 
     async def test_roundtrip_preserves_all_fields(self, mock_engine) -> None:
-        seen_at = dt.datetime.now(dt.timezone.utc)
+        seen_at = dt.datetime.now(dt.UTC)
         read_at = seen_at + dt.timedelta(seconds=1)
         archived_at = seen_at + dt.timedelta(seconds=2)
         obj = MyNotification(
@@ -83,7 +83,7 @@ class TestNotificationIntegration:
         assert loaded.actor_type == "User"
         assert loaded.actor_id == "42"
         assert loaded.group_key == "order.123"
-        assert loaded.seen_at.tzinfo == dt.timezone.utc
-        assert loaded.read_at.tzinfo == dt.timezone.utc
-        assert loaded.archived_at.tzinfo == dt.timezone.utc
-        assert loaded.created_at.tzinfo == dt.timezone.utc
+        assert loaded.seen_at.tzinfo == dt.UTC
+        assert loaded.read_at.tzinfo == dt.UTC
+        assert loaded.archived_at.tzinfo == dt.UTC
+        assert loaded.created_at.tzinfo == dt.UTC
