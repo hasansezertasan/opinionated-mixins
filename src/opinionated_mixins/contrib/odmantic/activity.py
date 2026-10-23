@@ -66,7 +66,7 @@ class Activity(metaclass=ODManticMixinMetaclass):
         default=True, description="Whether activity is visible to non-participants"
     )
     created_at: dt.datetime = Field(
-        default_factory=lambda: dt.datetime.now(dt.timezone.utc),
+        default_factory=lambda: dt.datetime.now(dt.UTC),
         description="When activity occurred",
     )
 

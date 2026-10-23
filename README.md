@@ -156,7 +156,7 @@ The [RFC index](docs/rfcs/INDEX.md) records accepted designs and the status of p
 - Expand working examples and document framework-specific limitations.
 - Extend integration coverage for storage behavior and mixin composition.
 
-The library already includes timestamp, active-flag, integer-ID, and UUID-ID mixins. CI runs linting, formatting, type checking, and tests on Python 3.10 and 3.14.
+The library already includes timestamp, active-flag, integer-ID, and UUID-ID mixins. CI runs linting, formatting, type checking, and tests on Python 3.11 and 3.14.
 
 Additional mixins, fields, or storage frameworks require research and an accepted RFC. See [CONTRIBUTING.md](CONTRIBUTING.md) to propose work.
 
@@ -209,7 +209,7 @@ SQLAlchemy, SQLModel, MongoEngine, and ODMantic. These are storage frameworks; i
 pip install opinionated-mixins
 ```
 
-Install your chosen framework separately. The base package has no runtime dependencies and requires Python 3.10 or newer.
+Install your chosen framework separately. The base package has no runtime dependencies and requires Python 3.11 or newer.
 
 ### How do I use a mixin?
 

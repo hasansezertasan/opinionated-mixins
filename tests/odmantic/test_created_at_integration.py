@@ -22,7 +22,7 @@ class TestCreatedAtIntegration:
         obj = model_cls(name="test")
         await mock_engine.save(obj)
         loaded = await mock_engine.find_one(model_cls)
-        now = dt.datetime.now(dt.timezone.utc)
+        now = dt.datetime.now(dt.UTC)
         delta = (now - loaded.created_at).total_seconds()
         assert delta < 5
 
@@ -36,4 +36,4 @@ class TestCreatedAtIntegration:
         # mongomock may truncate microseconds; compare up to millisecond precision
         diff = loaded.created_at - obj.created_at
         assert abs(diff.total_seconds()) < 0.01
-        assert loaded.created_at.tzinfo == dt.timezone.utc
+        assert loaded.created_at.tzinfo == dt.UTC

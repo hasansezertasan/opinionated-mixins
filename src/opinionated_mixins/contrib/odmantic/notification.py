@@ -71,7 +71,7 @@ class Notification(metaclass=ODManticMixinMetaclass):
         description="When user archived/dismissed notification; None = not archived",
     )
     created_at: dt.datetime = Field(
-        default_factory=lambda: dt.datetime.now(dt.timezone.utc),
+        default_factory=lambda: dt.datetime.now(dt.UTC),
         description="When notification was created",
     )
 

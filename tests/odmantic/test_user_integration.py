@@ -26,7 +26,7 @@ class TestUserIntegration:
         assert loaded.date_email_verified is None
 
     async def test_create_with_all_fields(self, mock_engine) -> None:
-        now = dt.datetime.now(dt.timezone.utc)
+        now = dt.datetime.now(dt.UTC)
         obj = MyUser(
             username="bob",
             hashed_password="hashed456",  # pragma: allowlist secret

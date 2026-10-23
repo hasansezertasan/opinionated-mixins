@@ -64,8 +64,8 @@ def utc_datetime(value: object) -> object:
     if not isinstance(value, dt.datetime):
         return value
     if value.tzinfo is None:
-        return value.replace(tzinfo=dt.timezone.utc)
-    return value.astimezone(dt.timezone.utc)
+        return value.replace(tzinfo=dt.UTC)
+    return value.astimezone(dt.UTC)
 
 
 class ODManticMixinMetaclass(_EmbeddedModelMetaclass, _ModelMetaclass):  # type: ignore[misc, valid-type]

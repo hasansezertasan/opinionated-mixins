@@ -21,8 +21,8 @@ class TestSQLModelUpdatedAt:
         assert {"updated_at"} <= names
 
     def test_constructor_keeps_values(self) -> None:
-        obj = MyUpdatedAt(updated_at=dt.datetime(2024, 1, 1, tzinfo=dt.timezone.utc))
-        assert obj.updated_at == dt.datetime(2024, 1, 1, tzinfo=dt.timezone.utc)
+        obj = MyUpdatedAt(updated_at=dt.datetime(2024, 1, 1, tzinfo=dt.UTC))
+        assert obj.updated_at == dt.datetime(2024, 1, 1, tzinfo=dt.UTC)
 
     def test_defaults(self) -> None:
         obj = MyUpdatedAt()

@@ -32,6 +32,6 @@ class UpdatedAt:
     updated_at = Column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: dt.datetime.now(dt.timezone.utc),
-        onupdate=lambda: dt.datetime.now(dt.timezone.utc),
+        default=lambda: dt.datetime.now(dt.UTC),
+        onupdate=lambda: dt.datetime.now(dt.UTC),
     )
