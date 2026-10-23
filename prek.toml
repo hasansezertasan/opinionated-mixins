@@ -179,8 +179,8 @@ hooks = [{ id = "actionlint" }]
 # hook is the blocking gate — it runs in the CI `hooks` job and locally; the
 # .github/workflows/zizmor.yml workflow additionally uploads findings to the
 # Security tab as a non-blocking dashboard. Default (regular) persona.
-# zizmor-pre-commit requires Python>=3.11 while default_language_version pins
-# the lowest supported interpreter (3.10), so this hook carries its own floor.
+# zizmor-pre-commit requires Python>=3.11; the hook pins its own interpreter so it
+# does not depend on default_language_version.
 [[repos]]
 repo = "https://github.com/zizmorcore/zizmor-pre-commit"
 rev = "v1.31.1"
