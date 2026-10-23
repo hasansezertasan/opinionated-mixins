@@ -120,6 +120,6 @@ The release-please workflow owns the changelog.
 
 ## Code Style
 
-- Target Python 3.10 or newer.
+- Target Python 3.11 or newer.
 - Use Ruff for formatting and linting, and strict type checking.
 - Use PEP 257-style docstrings, as enforced by Ruff.
