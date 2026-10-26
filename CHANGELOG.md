@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0](https://github.com/hasansezertasan/opinionated-mixins/compare/v0.2.0...v0.3.0) (2026-10-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop Python 3.10 support ([#180](https://github.com/hasansezertasan/opinionated-mixins/issues/180))
+
+### 🔧 Chores
+
+* drop Python 3.10 support ([#180](https://github.com/hasansezertasan/opinionated-mixins/issues/180)) ([7a95d38](https://github.com/hasansezertasan/opinionated-mixins/commit/7a95d38968ecfae648277d1046668334efb83d10))
+
 ## [0.2.0](https://github.com/hasansezertasan/opinionated-mixins/compare/v0.1.0...v0.2.0) (2026-10-16)
 
 
