@@ -49,7 +49,7 @@ jobs:
           python-version-file: .python-version
       - name: Setup uv
         if: github.event.action != 'closed'
-        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e  # v10.3.2
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
         with:
           enable-cache: true
           cache-dependency-glob: |
@@ -77,7 +77,7 @@ jobs:
         # in both cases. The action authenticates from its `token` input
         # (default github.token) via github-pages-deploy-action, so the checkout
         # above keeps persist-credentials: false.
-        uses: rossjrw/pr-preview-action@ffa7509e91a3ec8dfc2e5536c4d5c1acdf7a6de9  # v1.8.1
+        uses: rossjrw/pr-preview-action@873417d2df72380da1f3978378fb58560bcde976  # v1.8.2
         with:
           source-dir: docs/_build/html
           preview-branch: gh-pages
